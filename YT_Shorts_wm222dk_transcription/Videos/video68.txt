@@ -1,0 +1,86 @@
+Adderall explained: what you need to know (and what no one tells you) 💊 #adhd #summeronshorts
+
+
+# tactiq.io free youtube transcript
+# Adderall explained: what you need to know (and what no one tells you) 💊 #adhd  #summeronshorts
+# https://www.youtube.com/watch/Eyv7BHr0bOA
+
+00:00:01.280 I must have taken that aderal like 30
+00:00:03.840 minutes ago.
+00:00:07.200 I'm going to tell you everything that
+00:00:08.160 you need to know about Adderall. So,
+00:00:09.440 this medication is considered a
+00:00:10.719 controlled two substance, which means it
+00:00:12.480 has a high potential for abuse and
+00:00:14.320 dependence. What you'll notice is at the
+00:00:16.000 pharmacy, you'll probably only be able
+00:00:17.520 to get a month supply at a time.
+00:00:19.359 Usually, you could fill it 2 days early.
+00:00:21.039 The reason for the 2-day notice is to
+00:00:22.640 prevent people from stockpiling it
+00:00:24.320 because actually, sometimes your
+00:00:25.680 insurance will let you fill it usually
+00:00:27.359 like a week early. And with this
+00:00:28.560 medication, it is a firstline option for
+00:00:30.880 ADHD. You want to take this in the
+00:00:33.360 morning because it will possibly keep
+00:00:35.200 you up at night. Initial dose is usually
+00:00:36.960 5 milligs once a day for the immediate
+00:00:38.719 release. And then adults for the
+00:00:39.920 extended release is going to be 10 to 20
+00:00:41.600 millig. And fun fact, the AAP
+00:00:43.360 guidelines, which are guidelines that
+00:00:44.640 pediatricians follow, don't actually
+00:00:46.480 recommend dextroetamine in patients less
+00:00:49.360 than or equal to 5 years old. Also, a
+00:00:51.039 fun fact with these medications is that
+00:00:52.640 you don't want to take them with like
+00:00:54.000 acidic foods or like vitamin C, for
+00:00:56.399 example, because it can actually
+00:00:57.920 decrease the absorption of the aderall.
+00:01:00.079 And then when it comes to tapering off
+00:01:01.760 of the medication, there actually is no
+00:01:04.239 tapering if you are taking the
+00:01:06.159 appropriate dose. And it can cause a
+00:01:08.080 decreased appetite. So to help prevent
+00:01:10.000 weight loss, it's actually recommended
+00:01:11.600 to have a larger breakfast in the
+
+
+815,976 41,275 2,923 74
+
+Claims identified & fact-check:
+
+Claim 1: Adderall is considered a Schedule II controlled substance, meaning it has a high potential for abuse and dependence
+→ Supported (externally verified) — confirmed by multiple sources: Adderall is explicitly classified as a Schedule II stimulant under the U.S. Controlled Substances Act, alongside other high-abuse-potential drugs
+
+Claim 2: At the pharmacy you'll typically only get a month's supply at a time, and can usually fill it 2 days early to prevent stockpiling, though insurance sometimes allows filling about a week early
+→ Supported (externally verified) — confirmed by multiple sources: pharmacies commonly use a "two-day-early rule" for Schedule II controlled substances, and insurance plans often use a 75-80%-of-supply threshold, which for a 30-day prescription works out to roughly a week early
+
+Claim 3: Adderall is a first-line option for ADHD treatment
+→ Partially supported — this reflects general U.S. clinical practice for stimulants as first-line ADHD treatment, though the attached NICE guideline (UK-based) specifically recommends methylphenidate as first-line for children/young people and lisdexamfetamine or methylphenidate (not Adderall specifically) as first-line for adults — Adderall's first-line status is accurate to broader U.S. clinical convention but isn't the specific first-line agent named in the attached NICE reference
+
+Claim 4: Take Adderall in the morning because it may keep you up at night
+→ Supported (general, standard clinical guidance) — consistent with the well-established pharmacological profile of stimulant medications and standard prescribing practice to avoid sleep disruption; this aligns with NICE's own monitoring guidance around sleep pattern changes with stimulant medication (1.8.17)
+
+Claim 5: Initial dose is usually 5mg once daily for immediate release, and 10-20mg for extended release in adults
+→ Not independently verified — this specific dosing information wasn't confirmed in my search, though it's consistent with commonly cited Adderall dosing conventions; treating as unconfirmed rather than false
+
+Claim 6: AAP guidelines don't recommend dextroamphetamine in patients ≤5 years old
+→ Not independently verified — this specific claim wasn't confirmed in my searches; plausible given the general caution around stimulant use in very young children (paralleling NICE's own caution requiring second specialist opinion before medicating any child under 5), but not directly confirmed
+
+Claim 7: Don't take Adderall with acidic foods or vitamin C because it can decrease absorption
+→ Supported (externally verified) — strongly confirmed by multiple independent pharmacological sources: vitamin C and acidic foods lower gut/urinary pH, reducing amphetamine absorption and increasing excretion, with one pharmacokinetic study cited showing roughly a 30% reduction in amphetamine exposure with vitamin C co-administration
+
+Claim 8: There is no tapering needed when stopping the medication if you're taking the appropriate dose
+→ Partially supported — this is broadly consistent with standard stimulant prescribing practice (unlike some other psychiatric medications, stimulants are generally not associated with a discontinuation syndrome requiring gradual tapering), though this specific claim wasn't independently verified via search and NICE does discuss "trial periods of stopping medication" (1.10.3) without describing a formal taper requirement, lending indirect support
+
+Claim 9: Adderall can cause decreased appetite, so having a larger breakfast is recommended to help prevent weight loss
+→ Supported — directly matches NICE's guidance on managing weight loss as an adverse effect (1.8.6), which explicitly recommends "taking additional meals or snacks early in the morning... when stimulant effects have worn off" as a strategy — a larger breakfast (before the appetite-suppressing effects peak) is a reasonable, consistent application of this principle
+
+Result:
+
+Total claims: 9
+False/unsupported claims: 0 (2 claims — specific dosing figures and the AAP age-5 guideline — counted as unconfirmed/unverified rather than false, since they weren't found to be contradicted anywhere; 2 additional claims counted as partial — Adderall's "first-line" status relative to the UK-specific NICE guideline, and the no-taper claim)
+Supported-claim percentage: (9−0)/9 × 100 = 100%
+Label: 1 — Accurate

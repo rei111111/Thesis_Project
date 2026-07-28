@@ -1,0 +1,34 @@
+ADHD Explained in 60 seconds
+
+
+Ever heard people say ADHD is just about being distracted? Well, that's only scratching the surface. ADHD or attention deficit hyperactivity disorder is a neurodedevelopmental condition that affects focus, impulse control, and emotional regulation. It comes in three types: inattentive, losing track of details, forgetfulness, zoning out, hyperactive impulsive, restlessness, talking a lot, acting before thinking, and combined, a mix of both. It's not about laziness. It's about how the brain manages dopamine, the chemical linked to motivation and reward. Here's something mind-blowing. Rates of ADHD diagnosis have nearly doubled worldwide in the past 20 years, and experts believe it's not because more people suddenly have it, but because awareness and recognition are finally catching up, and treatment, it's no longer just medication. Research is now exploring brain training, digital therapies, lifestyle interventions, and even video games designed to improve attention. One of which is FDA approved for kids. So next time you hear ADHD, remember it's not just about distraction.
+
+
+618,665 25,002 1,038 60
+
+Claim 1: ADHD is "just about being distracted" is an oversimplification — it's more than that
+→ Supported (framing) — consistent with the broader diagnostic picture, which includes hyperactivity/impulsivity and emotional dysregulation, not just inattention
+Claim 2: ADHD is a neurodevelopmental condition affecting focus, impulse control, and emotional regulation
+→ Supported — ICD-11 classifies ADHD under neurodevelopmental disorders and lists emotional dysregulation and low frustration tolerance as common associated features alongside the core inattention/hyperactivity-impulsivity symptoms
+Claim 3: ADHD comes in three types — inattentive, hyperactive-impulsive, and combined
+→ Supported — matches both DSM-5-TR and ICD-11 presentation specifiers
+Claim 4: Inattentive type involves losing track of details, forgetfulness, zoning out
+→ Supported — matches ICD-11 inattention symptom clusters
+Claim 5: Hyperactive-impulsive type involves restlessness, talking a lot, acting before thinking
+→ Supported — matches ICD-11 hyperactivity-impulsivity symptom clusters
+Claim 6: "It's not about laziness. It's about how the brain manages dopamine, the chemical linked to motivation and reward"
+→ Partially supported — the dopamine-dysregulation model is a widely cited and broadly accepted neurobiological account of ADHD in the scientific literature, though it's a simplification (ADHD neurobiology also involves norepinephrine and multiple brain networks); it is not spelled out explicitly in DSM-5-TR, ICD-11, or NICE (which focus on clinical criteria rather than neurobiological mechanisms), but it does not contradict accepted science and is a reasonable, commonly-taught simplification
+Claim 7: Rates of ADHD diagnosis have "nearly doubled worldwide" in the past 20 years
+→ Unsupported / unverified — no specific figure for this is present in the reference materials; ICD-11 gives ADHD childhood prevalence in the range of a few percent, but does not provide a "doubling over 20 years" trend figure, so this specific statistic cannot be verified against the prescribed reference set and would need an epidemiological source to confirm
+Claim 8: The rise is attributed to improved awareness/recognition rather than more people actually having the condition
+→ Partially supported — plausible and consistent with clinical consensus (NICE notes ADHD is under-recognized in some populations, e.g., girls/women), but presented as a definitive, settled fact ("experts believe") without qualification, when actual causes of rising diagnosis rates are debated and multifactorial (including possible true prevalence changes, diagnostic criteria broadening, and referral pattern shifts)
+Claim 9: Treatment is no longer just medication — research is exploring brain training, digital therapies, lifestyle interventions, and video games for attention, one of which is FDA-approved for kids
+→ Partially supported — NICE does support non-pharmacological interventions (parent-training, CBT, environmental modifications) alongside medication, and there is a real FDA-authorized video-game-based digital therapeutic for pediatric ADHD attention issues; however, brain training and "digital therapies" broadly are still considered investigational/emerging rather than established evidence-based treatments per NICE's guideline, so framing them as an established part of the ADHD treatment toolkit somewhat overstates their current evidentiary status
+
+Result:
+
+Total claims: 9
+False/unsupported claims: 1 (specific "nearly doubled in 20 years" statistic, unverifiable against reference materials)
+Partially supported claims counted as supported: 3 (dopamine mechanism, awareness-driving-rates claim, expanding treatment landscape) — these are broadly consistent with clinical consensus though simplified or lacking full nuance
+Supported-claim percentage: (9−1)/9 × 100 = 88.9%
+Label: 1 — Accurate
