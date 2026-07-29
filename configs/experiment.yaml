@@ -1,0 +1,42 @@
+seed: 42
+
+data:
+  dataset_path: data/dataset.csv
+  train_indices_path: data/train_indices.csv
+  test_indices_path: data/test_indices.csv
+  target_column: label
+  # Change to 500 when the final dataset is ready. Null permits sample data.
+  expected_rows: null
+
+split:
+  test_size: 0.20
+
+features:
+  tfidf:
+    max_features: 300
+    ngram_range: [1, 2]
+    stop_words: english
+  linguistic_columns:
+    - certainty_score
+    - hedge_score
+  engagement_columns:
+    - likes
+    - comments
+    - views
+    - duration_sec
+
+ridge:
+  alphas: [0.1, 1.0, 10.0]
+
+minilm:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 32
+  c_values: [0.1, 1.0, 10.0]
+
+evaluation:
+  outer_folds: 5
+  inner_folds: 3
+  bootstrap_resamples: 10000
+  primary_metric: quadratic_weighted_kappa
+  n_jobs: 1
+

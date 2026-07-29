@@ -1,0 +1,41 @@
+title,transcript,likes,comments,views,duration_sec,total_claims,false_claims,label,certainty_score,hedge_score
+ADHD information example 1,Research suggests that support may help some people and outcomes differ.,120,8,2400,42,5,0,1,0.0,21.4
+ADHD information example 2,A clinician could assess symptoms because several conditions may look similar.,85,5,1800,39,5,1,1,0.0,25.0
+ADHD information example 3,Treatment will depend on the person and monitoring is always important.,310,18,7200,55,5,0,1,18.2,0.0
+ADHD information example 4,Evidence suggests that sleep might affect attention but does not prove a diagnosis.,64,3,900,47,5,1,1,8.3,16.7
+ADHD information example 5,Qualified assessment and individual history are definitely important.,440,31,11000,33,5,0,1,12.5,0.0
+ADHD information example 6,Symptoms may vary across settings and could change over time.,155,11,3600,51,5,1,1,0.0,22.2
+ADHD information example 7,No single online sign proves ADHD and professional evaluation is recommended.,90,4,1400,44,5,0,1,10.0,0.0
+ADHD information example 8,Medication effects might differ and monitoring may be required.,270,20,6300,58,5,1,1,0.0,22.2
+ADHD information example 9,The evidence could support several options rather than one universal answer.,510,42,15000,36,5,0,1,0.0,9.1
+ADHD information example 10,A full assessment will consider duration setting and impairment.,73,6,1250,49,5,1,1,11.1,0.0
+Mixed ADHD claim example 1,This method definitely helps everyone although individual results may differ.,610,55,18000,41,5,2,2,12.5,12.5
+Mixed ADHD claim example 2,One sign always confirms ADHD but a clinician could consider other causes.,205,14,4800,52,5,2,2,14.3,14.3
+Mixed ADHD claim example 3,The advice may help and it will work immediately for every person.,333,24,8100,46,5,2,2,11.1,11.1
+Mixed ADHD claim example 4,Evidence suggests one benefit but the speaker definitely overstates the result.,98,9,2100,38,5,2,2,11.1,11.1
+Mixed ADHD claim example 5,This habit could improve focus but it always replaces professional care.,760,66,23000,57,5,2,2,10.0,10.0
+Mixed ADHD claim example 6,The explanation may be partly correct but it proves too much.,130,12,3200,35,5,2,2,11.1,11.1
+Mixed ADHD claim example 7,Some people might benefit but the same result will happen to everybody.,420,37,9700,50,5,2,2,10.0,10.0
+Mixed ADHD claim example 8,The first point is supported while the second is definitely unsupported.,57,2,820,32,5,2,2,10.0,0.0
+Mixed ADHD claim example 9,This could be associated with attention but it always identifies ADHD.,287,21,6900,43,5,2,2,11.1,11.1
+Mixed ADHD claim example 10,The evidence may support part of this explanation but not the universal claim.,175,15,4100,54,5,2,2,8.3,8.3
+Mostly unsupported example 1,One habit definitely cures ADHD and perhaps also replaces every treatment.,890,75,29000,40,5,3,3,11.1,11.1
+Mostly unsupported example 2,This sign always proves the condition though it might have other causes.,240,19,5700,53,5,3,3,12.5,12.5
+Mostly unsupported example 3,A single food will remove all symptoms and could work within one day.,470,43,12200,48,5,3,3,10.0,10.0
+Mostly unsupported example 4,The claim definitely applies to everyone although evidence may be limited.,112,7,2600,37,5,3,3,12.5,12.5
+Mostly unsupported example 5,This online test always gives a diagnosis and possibly replaces evaluation.,950,81,31000,59,5,4,3,11.1,11.1
+Mostly unsupported example 6,The speaker claims certainty while one small point might be reasonable.,188,13,4500,45,5,4,3,0.0,10.0
+Mostly unsupported example 7,Every person will respond identically but the final caution may be valid.,525,47,13800,34,5,3,3,10.0,10.0
+Mostly unsupported example 8,The method definitely prevents ADHD and perhaps improves general wellbeing.,69,4,1050,56,5,4,3,11.1,11.1
+Mostly unsupported example 9,A viral symptom list proves the diagnosis even if one item could be useful.,355,29,8500,42,5,3,3,10.0,10.0
+Mostly unsupported example 10,The universal promise is always true while a minor suggestion may be harmless.,143,10,3400,50,5,4,3,9.1,9.1
+Unsupported ADHD example 1,This product definitely cures every case of ADHD overnight.,1200,110,42000,31,5,5,4,12.5,0.0
+Unsupported ADHD example 2,One behaviour always proves ADHD without any professional assessment.,315,26,7600,44,5,5,4,11.1,0.0
+Unsupported ADHD example 3,Everyone will develop ADHD after using a phone for one week.,680,59,19000,39,5,5,4,10.0,0.0
+Unsupported ADHD example 4,This supplement undeniably removes the condition in sixty seconds.,225,17,5200,46,5,5,4,11.1,0.0
+Unsupported ADHD example 5,A single quiz definitely diagnoses ADHD in every viewer.,1050,95,36000,35,5,5,4,12.5,0.0
+Unsupported ADHD example 6,The speaker says medication always changes personality permanently.,177,12,3900,58,5,5,4,11.1,0.0
+Unsupported ADHD example 7,This secret method will eliminate every symptom immediately.,740,68,21000,43,5,5,4,11.1,0.0
+Unsupported ADHD example 8,Looking at handwriting certainly proves whether somebody has ADHD.,81,5,1300,49,5,5,4,11.1,0.0
+Unsupported ADHD example 9,All attention problems definitely have one identical cause.,560,50,14800,38,5,5,4,12.5,0.0
+Unsupported ADHD example 10,The video claims that one sound always cures ADHD.,194,16,4700,52,5,5,4,11.1,0.0
