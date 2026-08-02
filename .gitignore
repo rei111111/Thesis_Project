@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Downloaded model caches and generated checkpoints
+.cache/
+checkpoints/
+
+# Generated experiment artifacts
+results/predictions/*
+results/metrics/*
+results/tables/*
+results/figures/*
+results/models/*
+
+# Keep output directory structure in version control
+!results/predictions/.gitkeep
+!results/metrics/.gitkeep
+!results/tables/.gitkeep
+!results/figures/.gitkeep
+!results/models/.gitkeep

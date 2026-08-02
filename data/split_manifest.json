@@ -1,0 +1,25 @@
+{
+  "dataset_sha256": "8532b4a80ffdfb52f0723dbed5cff69a8d05ec368149916aa848701259c20d4a",
+  "source_rows": 250,
+  "modelled_rows": 246,
+  "excluded_rows": 4,
+  "training_rows": 196,
+  "heldout_rows": 50,
+  "training_class_distribution": {
+    "1": 92,
+    "2": 33,
+    "3": 57,
+    "4": 14
+  },
+  "heldout_class_distribution": {
+    "1": 24,
+    "2": 8,
+    "3": 14,
+    "4": 4
+  },
+  "splitter": "train_test_split(stratified)",
+  "test_size": 0.2,
+  "seed": 42,
+  "unassigned_rows_are_excluded": true,
+  "duplicate_content_handling": false
+}

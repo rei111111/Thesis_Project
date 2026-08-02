@@ -1,0 +1,26 @@
+{
+  "source_rows": 250,
+  "modelled_rows": 246,
+  "excluded_unassigned_rows": 4,
+  "class_distribution": {
+    "1": 116,
+    "2": 41,
+    "3": 71,
+    "4": 18
+  },
+  "source_columns": [
+    "title",
+    "transcript",
+    "likes",
+    "comments",
+    "views",
+    "duration_sec",
+    "total_claims",
+    "false_claims",
+    "label"
+  ],
+  "author_annotations_recalculated": false,
+  "duplicate_content_handling": false,
+  "derived_columns_written_to_source": [],
+  "dataset_sha256": "8532b4a80ffdfb52f0723dbed5cff69a8d05ec368149916aa848701259c20d4a"
+}

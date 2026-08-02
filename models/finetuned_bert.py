@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import copy 
+import copy
 import random
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,6 +14,10 @@ import pandas as pd
 from sklearn.metrics import cohen_kappa_score
 
 from features.metadata_features import MetadataScaler
+from features.linguistic_features import (
+    DEFAULT_CERTAINTY_TERMS,
+    DEFAULT_HEDGE_TERMS,
+)
 from features.transformer_features import BertVideoDataset
 
 try:
@@ -41,6 +45,7 @@ except ImportError:
 
 TorchModule = nn.Module if nn is not None else object
 
+
 def require_torch() -> None:
     if torch is None or nn is None or DataLoader is None:
         raise ImportError("Install torch before running fine-tuned BERT.")
@@ -59,14 +64,17 @@ def set_random_seed(seed: int) -> None:
         torch.manual_seed(seed)
         if torch.cuda.is_available():
             torch.cuda.manual_seed_all(seed)
+        if hasattr(torch.backends, "cudnn"):
+            torch.backends.cudnn.deterministic = True
+            torch.backends.cudnn.benchmark = False
 
 
 class BertMetadataClassifier(TorchModule):
-    """Bert pooled representation cocatenated with six auxiliary values"""
+    """BERT pooled representation concatenated with derived auxiliary values."""
 
     def __init__(
         self,
-        model_name: str = "bert-baseuncased",
+        model_name: str = "bert-base-uncased",
         metadata_dimension: int = 6,
         num_labels: int = 4,
         dropout: float = 0.1,
@@ -92,8 +100,8 @@ class BertMetadataClassifier(TorchModule):
         class_weights: Any = None,
     ) -> dict[str, Any]:
         encoder_arguments = {
-            "input_ids": input_ids
-            "attention_mask": attention_mask
+            "input_ids": input_ids,
+            "attention_mask": attention_mask,
         }
         if token_type_ids is not None:
             encoder_arguments["token_type_ids"] = token_type_ids
@@ -123,8 +131,9 @@ class BertTrainingResult:
     history: list[dict[str, float]]
     settings: dict[str, Any]
 
+
 def calculate_class_weights(labels: pd.Series, num_labels: int = 4) -> Any:
-    """Return balanced weights for labels encoded as 1 throufh 4. """
+    """Return balanced weights for labels encoded as 1 through 4."""
     require_torch()
     zero_based = labels.astype(int).to_numpy() - 1
     counts = np.bincount(zero_based, minlength=num_labels)
@@ -159,6 +168,7 @@ def _make_loader(
     )
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
+
 def _model_inputs(batch: dict[str, Any], device: Any) -> dict[str, Any]:
     keys = {"input_ids", "attention_mask", "token_type_ids", "metadata", "labels"}
     return {
@@ -166,6 +176,7 @@ def _model_inputs(batch: dict[str, Any], device: Any) -> dict[str, Any]:
         for key, value in batch.items()
         if key in keys
     }
+
 
 def _validation_predictions(
     model: BertMetadataClassifier,
@@ -211,7 +222,12 @@ def train_bert_model(
     set_random_seed(seed)
     active_device = resolve_device(device)
 
-    scaler = MetadataScaler().fit(train_data)
+    lexicons = settings.get("linguistic_lexicons", {})
+    certainty_terms = tuple(
+        lexicons.get("certainty_terms", DEFAULT_CERTAINTY_TERMS)
+    )
+    hedge_terms = tuple(lexicons.get("hedge_terms", DEFAULT_HEDGE_TERMS))
+    scaler = MetadataScaler(certainty_terms, hedge_terms).fit(train_data)
     train_metadata = scaler.transform(train_data)
     train_loader = _make_loader(
         train_data,
@@ -238,7 +254,7 @@ def train_bert_model(
 
     model = BertMetadataClassifier(
         model_name=settings["model_name"],
-        metadata_dimension=6,
+        metadata_dimension=len(scaler.get_feature_names_out()),
         num_labels=int(settings.get("num_labels", 4)),
         dropout=float(settings.get("dropout", 0.1)),
         encoder=encoder,
@@ -362,7 +378,7 @@ def predict_bert(
     with torch.no_grad():
         for batch in loader:
             row_indices.extend(batch["row_index"].cpu().tolist())
-            arguments = _model_inputs(batch, actual device)
+            arguments = _model_inputs(batch, active_device)
             output = model(**arguments)
             batch_probabilities = torch.softmax(output["logits"], dim=1)
             predictions.extend((batch_probabilities.argmax(dim=1) + 1).cpu().tolist())
@@ -393,4 +409,4 @@ def save_bert_artifacts(
     joblib.dump(result.metadata_scaler, directory / "metadata_scaler.joblib")
     result.tokenizer.save_pretrained(directory / "tokenizer")
     pd.DataFrame(result.history).to_csv(directory / "training_history.csv", index=False)
-
+    joblib.dump(result.settings, directory / "training_settings.joblib")

@@ -1,0 +1,177 @@
+version: thesis_v2
+unit: matches_per_100_tokens
+
+# Operational lexical features. Changing these lists creates a new experimental
+# condition and should be recorded before rerunning the models.
+certainty_terms:
+  - absolutely
+  - always
+  - apparently
+  - assuredly
+  - certain
+  - certainly
+  - clear
+  - clearly
+  - conclusively
+  - confirmed
+  - confirm
+  - confirms
+  - definite
+  - definitely
+  - demonstrate
+  - demonstrates
+  - demonstrated
+  - evident
+  - evidently
+  - exactly
+  - fact
+  - factual
+  - firmly
+  - guarantee
+  - guaranteed
+  - indeed
+  - indisputable
+  - indisputably
+  - inevitably
+  - incontestably
+  - indubitably
+  - know
+  - knows
+  - known
+  - manifestly
+  - must
+  - necessarily
+  - need
+  - needs
+  - never
+  - obvious
+  - obviously
+  - plainly
+  - positive
+  - positively
+  - precisely
+  - prove
+  - proved
+  - proven
+  - proves
+  - real
+  - really
+  - sure
+  - surely
+  - "true"
+  - truly
+  - truth
+  - undeniable
+  - undeniably
+  - undoubted
+  - undoubtedly
+  - unmistakable
+  - unquestionable
+  - unquestionably
+  - verified
+  - verify
+  - withoutdoubt
+  - "yes"
+
+hedge_terms:
+  - about
+  - almost
+  - apparent
+  - apparently
+  - appear
+  - appeared
+  - appears
+  - approximately
+  - argue
+  - argued
+  - argues
+  - around
+  - assume
+  - assumed
+  - broadly
+  - certain amount
+  - certain extent
+  - certain level
+  - claim
+  - claimed
+  - claims
+  - could
+  - couldn’t
+  - doubt
+  - doubtful
+  - essentially
+  - estimate
+  - estimated
+  - fairly
+  - feel
+  - feels
+  - felt
+  - frequently
+  - from my perspective
+  - from our perspective
+  - from this perspective
+  - generally
+  - guess
+  - indicate
+  - indicated
+  - indicates
+  - in general
+  - in most cases
+  - in most instances
+  - in my opinon
+  - in my view
+  - in this view
+  - in our opinion
+  - in our view
+  - largely
+  - likely
+  - mainly
+  - may
+  - maybe
+  - might
+  - mostly
+  - often
+  - on the whole
+  - ought
+  - perhaps
+  - plausible
+  - plausibly
+  - possible
+  - possibly
+  - postulate
+  - postulated
+  - postulates
+  - presumable
+  - presumably
+  - probable
+  - probably
+  - quite
+  - rather x
+  - relatively
+  - roughly
+  - seems
+  - should
+  - sometimes
+  - somewhat
+  - suggest
+  - suggested
+  - suggests
+  - suppose
+  - supposed
+  - supposes
+  - suspect
+  - suspects
+  - tend to
+  - tended to
+  - tends to
+  - to my knowledge
+  - typical
+  - typically
+  - uncertain
+  - uncertainly
+  - unclear
+  - unclearly
+  - unlikely
+  - usually
+  - would
+  - wouldn’t

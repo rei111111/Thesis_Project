@@ -4,22 +4,25 @@ data:
   dataset_path: data/dataset.csv
   train_indices_path: data/train_indices.csv
   test_indices_path: data/test_indices.csv
+  excluded_indices_path: data/excluded_indices.csv
+  split_manifest_path: data/split_manifest.json
+  validation_report_path: data/validation_report.json
   target_column: label
-  # Change to 500 when the final dataset is ready. Null permits sample data.
-  expected_rows: null
+  expected_rows: 250
 
 split:
+  # The authors are responsible for resolving repeated source rows before the
+  # definitive thesis run. The code performs ordinary label stratification.
+  seed: 42
   test_size: 0.20
 
 features:
+  linguistic_lexicon_path: configs/linguistic_lexicons.yaml
   tfidf:
     max_features: 300
     ngram_range: [1, 2]
     stop_words: english
-  linguistic_columns:
-    - certainty_score
-    - hedge_score
-  engagement_columns:
+  raw_engagement_columns:
     - likes
     - comments
     - views
@@ -39,4 +42,3 @@ evaluation:
   bootstrap_resamples: 10000
   primary_metric: quadratic_weighted_kappa
   n_jobs: 1
-
