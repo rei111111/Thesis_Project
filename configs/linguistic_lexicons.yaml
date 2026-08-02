@@ -1,77 +1,72 @@
-version: thesis_v2
+version: thesis_v3
 unit: matches_per_100_tokens
 
 # Operational lexical features. Changing these lists creates a new experimental
 # condition and should be recorded before rerunning the models.
 certainty_terms:
-  - absolutely
+  - actually
   - always
-  - apparently
-  - assuredly
+  - believe
+  - believed
+  - believes
+  - beyond doubt
   - certain
   - certainly
   - clear
   - clearly
   - conclusively
-  - confirmed
-  - confirm
-  - confirms
+  - decidedly
   - definite
   - definitely
   - demonstrate
-  - demonstrates
   - demonstrated
+  - demonstrates
+  - doubtless
+  - establish
+  - stablished
   - evident
   - evidently
-  - exactly
-  - fact
-  - factual
-  - firmly
-  - guarantee
-  - guaranteed
+  - find
+  - finds
+  - found
+  - in fact
+  - incontestable
+  - incontestably
+  - incontrovertible
+  - incontrovertibly
   - indeed
   - indisputable
   - indisputably
-  - inevitably
-  - incontestably
-  - indubitably
   - know
-  - knows
   - known
-  - manifestly
   - must
-  - necessarily
-  - need
-  - needs
   - never
+  - no doubt
   - obvious
   - obviously
-  - plainly
-  - positive
-  - positively
-  - precisely
+  - of course
   - prove
   - proved
-  - proven
   - proves
-  - real
+  - realize
+  - realized
+  - realizes
   - really
+  - show
+  - showed
+  - shown
+  - shows
   - sure
   - surely
-  - "true"
+  - think
+  - thinks
+  - thought
   - truly
-  - truth
   - undeniable
   - undeniably
-  - undoubted
+  - undisputedly
   - undoubtedly
-  - unmistakable
-  - unquestionable
-  - unquestionably
-  - verified
-  - verify
-  - withoutdoubt
-  - "yes"
+  - without doubt
 
 hedge_terms:
   - about
