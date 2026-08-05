@@ -1,0 +1,6 @@
+fold,quadratic_weighted_kappa,accuracy,weighted_f1,mean_absolute_error,best_parameters
+1,0.20360360360360363,0.38461538461538464,0.38907758907758905,0.9230769230769231,"{""classifier__max_depth"": 5, ""classifier__min_samples_leaf"": 10}"
+2,-0.008064516129032473,0.375,0.264,1.15,"{""classifier__max_depth"": 3, ""classifier__min_samples_leaf"": 5}"
+3,0.06825938566552914,0.2564102564102564,0.19137159137159135,1.0256410256410255,"{""classifier__max_depth"": 5, ""classifier__min_samples_leaf"": 10}"
+4,0.019230769230769273,0.358974358974359,0.3348311607420919,1.1794871794871795,"{""classifier__max_depth"": 7, ""classifier__min_samples_leaf"": 10}"
+5,0.017857142857142905,0.2564102564102564,0.25869963369963367,1.3333333333333333,"{""classifier__max_depth"": 7, ""classifier__min_samples_leaf"": 5}"

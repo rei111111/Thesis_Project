@@ -1,0 +1,15 @@
+condition,interpretability_level,named_feature_rows,fold_stability_rows,substantive_feature_ranking_allowed,named_auxiliary_inspection_allowed,configuration,model_family,feature_set,experimental_condition,quadratic_weighted_kappa,accuracy,weighted_f1,mean_absolute_error,quadratic_weighted_kappa_rank,accuracy_rank,weighted_f1_rank,mean_absolute_error_rank
+A_LOGISTIC_REGRESSION,inherent_named_features,1200,1504,True,True,A,LOGISTIC_REGRESSION,A,True,0.3708865660085172,0.38,0.39829373814041746,0.82,1,8,3,4
+A_RIDGE,inherent_named_features,1200,1504,True,True,A,RIDGE,A,True,0.22832501134816163,0.44,0.43095516569200776,0.8,7,1,1,1
+A_COMPLEMENT_NB,inherent_named_features,1200,1504,True,True,A,COMPLEMENT_NB,A,True,0.21970004053506276,0.44,0.3921720430107527,0.86,8,1,5,8
+A_DECISION_TREE,inherent_named_features,300,376,True,True,A,DECISION_TREE,A,True,-0.14315863524446004,0.36,0.25437939110070257,1.2,16,11,13,16
+B_LOGISTIC_REGRESSION,inherent_named_features,1208,1512,True,True,B,LOGISTIC_REGRESSION,B,True,0.1862955032119914,0.34,0.33925925925925926,0.92,10,13,9,10
+B_RIDGE,inherent_named_features,1208,1512,True,True,B,RIDGE,B,True,0.13542045868219876,0.28,0.29937334217506634,1.06,11,14,11,12
+B_COMPLEMENT_NB,inherent_named_features,1208,1512,True,True,B,COMPLEMENT_NB,B,True,0.3406830955469088,0.38,0.36661654135338345,0.82,2,8,8,4
+B_DECISION_TREE,inherent_named_features,302,378,True,True,B,DECISION_TREE,B,True,-0.08930500540151254,0.38,0.2636866359447005,1.14,15,8,12,14
+C_LOGISTIC_REGRESSION,inherent_named_features,1224,1528,True,True,C,LOGISTIC_REGRESSION,C,True,0.295173002990175,0.42,0.41280701754385957,0.8,5,3,2,1
+C_RIDGE,inherent_named_features,1224,1528,True,True,C,RIDGE,C,True,0.23413566739606118,0.4,0.3936431623931624,0.84,6,4,4,6
+C_COMPLEMENT_NB,inherent_named_features,1224,1528,True,True,C,COMPLEMENT_NB,C,True,0.33065595716198126,0.4,0.3794736842105263,0.8,3,4,7,1
+C_DECISION_TREE,inherent_named_features,306,382,True,True,C,DECISION_TREE,C,True,0.10489157841654051,0.16,0.09732600732600732,1.02,12,16,16,11
+D_FROZEN_MINILM,named_auxiliary_coefficients_with_unnamed_text_embedding,24,24,False,True,D,FROZEN_MINILM,,True,0.19687930243230833,0.4,0.3873638344226579,0.84,9,4,6,6
+E_FINETUNED_BERT,opaque_end_to_end_transformer,0,0,False,False,E,FINETUNED_BERT,,True,0.30287430287430295,0.36,0.33553884711779447,0.86,4,11,10,8

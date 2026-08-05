@@ -1,0 +1,41 @@
+{
+  "source_rows": 250,
+  "labelled_rows_in_rq1": 246,
+  "training_rows_in_analysis": 196,
+  "heldout_rows_in_analysis": 50,
+  "source_columns": [
+    "title",
+    "transcript",
+    "likes",
+    "comments",
+    "views",
+    "duration_sec",
+    "total_claims",
+    "false_claims",
+    "label"
+  ],
+  "source_has_video_id": false,
+  "source_has_platform": false,
+  "derived_linguistic_features": [
+    "certainty_score",
+    "hedge_score"
+  ],
+  "experimental_condition_count": 14,
+  "conditions": [
+    "A_LOGISTIC_REGRESSION",
+    "A_RIDGE",
+    "A_COMPLEMENT_NB",
+    "A_DECISION_TREE",
+    "B_LOGISTIC_REGRESSION",
+    "B_RIDGE",
+    "B_COMPLEMENT_NB",
+    "B_DECISION_TREE",
+    "C_LOGISTIC_REGRESSION",
+    "C_RIDGE",
+    "C_COMPLEMENT_NB",
+    "C_DECISION_TREE",
+    "D_FROZEN_MINILM",
+    "E_FINETUNED_BERT"
+  ],
+  "excluded_total_claims": []
+}
