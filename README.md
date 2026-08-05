@@ -1,201 +1,228 @@
 # ADHD Short-Video Misinformation Classification
 
-This repository contains the authors' YouTube Shorts material and the complete
-machine-learning pipeline for the current 250-video ADHD dataset. Run commands
-from the repository root (`Thesis_Project`).
+This repository implements the complete computational study needed for RQ1,
+RQ2, and RQ3: fourteen experimental conditions, two contextual baselines,
+global and local interpretability exports, fold-stability analysis,
+paired uncertainty estimates, error analysis, and a pre-specified sensitivity
+run.
 
-## Implemented model families
+## Source CSV contract
 
-1. **Ridge Classifier**, evaluated under three feature conditions:
-   - A: TF-IDF text only;
-   - B: TF-IDF plus internally derived certainty and hedge rates;
-   - C: condition B plus engagement metadata and video duration.
-2. **Frozen MiniLM** (`sentence-transformers/all-MiniLM-L6-v2`): a frozen
-   384-dimensional sentence embedding joined to six auxiliary features and
-   classified with balanced multinomial Logistic Regression.
-3. **Fine-tuned BERT** (`bert-base-uncased`): the transformer is fine-tuned end
-   to end, and its pooled text representation is joined to the same six
-   auxiliary features before a four-class neural classification head.
-
-These are three model families and five reported experimental conditions:
-`A_RIDGE`, `B_RIDGE`, `C_RIDGE`, `D_FROZEN_MINILM`, and
-`E_FINETUNED_BERT`.
-
-## Canonical dataset
-
-`data/dataset.csv` is the file read by every training command. In this package,
-the uploaded 250-video file has replaced the former 40-row mock dataset.
-`data/adhd_misinformation_dataset.csv` is retained because it was part of the
-uploaded project; it is currently byte-for-byte identical to `dataset.csv` but
-is not read by the model pipeline.
-
-The canonical CSV has exactly these nine author-provided columns, in order:
+`data/dataset.csv` contains exactly these nine columns, in this order:
 
 ```text
 title,transcript,likes,comments,views,duration_sec,total_claims,false_claims,label
 ```
 
-| Columns | Role |
+There is no source `video_id` column and no source `platform` column. The code
+inserts a zero-based `row_index` in memory and in split/prediction artifacts so
+rows can be audited without expanding the source CSV.
+
+| Field | Modelling role |
 |---|---|
 | `title`, `transcript` | Raw text predictors |
-| `likes`, `comments`, `views`, `duration_sec` | Raw numeric predictors for conditions C, D, and E |
-| `total_claims`, `false_claims` | Author annotation/audit fields; never predictors |
-| `label` | Supervised target; never a predictor |
+| `likes`, `comments`, `views`, `duration_sec` | Raw predictors in C--E |
+| `total_claims`, `false_claims` | Annotation-audit fields; prohibited predictors |
+| `label` | Ordinal target, 1--4 |
 
-`certainty_score` and `hedge_score` are deliberately absent from the CSV. The
-code derives `certainty_rate` and `hedge_rate` from `title + transcript` inside
-the fitted feature pipelines. The fixed operational lists are stored in
-`configs/linguistic_lexicons.yaml`, and matching fallback lists are stored in
-`features/linguistic_features.py`.
+The only handcrafted linguistic features are `certainty_score` and
+`hedge_score`. They are matches per 100 word tokens, derived from title plus
+transcript inside each fitted pipeline. They are not CSV columns. Their fixed,
+validated, non-overlapping lexicons are stored in
+`configs/linguistic_lexicons.yaml`.
 
-## Author-owned annotation correctness
+## Label validation
 
-The preparation code trusts the authors' annotations. It does **not**:
+The code checks, but never invents or fact-checks, the manual annotations:
 
-- recalculate a label from `total_claims` and `false_claims`;
-- alter, repair, deduplicate, reorder, or rewrite source rows;
-- detect or group repeated transcripts;
-- add derived feature columns to the CSV.
-
-It checks only the runtime contract needed by the models: exact columns, the
-expected row count, nonblank text, usable numeric predictor metadata, and
-labels that are either blank or integers 1–4. The current file has 250 source
-rows, 246 assigned labels, and four blank labels. The four blank-label rows are
-retained in the source CSV and recorded in `data/excluded_indices.csv`, but they
-cannot be used for supervised training or evaluation.
-
-The authors will resolve repeated CSV entries before the definitive thesis run.
-After any row is added, removed, reordered, or edited, regenerate all split
-files before training:
-
-```bash
-python -m scripts.prepare_data --overwrite-split
+```text
+supported_ratio = (total_claims - false_claims) / total_claims
 ```
 
-## Feature conditions
+| Ratio | Label |
+|---|---:|
+| 0.80--1.00 | 1, Accurate |
+| 0.60--<0.80 | 2, Slightly misleading |
+| 0.16--<0.60 | 3, Moderately misleading |
+| 0.00--<0.16 | 4, Highly misleading |
 
-| Condition | Input representation | Estimator |
-|---|---|---|
-| A-Ridge | TF-IDF of title + transcript | Balanced Ridge Classifier |
-| B-Ridge | A + certainty/hedge rates | Balanced Ridge Classifier |
-| C-Ridge | B + log-scaled likes, comments, views, duration | Balanced Ridge Classifier |
-| D | Frozen MiniLM embedding + six auxiliary values | Balanced Logistic Regression |
-| E | Fine-tuned BERT representation + six auxiliary values | Four-output neural head |
+The packaged YouTube file currently has 250 rows, 246 assigned labels, and four
+retained but unassigned rows. When the separate 250-video contribution is
+appended, replace `data/dataset.csv`, set `data.expected_rows` to `500` (or pass
+`--expected-rows 500`), review the combined file, and create a new frozen split.
+All fourteen conditions must then be rerun together; metrics from separate
+250-video runs must not be combined.
 
-The six auxiliary values used by D and E are the two internally derived lexical
-rates plus the four raw numeric fields. Their scalers are fitted only on the
-current training portion of each split or fold.
+The current 250-video subset contains one manual annotation record per video.
+It was annotated by one person, so no double-coding or inter-annotator-agreement
+workflow is part of this repository.
 
-## Splitting and evaluation
+## Fourteen conditions
 
-- The 246 labelled rows are divided with an ordinary label-stratified 80/20
-  split using seed 42: 196 training rows and 50 held-out rows.
-- Split files contain stable zero-based row positions from `dataset.csv`.
-- Duplicate-content handling is intentionally not implemented. If repeated
-  rows remain, ordinary stratification may place them in different subsets.
-- Ridge and MiniLM use five-fold outer stratified cross-validation on the
-  training set. Three-fold inner stratified cross-validation selects their
-  hyperparameters.
-- BERT uses five-fold outer stratified cross-validation. Within each outer
-  training fold, a label-stratified training-only subset controls early
-  stopping. The median selected epoch is used for the final fit.
-- TF-IDF vocabularies, metadata scalers, feature scalers, class weights, and
-  hyperparameter searches are fitted without access to their evaluation rows.
-- The final held-out set is evaluated once per condition.
-- Metrics include quadratic weighted Cohen's kappa, accuracy, weighted F1,
-  mean absolute error, per-class precision/recall/F1, and a four-class
-  confusion matrix.
-- Pairwise model comparisons use aligned, label-stratified bootstrap intervals.
+| Configuration | Features | Models | Count |
+|---|---|---|---:|
+| A | TF-IDF title + transcript | Logistic Regression, Ridge, CNB, Decision Tree | 4 |
+| B | A + certainty and hedge scores | Same four models | 4 |
+| C | B + log-transformed engagement and duration | Same four models | 4 |
+| D | Frozen 384-dimensional MiniLM + six named auxiliary values | Logistic Regression | 1 |
+| E | Fine-tuned BERT pooled representation + six named auxiliary values | Neural head | 1 |
 
-## Setup
+Logistic Regression and Ridge use standard-scaled named numeric features. CNB
+uses fold-local clipped Min--Max scaling so every input remains non-negative.
+The Decision Tree receives log-transformed but otherwise unstandardised numeric
+features. The two baselines are reported separately and are not experimental
+conditions.
 
-Python 3.10 or newer is recommended.
+## Leakage and evaluation safeguards
+
+- The source checksum and all three split-index checksums are frozen.
+- Exact normalised-transcript duplicates remain in one held-out/outer/inner
+  group.
+- The TF-IDF vocabulary, scalers, class weighting, and model selection are fit
+  using training rows only.
+- All classical conditions and MiniLM use five grouped outer folds and three
+  grouped inner folds, with QWK as the selection metric.
+- BERT uses the same five outer folds and a grouped training-only early-stopping
+  subset. The median selected epoch is used for final fitting.
+- The aligned held-out rows are evaluated once per finalized run.
+- Stored held-out files are write-protected unless an intentional rerun uses
+  `--overwrite-heldout`.
+
+## Interpretability outputs
+
+Every A--C final fit exports all named model evidence, not just a model label:
+
+- Logistic Regression and Ridge: all class coefficients, positive/negative
+  rankings, intercepts, and top per-video feature contributions;
+- Complement Naive Bayes: all class complement weights, rankings, and
+  per-video weighted contributions;
+- Decision Tree: all feature importances, a node table, exact text rules, a
+  rendered tree, and the precise rule path for each held-out prediction;
+- all four families: outer-fold feature tables and stability summaries that
+  count a feature missing from a fold vocabulary as zero;
+- Configuration-C cross-model consensus tables for textual and named features;
+- MiniLM's six named auxiliary coefficients and their fold stability are
+  exported separately, while its 384 unnamed embedding dimensions are excluded
+  from substantive ranking;
+- a performance/interpretability table that explicitly marks MiniLM dimensions
+  as unnamed and fine-tuned BERT as opaque under the approved design.
+
+RQ2 also receives class descriptives and training-only Spearman/Kruskal
+association statistics for the two linguistic scores and four log-transformed
+metadata values, including bootstrap intervals and Holm-adjusted p-values.
+
+## Installation
+
+Run from the project root:
 
 ```bash
 python -m venv .venv
 ```
 
-Activate the environment, then install dependencies:
+Activate the environment and install:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-MiniLM and BERT download pretrained weights on first use. Fine-tuned BERT is
-practical on a CUDA-capable GPU; CPU execution is supported but can be slow.
+then
 
-## Execution workflow
+```bash
+python -m pip install --no-cache-dir torch==2.12.1 \
+  --index-url https://download.pytorch.org/whl/cu126
+```
 
-### 1. Check the CSV and create or verify split files
+Transformer downloads require internet access. Fine-tuned BERT is intended to
+run on a CUDA-capable GPU.
+
+## Reproducible workflow
+
+Validate the current file and verify the frozen split:
 
 ```bash
 python -m scripts.prepare_data
 ```
 
-If `dataset.csv` intentionally changed:
+After an intentional dataset change, create a new split:
 
 ```bash
-python -m scripts.prepare_data --overwrite-split
+python -m scripts.prepare_data --expected-rows 250 --overwrite-split
 ```
 
-### 2. Run automated tests
+Train all fourteen conditions and both baselines:
 
 ```bash
-python -m unittest discover -s testing -v
-```
-
-### 3. Train one family or all families
-
-```bash
-python -m scripts.train_models --model ridge
-python -m scripts.train_models --model minilm
-python -m scripts.train_models --model bert --device cuda
 python -m scripts.train_models --model all --device cuda
 ```
 
-Held-out prediction files are write-once by default. A justified rerun requires
-`--overwrite-heldout`; do not use that flag merely to tune against the held-out
-set.
+Families can also be run separately:
 
-### 4. Build final tables and figures
+```bash
+python -m scripts.train_models --model logistic
+python -m scripts.train_models --model ridge
+python -m scripts.train_models --model cnb
+python -m scripts.train_models --model tree
+python -m scripts.train_models --model baselines
+python -m scripts.train_models --model minilm
+python -m scripts.train_models --model bert --device cuda
+```
 
-After all five condition prediction files exist:
+Generate the complete result artifact set only after every prediction file is
+present:
 
 ```bash
 python -m scripts.generate_results
 ```
 
-## Generated outputs
+# This is useless, do not run this
 
-| Location | Contents |
-|---|---|
-| `data/validation_report.json` | Source schema, row, and class summary |
-| `data/split_manifest.json` | Dataset checksum, split method, seed, and counts |
-| `data/train_indices.csv` | 196 training row positions |
-| `data/test_indices.csv` | 50 held-out row positions |
-| `data/excluded_indices.csv` | Four unassigned row positions |
-| `results/metrics/` | Cross-validation and held-out metrics |
-| `results/predictions/` | Row-aligned CV and held-out predictions |
-| `results/models/` | Fitted estimators, BERT state, tokenizer, and scalers |
-| `results/tables/` | Final performance and bootstrap-comparison tables |
-| `results/figures/` | Confusion-matrix figures |
+Run the pre-specified two-claim sensitivity analysis in its own output tree:
 
-No trained model, held-out prediction, or claimed thesis performance result is
-prepackaged. Those artifacts are produced only when the authors run the
-documented training commands.
+```bash
+python -m scripts.run_sensitivity --device cuda
+```
 
-## Project layout
+After the primary and sensitivity outputs both exist, verify the entire
+non-LaTeX study artifact set and every recorded checksum:
+
+
+# This is useless don't run this either
+
+```bash
+python -m scripts.validate_study_outputs
+```
+
+## Outputs
+
+Primary outputs are written under `results/`:
 
 ```text
-Thesis_Project/
-├── YT_Shorts_wm222dk_transcription/  authors' source and fact-check material
-├── raime_transcription/              second-author source area
-├── configs/                          experiment, BERT, and lexicon settings
-├── data/                             canonical CSV and saved row splits
-├── features/                         text, linguistic, metadata, transformer input
-├── models/                           Ridge, frozen MiniLM, fine-tuned BERT
-├── evaluation/                       cross-validation, metrics, final evaluation
-├── scripts/                          command-line workflow
-├── testing/                          dependency-light automated tests
-└── results/                          generated models, metrics, predictions, tables
+metrics/                 fold and held-out metrics, population audit
+predictions/             aligned outer-fold and held-out predictions
+models/                  selected fitted estimators and BERT artifacts
+interpretability/        weights, stability, rules, paths, contributions
+feature_associations/    named-feature rows, descriptives, statistics
+tables/                  RQ1--RQ3 summaries, ablations, errors, bootstraps
+figures/                 confusion matrices, class distribution, trees
+reproducibility/         commands, hashes, packages, hardware, seeds
+results_manifest.json    checksums and completeness contract
 ```
+
+The generator rejects missing conditions, unexpected stale prediction files,
+misaligned rows, inconsistent true labels, missing fold metrics, and missing
+interpretability artifacts.
+
+## Verification
+
+Run the dependency-light suite:
+
+
+# Don't worry if a few things fail
+
+```bash
+python -m unittest discover -s testing -v
+```
+
+The BERT tensor test activates automatically when PyTorch is installed. See
+`VERIFICATION.md` and `IMPLEMENTATION_MANIFEST.md` for the verified state and
+the exact file-level change list.

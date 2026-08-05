@@ -1,0 +1,81 @@
+condition,fold,class_label,feature_index,feature,feature_group,weight_type,weight,absolute_weight,direction,absolute_rank,positive_rank,negative_rank,ranking_view
+A_COMPLEMENT_NB,final_training_fit,1,207,quickly,textual,complement_log_weight,5.83272524175732,5.83272524175732,positive,1,1,300,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,166,management,textual,complement_log_weight,5.82965265368727,5.82965265368727,positive,2,2,299,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,104,function,textual,complement_log_weight,5.8291523397479486,5.8291523397479486,positive,3,3,298,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,165,manage,textual,complement_log_weight,5.825254946082127,5.825254946082127,positive,4,4,297,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,281,understanding,textual,complement_log_weight,5.823289880722444,5.823289880722444,positive,5,5,296,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,20,answer sep,textual,complement_log_weight,5.821434797879157,5.821434797879157,positive,6,6,295,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,90,experts answer,textual,complement_log_weight,5.820571646922143,5.820571646922143,positive,7,7,294,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,229,sign,textual,complement_log_weight,5.8188449628137375,5.8188449628137375,positive,8,8,293,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,28,behaviors,textual,complement_log_weight,5.816659718355212,5.816659718355212,positive,9,9,292,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,112,harder,textual,complement_log_weight,5.813781528633896,5.813781528633896,positive,10,10,291,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,29,best,textual,complement_log_weight,5.8101956995191895,5.8101956995191895,positive,11,11,290,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,244,struggling,textual,complement_log_weight,5.8096407770440015,5.8096407770440015,positive,12,12,289,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,46,condition,textual,complement_log_weight,5.8076926784196,5.8076926784196,positive,13,13,288,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,124,impact,textual,complement_log_weight,5.8065431988112115,5.8065431988112115,positive,14,14,287,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,114,health,textual,complement_log_weight,5.806360124293103,5.806360124293103,positive,15,15,286,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,89,experts,textual,complement_log_weight,5.805972666637712,5.805972666637712,positive,16,16,285,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,241,structure,textual,complement_log_weight,5.8057706210679045,5.8057706210679045,positive,17,17,284,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,7,adhd autism,textual,complement_log_weight,5.802014198477808,5.802014198477808,positive,18,18,283,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,199,poor,textual,complement_log_weight,5.801037664864733,5.801037664864733,positive,19,19,282,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,1,172,meds,textual,complement_log_weight,5.800563914990101,5.800563914990101,positive,20,20,281,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,60,differently,textual,complement_log_weight,5.86257110747716,5.86257110747716,positive,1,1,300,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,298,इपर,textual,complement_log_weight,5.86005797951697,5.86005797951697,positive,2,2,298,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,299,एक,textual,complement_log_weight,5.86005797951697,5.86005797951697,positive,2,2,298,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,76,eat,textual,complement_log_weight,5.847073748347297,5.847073748347297,positive,4,4,297,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,152,little bit,textual,complement_log_weight,5.8413856331800185,5.8413856331800185,positive,5,5,296,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,99,follow,textual,complement_log_weight,5.839427989423423,5.839427989423423,positive,6,6,295,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,77,eating,textual,complement_log_weight,5.838085473338144,5.838085473338144,positive,7,7,294,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,18,affects,textual,complement_log_weight,5.827044357706477,5.827044357706477,positive,8,8,293,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,246,stuff,textual,complement_log_weight,5.826078568781928,5.826078568781928,positive,9,9,292,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,55,diagnostic,textual,complement_log_weight,5.824151442118072,5.824151442118072,positive,10,10,291,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,134,intense,textual,complement_log_weight,5.823883337337859,5.823883337337859,positive,11,11,290,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,92,explained,textual,complement_log_weight,5.821310166845545,5.821310166845545,positive,12,12,289,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,139,kid,textual,complement_log_weight,5.820764149303816,5.820764149303816,positive,13,13,288,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,28,behaviors,textual,complement_log_weight,5.819968858308165,5.819968858308165,positive,14,14,287,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,143,lack,textual,complement_log_weight,5.819723255241315,5.819723255241315,positive,15,15,286,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,169,means,textual,complement_log_weight,5.817751302996869,5.817751302996869,positive,16,16,285,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,279,unable,textual,complement_log_weight,5.8176706931396165,5.8176706931396165,positive,17,17,284,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,126,improve,textual,complement_log_weight,5.816874475368136,5.816874475368136,positive,18,18,283,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,174,mind,textual,complement_log_weight,5.816740004726163,5.816740004726163,positive,19,19,282,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,2,15,adhd women,textual,complement_log_weight,5.816393153401833,5.816393153401833,positive,20,20,281,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,147,levels,textual,complement_log_weight,5.851203158736502,5.851203158736502,positive,1,1,300,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,36,called,textual,complement_log_weight,5.848011958355268,5.848011958355268,positive,2,2,299,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,182,neurotypical person,textual,complement_log_weight,5.844708605828646,5.844708605828646,positive,3,3,298,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,293,works,textual,complement_log_weight,5.837683253986176,5.837683253986176,positive,4,4,297,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,117,helpful,textual,complement_log_weight,5.83212361902861,5.83212361902861,positive,5,5,296,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,91,explain,textual,complement_log_weight,5.831546956799151,5.831546956799151,positive,6,6,295,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,179,natural,textual,complement_log_weight,5.82921329104277,5.82921329104277,positive,7,7,294,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,160,low,textual,complement_log_weight,5.829191936844112,5.829191936844112,positive,8,8,293,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,294,world,textual,complement_log_weight,5.828381236973397,5.828381236973397,positive,9,9,292,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,181,neurotypical,textual,complement_log_weight,5.826588857653609,5.826588857653609,positive,10,10,291,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,198,point,textual,complement_log_weight,5.824449555695086,5.824449555695086,positive,11,11,290,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,246,stuff,textual,complement_log_weight,5.824289884694054,5.824289884694054,positive,12,12,289,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,76,eat,textual,complement_log_weight,5.818566570067464,5.818566570067464,positive,13,13,288,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,101,foods,textual,complement_log_weight,5.817454702169835,5.817454702169835,positive,14,14,287,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,110,happens,textual,complement_log_weight,5.817251774294336,5.817251774294336,positive,15,15,286,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,268,treat,textual,complement_log_weight,5.8158576227504,5.8158576227504,positive,16,16,285,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,15,adhd women,textual,complement_log_weight,5.815582204473342,5.815582204473342,positive,17,17,284,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,33,body,textual,complement_log_weight,5.8133915403944965,5.8133915403944965,positive,18,18,283,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,174,mind,textual,complement_log_weight,5.81115023656265,5.81115023656265,positive,19,19,282,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,3,85,example,textual,complement_log_weight,5.811146808740331,5.811146808740331,positive,20,20,281,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,295,wrong,textual,complement_log_weight,5.857336414416908,5.857336414416908,positive,1,1,300,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,76,eat,textual,complement_log_weight,5.854330578369254,5.854330578369254,positive,2,2,299,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,103,friend,textual,complement_log_weight,5.8512770972771175,5.8512770972771175,positive,3,3,298,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,120,highly,textual,complement_log_weight,5.848086588905986,5.848086588905986,positive,4,4,297,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,192,pay attention,textual,complement_log_weight,5.846436607626893,5.846436607626893,positive,5,5,296,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,91,explain,textual,complement_log_weight,5.842234662742321,5.842234662742321,positive,6,6,295,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,26,bad,textual,complement_log_weight,5.838587060384309,5.838587060384309,positive,7,7,294,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,210,recommend,textual,complement_log_weight,5.837564969046205,5.837564969046205,positive,8,8,293,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,109,great,textual,complement_log_weight,5.832321172660864,5.832321172660864,positive,9,9,292,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,38,certain,textual,complement_log_weight,5.827165194895698,5.827165194895698,positive,10,10,291,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,206,psychiatrist,textual,complement_log_weight,5.827160867249727,5.827160867249727,positive,11,11,290,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,246,stuff,textual,complement_log_weight,5.824116749263567,5.824116749263567,positive,12,12,289,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,77,eating,textual,complement_log_weight,5.822973115464379,5.822973115464379,positive,13,13,288,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,28,behaviors,textual,complement_log_weight,5.822728431267987,5.822728431267987,positive,14,14,287,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,191,pay,textual,complement_log_weight,5.821200474892619,5.821200474892619,positive,15,15,286,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,200,potential,textual,complement_log_weight,5.820909421552545,5.820909421552545,positive,16,16,285,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,294,world,textual,complement_log_weight,5.820294388767506,5.820294388767506,positive,17,17,284,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,60,differently,textual,complement_log_weight,5.819513373268672,5.819513373268672,positive,18,18,283,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,94,family,textual,complement_log_weight,5.816705245403092,5.816705245403092,positive,19,19,282,strongest_weight
+A_COMPLEMENT_NB,final_training_fit,4,267,times,textual,complement_log_weight,5.815029874233726,5.815029874233726,positive,20,20,281,strongest_weight

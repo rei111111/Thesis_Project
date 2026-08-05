@@ -1,4 +1,4 @@
-version: thesis_v3
+version: thesis_v3_certainty_hedge_only
 unit: matches_per_100_tokens
 
 # Operational lexical features. Changing these lists creates a new experimental

@@ -19,68 +19,68 @@ from sklearn.base import BaseEstimator, TransformerMixin
 # a new experiment and must be reported.
 DEFAULT_CERTAINTY_TERMS = (
     "absolutely",
-    "actually"
-    "always"
-    "believe"
-    "believed"
-    "believes"
-    "beyond doubt"
-    "certain"
-    "certainly"
-    "clear"
-     "clearly"
-     "conclusively"
-     "decidedly"
-     "definite"
-     "definitely"
-     "demonstrate"
-     "demonstrated"
-     "demonstrates"
-     "doubtless"
-     "establish"
-     "established"
-     "evident"
-     "evidently"
-     "find"
-     "finds"
-     "found"
-     "in fact"
-     "incontestable"
-     "incontestably"
-     "incontrovertible"
-     "incontrovertibly"
-     "indeed"
-     "indisputable"
-     "indisputably"
-     "know"
-     "known"
-     "never"
-     "no doubt"
-     "obvious"
-     "obviously"
-     "of course"
-     "prove"
-     "proved"
-     "proves"
-     "realize"
-     "realized"
-     "realizes"
-     "really"
-     "show"
-     "showed"
-     "shown"
-     "shows"
-     "sure"
-     "surely"
-     "think"
-     "thinks"
-     "thought"
-     "truly"
-     "undeniable"
-     "undeniably"
-     "undisputedly"
-     "undoubtedly"
-     "without doubt"
+    "actually",
+    "always",
+    "believe",
+    "believed",
+    "believes",
+    "beyond doubt",
+    "certain",
+    "certainly",
+    "clear",
+    "clearly",
+    "conclusively",
+    "decidedly",
+    "definite",
+    "definitely",
+    "demonstrate",
+    "demonstrated",
+    "demonstrates",
+    "doubtless",
+    "establish",
+    "established",
+    "evident",
+    "evidently",
+    "find",
+    "finds",
+    "found",
+    "in fact",
+    "incontestable",
+    "incontestably",
+    "incontrovertible",
+    "incontrovertibly",
+    "indeed",
+    "indisputable",
+    "indisputably",
+    "know",
+    "known",
+    "never",
+    "no doubt",
+    "obvious",
+    "obviously",
+    "of course",
+    "prove",
+    "proved",
+    "proves",
+    "realize",
+    "realized",
+    "realizes",
+    "really",
+    "show",
+    "showed",
+    "shown",
+    "shows",
+    "sure",
+    "surely",
+    "think",
+    "thinks",
+    "thought",
+    "truly",
+    "undeniable",
+    "undeniably",
+    "undisputedly",
+    "undoubtedly",
+    "without doubt",
 )
 
 DEFAULT_HEDGE_TERMS = (
@@ -187,7 +187,7 @@ DEFAULT_HEDGE_TERMS = (
     "wouldn’t",
 )
 
-DERIVED_LINGUISTIC_FEATURES = ("certainty_rate", "hedge_rate")
+DERIVED_LINGUISTIC_FEATURES = ("certainty_score", "hedge_score")
 
 TOKEN_PATTERN = re.compile(r"[A-Za-z]+(?:'[A-Za-z]+)?")
 
@@ -232,6 +232,43 @@ def calculate_linguistic_scores(
     certainty = score_per_100_tokens(text, certainty_terms)
     hedge = score_per_100_tokens(text, hedge_terms)
     return certainty, hedge
+
+
+def validate_lexicons(
+    certainty_terms: Iterable[str],
+    hedge_terms: Iterable[str],
+) -> dict[str, object]:
+    """Validate and describe the two versioned operational lexicons.
+
+    A term occurring in both lists would be counted once as certainty and once
+    as hedging, which would make the two named features needlessly ambiguous.
+    The experiment therefore rejects overlaps instead of silently double
+    counting them.
+    """
+    certainty = tuple(str(term).strip().lower() for term in certainty_terms)
+    hedge = tuple(str(term).strip().lower() for term in hedge_terms)
+    if not certainty or not hedge:
+        raise ValueError("Both linguistic lexicons must contain terms.")
+    if any(not term for term in certainty + hedge):
+        raise ValueError("Linguistic lexicons cannot contain blank terms.")
+    certainty_duplicates = sorted(
+        term for term in set(certainty) if certainty.count(term) > 1
+    )
+    hedge_duplicates = sorted(term for term in set(hedge) if hedge.count(term) > 1)
+    overlap = sorted(set(certainty) & set(hedge))
+    if certainty_duplicates or hedge_duplicates or overlap:
+        raise ValueError(
+            "Linguistic lexicons must be disjoint and duplicate-free. "
+            f"certainty duplicates={certainty_duplicates}; "
+            f"hedge duplicates={hedge_duplicates}; overlap={overlap}."
+        )
+    return {
+        "certainty_term_count": len(certainty),
+        "hedge_term_count": len(hedge),
+        "overlap": overlap,
+        "unit": "matches_per_100_word_tokens",
+        "feature_names": list(DERIVED_LINGUISTIC_FEATURES),
+    }
 
 
 class LinguisticFeatureExtractor(BaseEstimator, TransformerMixin):

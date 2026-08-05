@@ -3,18 +3,19 @@ from __future__ import annotations
 import unittest
 
 import numpy as np
+import pandas as pd
 
 from evaluation.cross_validation import run_nested_cross_validation
 from evaluation.metrics import (
+    bootstrap_many_conditions,
     calculate_metrics,
     paired_stratified_bootstrap,
 )
-from models.frozen_minilm import FrozenMiniLMClassifier, minilm_parameter_grid
 from models.ridge_classifier import (
     build_ridge_classifier,
     ridge_parameter_grid,
 )
-from testing.test_models import FakeSentenceEncoder, model_frame
+from testing.test_models import model_frame
 
 
 class EvaluationTests(unittest.TestCase):
@@ -43,31 +44,25 @@ class EvaluationTests(unittest.TestCase):
         )
         self.assertEqual(len(result.fold_metrics), 3)
 
-    def test_outer_folds_are_label_stratified(self) -> None:
-        data = model_frame(rows_per_class=6)
+    def test_duplicate_transcripts_never_cross_outer_folds(self) -> None:
+        original = model_frame(rows_per_class=6)
+        duplicate = original.iloc[[0]].copy()
+        duplicate["row_index"] = original["row_index"].max() + 1
+        combined = pd.concat([original, duplicate], ignore_index=True)
         result = run_nested_cross_validation(
             estimator=build_ridge_classifier("A", max_features=50),
             parameter_grid=ridge_parameter_grid([1.0]),
-            data=data,
+            data=combined,
             outer_folds=3,
             inner_folds=2,
             seed=7,
         )
-        counts = result.predictions.groupby(["fold", "true_label"]).size()
-        self.assertTrue((counts == 2).all())
-
-    def test_nested_minilm_path_accepts_frozen_encoder(self) -> None:
-        data = model_frame(rows_per_class=4)
-        result = run_nested_cross_validation(
-            estimator=FrozenMiniLMClassifier(encoder=FakeSentenceEncoder()),
-            parameter_grid=minilm_parameter_grid([0.5, 1.0]),
-            data=data,
-            outer_folds=2,
-            inner_folds=2,
-            seed=11,
-        )
-        self.assertEqual(len(result.predictions), len(data))
-        self.assertEqual(len(result.best_parameters), 2)
+        duplicated = result.predictions[
+            result.predictions["row_index"].isin(
+                [original.iloc[0]["row_index"], duplicate.iloc[0]["row_index"]]
+            )
+        ]
+        self.assertEqual(duplicated["fold"].nunique(), 1)
 
     def test_paired_bootstrap_detects_better_predictions(self) -> None:
         labels = np.tile([1, 2, 3, 4], 5)
@@ -81,6 +76,19 @@ class EvaluationTests(unittest.TestCase):
             seed=42,
         )
         self.assertGreater(comparison["observed_difference"], 0)
+
+    def test_shared_bootstrap_returns_every_metric_and_pair(self) -> None:
+        labels = np.tile([1, 2, 3, 4], 3)
+        intervals, differences = bootstrap_many_conditions(
+            labels,
+            {"perfect": labels, "shifted": np.roll(labels, 1)},
+            resamples=30,
+            seed=3,
+        )
+        self.assertEqual(len(intervals), 8)
+        self.assertEqual(len(differences), 4)
+        qwk = next(row for row in differences if row["metric"] == "quadratic_weighted_kappa")
+        self.assertGreater(qwk["observed_a_minus_b"], 0)
 
 
 if __name__ == "__main__":

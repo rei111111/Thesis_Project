@@ -15,7 +15,7 @@ from features.linguistic_features import (
     DEFAULT_CERTAINTY_TERMS,
     DEFAULT_HEDGE_TERMS,
 )
-from features.transformer_features import encode_minilm
+from features.transformer_features import encode_minilm, load_minilm_encoder
 
 
 class FrozenMiniLMClassifier(ClassifierMixin, BaseEstimator):
@@ -44,12 +44,23 @@ class FrozenMiniLMClassifier(ClassifierMixin, BaseEstimator):
         self.hedge_terms = hedge_terms
 
     def _build_matrix(self, data: pd.DataFrame, fit_scaler: bool) -> np.ndarray:
+        active_encoder = self.encoder or load_minilm_encoder(
+            self.model_name,
+            self.device,
+        )
+        if fit_scaler:
+            first_module = None
+            if hasattr(active_encoder, "_first_module"):
+                first_module = active_encoder._first_module()
+            auto_model = getattr(first_module, "auto_model", None)
+            config = getattr(auto_model, "config", None)
+            self.model_revision_ = getattr(config, "_commit_hash", None)
         embeddings = encode_minilm(
             data=data,
             model_name=self.model_name,
             batch_size=self.batch_size,
             device=self.device,
-            encoder=self.encoder,
+            encoder=active_encoder,
         )
         if fit_scaler:
             self.metadata_scaler_ = MetadataScaler(

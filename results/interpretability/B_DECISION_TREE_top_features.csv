@@ -1,0 +1,21 @@
+condition,fold,class_label,feature_index,feature,feature_group,weight_type,weight,absolute_weight,direction,absolute_rank,positive_rank,negative_rank,ranking_view
+B_DECISION_TREE,final_training_fit,all,285,ve,textual,gini_importance,0.2660706707837808,0.2660706707837808,positive,1,1,302,strongest_weight
+B_DECISION_TREE,final_training_fit,all,33,body,textual,gini_importance,0.12613903763785578,0.12613903763785578,positive,2,2,301,strongest_weight
+B_DECISION_TREE,final_training_fit,all,160,low,textual,gini_importance,0.11320338904568152,0.11320338904568152,positive,3,3,300,strongest_weight
+B_DECISION_TREE,final_training_fit,all,192,pay attention,textual,gini_importance,0.10875457028885892,0.10875457028885892,positive,4,4,299,strongest_weight
+B_DECISION_TREE,final_training_fit,all,301,hedge_score,handcrafted_linguistic,gini_importance,0.08272136236459945,0.08272136236459945,positive,5,5,298,strongest_weight
+B_DECISION_TREE,final_training_fit,all,226,sep,textual,gini_importance,0.08232432657333505,0.08232432657333505,positive,6,6,297,strongest_weight
+B_DECISION_TREE,final_training_fit,all,154,long,textual,gini_importance,0.05326408681203694,0.05326408681203694,positive,7,7,296,strongest_weight
+B_DECISION_TREE,final_training_fit,all,149,like,textual,gini_importance,0.04884824146411089,0.04884824146411089,positive,8,8,295,strongest_weight
+B_DECISION_TREE,final_training_fit,all,97,feeling,textual,gini_importance,0.04326932374830151,0.04326932374830151,positive,9,9,294,strongest_weight
+B_DECISION_TREE,final_training_fit,all,164,making,textual,gini_importance,0.0432348886427904,0.0432348886427904,positive,10,10,293,strongest_weight
+B_DECISION_TREE,final_training_fit,all,262,things,textual,gini_importance,0.024364506144781257,0.024364506144781257,positive,11,11,292,strongest_weight
+B_DECISION_TREE,final_training_fit,all,118,helps,textual,gini_importance,0.005559718287929282,0.005559718287929282,positive,12,12,291,strongest_weight
+B_DECISION_TREE,final_training_fit,all,95,feel,textual,gini_importance,0.00224587820593821,0.00224587820593821,positive,13,13,290,strongest_weight
+B_DECISION_TREE,final_training_fit,all,0,10,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight
+B_DECISION_TREE,final_training_fit,all,1,able,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight
+B_DECISION_TREE,final_training_fit,all,2,activity,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight
+B_DECISION_TREE,final_training_fit,all,3,actually,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight
+B_DECISION_TREE,final_training_fit,all,4,add,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight
+B_DECISION_TREE,final_training_fit,all,5,adhd,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight
+B_DECISION_TREE,final_training_fit,all,6,adhd adhd,textual,gini_importance,0.0,0.0,zero,14,14,1,strongest_weight

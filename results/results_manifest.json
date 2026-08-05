@@ -1,0 +1,1348 @@
+{
+  "complete_experimental_conditions": [
+    "A_LOGISTIC_REGRESSION",
+    "A_RIDGE",
+    "A_COMPLEMENT_NB",
+    "A_DECISION_TREE",
+    "B_LOGISTIC_REGRESSION",
+    "B_RIDGE",
+    "B_COMPLEMENT_NB",
+    "B_DECISION_TREE",
+    "C_LOGISTIC_REGRESSION",
+    "C_RIDGE",
+    "C_COMPLEMENT_NB",
+    "C_DECISION_TREE",
+    "D_FROZEN_MINILM",
+    "E_FINETUNED_BERT"
+  ],
+  "contextual_baselines": [
+    "BASELINE_MOST_FREQUENT",
+    "BASELINE_STRATIFIED_RANDOM"
+  ],
+  "condition_count": 14,
+  "expected_outer_folds": 5,
+  "bootstrap_resamples": 10000,
+  "excluded_total_claims": [],
+  "artifacts": [
+    {
+      "path": "feature_associations\\named_feature_associations.csv",
+      "bytes": 1476,
+      "sha256": "92f92b3034c5d1d588cc919262045b8bdb47d0f38bbd7eaa2765a7d45fc6f14b"
+    },
+    {
+      "path": "feature_associations\\named_feature_class_descriptives.csv",
+      "bytes": 7581,
+      "sha256": "cae3a801933fe489e6ee1353ef0f9ade813bb00d9b5a7264bdedddeb10d7fe56"
+    },
+    {
+      "path": "feature_associations\\named_features_full_labelled.csv",
+      "bytes": 26516,
+      "sha256": "2dffdaa22aacee7d08c9b1278f81595e5a2059e750ac65c70d5ce4366fa75d72"
+    },
+    {
+      "path": "feature_associations\\named_features_training_only.csv",
+      "bytes": 21182,
+      "sha256": "9fd98df8f2d3d4a998ef858d8c76e7c313b3b086b8c1d3cfa9b879f9c752ca8c"
+    },
+    {
+      "path": "figures\\A_COMPLEMENT_NB_confusion.csv",
+      "bytes": 65,
+      "sha256": "ab2bd0c7f4acc35bda0dcde6ae6c8cc3d67733ba4dddbdc5d1cdbdff0d2b6e67"
+    },
+    {
+      "path": "figures\\A_COMPLEMENT_NB_confusion.png",
+      "bytes": 34816,
+      "sha256": "76b55b305f007861541018007738d4d903a7d2e69f58d9a9638329cc7f285588"
+    },
+    {
+      "path": "figures\\A_DECISION_TREE_confusion.csv",
+      "bytes": 66,
+      "sha256": "fea6df857dcc93ff50b1a90f8c8627e0730586ebe8b4a58cd2cdc08da02f0219"
+    },
+    {
+      "path": "figures\\A_DECISION_TREE_confusion.png",
+      "bytes": 35654,
+      "sha256": "e283804c83504c9784824d1305b1cdff9c89e34972929c610781eb23635efb5f"
+    },
+    {
+      "path": "figures\\A_LOGISTIC_REGRESSION_confusion.csv",
+      "bytes": 64,
+      "sha256": "987e643aae6740011cd73f2dc0eaddaf1955413a45c0eef2728fe1b554189974"
+    },
+    {
+      "path": "figures\\A_LOGISTIC_REGRESSION_confusion.png",
+      "bytes": 36305,
+      "sha256": "b40946878e24d67f7c19941e9576c2e6a64e8c24a92a82b59d1bb6bd5ecfb8f4"
+    },
+    {
+      "path": "figures\\A_RIDGE_confusion.csv",
+      "bytes": 64,
+      "sha256": "3f07f8f2daf234fad9d3384fb3af76459b209b7f6551d87e8f86b794e70f81a6"
+    },
+    {
+      "path": "figures\\A_RIDGE_confusion.png",
+      "bytes": 33076,
+      "sha256": "bb7860642dd47cbb42ad409d7c1f7a77a54fd436ed45dc8a0bacf61791d4999f"
+    },
+    {
+      "path": "figures\\B_COMPLEMENT_NB_confusion.csv",
+      "bytes": 64,
+      "sha256": "30cd17b8f0e926e28f631cd95131c40a7518a300d8ce9c7be41e8238c6d111e8"
+    },
+    {
+      "path": "figures\\B_COMPLEMENT_NB_confusion.png",
+      "bytes": 34743,
+      "sha256": "d9ac107fb7cf74fd7a3326818210657a4e6fcbc4dfce4a946c35880fafd240ae"
+    },
+    {
+      "path": "figures\\B_DECISION_TREE_confusion.csv",
+      "bytes": 66,
+      "sha256": "349b55e343cd2ad037fe4ab5433532f2b2218bd81f007f350abbb8903495ff3e"
+    },
+    {
+      "path": "figures\\B_DECISION_TREE_confusion.png",
+      "bytes": 36679,
+      "sha256": "9ecabfa570441f7258fd5faf31c4c916451096405c2941236d2f2fe93d7d1dd0"
+    },
+    {
+      "path": "figures\\B_LOGISTIC_REGRESSION_confusion.csv",
+      "bytes": 64,
+      "sha256": "e0693cca36bfb5be848399001cfa05844e51f52c0af86e7b8d5c6408ed22d889"
+    },
+    {
+      "path": "figures\\B_LOGISTIC_REGRESSION_confusion.png",
+      "bytes": 34732,
+      "sha256": "23635eb2dee5ec90e6f7fa4634d6546279c144be7465f2a3e5c4d56fe83e96e4"
+    },
+    {
+      "path": "figures\\B_RIDGE_confusion.csv",
+      "bytes": 64,
+      "sha256": "55c3f207d90147a75ef5aaed0c8dd935d0b9224af6c381f060af672ce3a98568"
+    },
+    {
+      "path": "figures\\B_RIDGE_confusion.png",
+      "bytes": 31197,
+      "sha256": "6e16d0064cf37b3ea7b334ba1149fb15792957a9dd8e3b64b6c091d19ec2fb35"
+    },
+    {
+      "path": "figures\\BASELINE_MOST_FREQUENT_confusion.csv",
+      "bytes": 67,
+      "sha256": "8e072319f075e4b630d5ba71c9d784bbe1688a939e2bdb52a663c8ad88301d1f"
+    },
+    {
+      "path": "figures\\BASELINE_MOST_FREQUENT_confusion.png",
+      "bytes": 40907,
+      "sha256": "5bf5a06019538a57c757999614aa363652ffab2e77873cd2431ff4e1cf5e7466"
+    },
+    {
+      "path": "figures\\BASELINE_STRATIFIED_RANDOM_confusion.csv",
+      "bytes": 65,
+      "sha256": "caadf60f35eb83e5c974bbfe31b434827d136b91e213d2a5f367b4c78df2d37d"
+    },
+    {
+      "path": "figures\\BASELINE_STRATIFIED_RANDOM_confusion.png",
+      "bytes": 37032,
+      "sha256": "baf2b301f712e8113aef061375c77e564cfa4e0e4e917a04efa8c08e56ef72ab"
+    },
+    {
+      "path": "figures\\C_COMPLEMENT_NB_confusion.csv",
+      "bytes": 64,
+      "sha256": "b777c00751741d24f33f0bfd6f6491108751af211f33ee149906b677ebc59e66"
+    },
+    {
+      "path": "figures\\C_COMPLEMENT_NB_confusion.png",
+      "bytes": 35093,
+      "sha256": "abafac5419e96dae6c855ac2b508827b87660c907b9ff5dbe87f3376aafabd6b"
+    },
+    {
+      "path": "figures\\C_DECISION_TREE_confusion.csv",
+      "bytes": 66,
+      "sha256": "9b25147fd7f61cbe4c56136c796ef9649f0963be24f1f5e4ebbc887bacb655d9"
+    },
+    {
+      "path": "figures\\C_DECISION_TREE_confusion.png",
+      "bytes": 36241,
+      "sha256": "1fee4934e25f773df333412a812c892a2b6f01b4db6b9ee001bad88f7cbd5041"
+    },
+    {
+      "path": "figures\\C_LOGISTIC_REGRESSION_confusion.csv",
+      "bytes": 64,
+      "sha256": "a82c2936f708276dcfd3c059ea47febfc180c7c04f706cdb9cf4fa780594eb54"
+    },
+    {
+      "path": "figures\\C_LOGISTIC_REGRESSION_confusion.png",
+      "bytes": 36630,
+      "sha256": "f4f626a66dcb36000605acec887ad4bdab7e8f41aa99f592a839a04c60bcaaef"
+    },
+    {
+      "path": "figures\\C_RIDGE_confusion.csv",
+      "bytes": 64,
+      "sha256": "9d8ff20d8b7f577b2b4f97559ebaa415ad3662867bcab82a8161b0018b20872d"
+    },
+    {
+      "path": "figures\\C_RIDGE_confusion.png",
+      "bytes": 32501,
+      "sha256": "556bfe8390c1680876f666ac4262b3ce4b9b9b2264e0e458352504648e06ce9c"
+    },
+    {
+      "path": "figures\\D_FROZEN_MINILM_confusion.csv",
+      "bytes": 64,
+      "sha256": "64368ddd397e87323eda083ca301deffc6e54b7517ec189fdc125f082e8f772f"
+    },
+    {
+      "path": "figures\\D_FROZEN_MINILM_confusion.png",
+      "bytes": 33610,
+      "sha256": "5d274b23b0a4e1e1d3bdb522089d755158c537b426420b6643eff8b49a84943e"
+    },
+    {
+      "path": "figures\\E_FINETUNED_BERT_confusion.csv",
+      "bytes": 65,
+      "sha256": "423a7d9d9881212fce370e425186cd54623047d7a4414674162a6b7f48840a79"
+    },
+    {
+      "path": "figures\\E_FINETUNED_BERT_confusion.png",
+      "bytes": 31881,
+      "sha256": "ef99dc322c50cdeaec74cc2b072d02b277e4f86be3d378545e1e47c0c145ab94"
+    },
+    {
+      "path": "figures\\rq1_class_distribution.png",
+      "bytes": 59904,
+      "sha256": "2136637c3d4c4799b4ecf18c8352e779f57bd3ff2a1ea1560cc48d5893ff58fb"
+    },
+    {
+      "path": "interpretability\\A_COMPLEMENT_NB_all_features.csv",
+      "bytes": 162209,
+      "sha256": "1785f0c7fabf2a15aefb28a5ff2f03e522f51b3fc28fd5b79b86ac9930ac784e"
+    },
+    {
+      "path": "interpretability\\A_COMPLEMENT_NB_feature_stability.csv",
+      "bytes": 275955,
+      "sha256": "67ef8e89e37542bb14ad4be0cb5676476d61d1876f9cb826d5506def1ff40922"
+    },
+    {
+      "path": "interpretability\\A_COMPLEMENT_NB_fold_features.csv",
+      "bytes": 708879,
+      "sha256": "7c7f10d75cc601644decc50635b761c2b683381f01299b44c70a41ebb90db808"
+    },
+    {
+      "path": "interpretability\\A_COMPLEMENT_NB_heldout_contributions.csv",
+      "bytes": 64007,
+      "sha256": "a24a08eab7837f7d46ad5896917c28dbe006bad385353176182f9ef6df20f391"
+    },
+    {
+      "path": "interpretability\\A_COMPLEMENT_NB_summary.json",
+      "bytes": 153,
+      "sha256": "d2468236d450122fdc1aeb9e1d17652b23acc52815dc58cd4b899cacf907d7ff"
+    },
+    {
+      "path": "interpretability\\A_COMPLEMENT_NB_top_features.csv",
+      "bytes": 12218,
+      "sha256": "b955e175b3cd51a0981b7c7d761c9277805cb30b25b0d57c1bc7377e9773584e"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_all_features.csv",
+      "bytes": 29518,
+      "sha256": "c07bb6ac811e596f9fa333bdc5f3b51d9242d635d155d124e51eab138bd6df44"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_feature_stability.csv",
+      "bytes": 40796,
+      "sha256": "ddfd0a66bc5cf924d50c1ded8ab30240dd1967a9425595a7612e793c8c35d8f0"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_fold_features.csv",
+      "bytes": 118481,
+      "sha256": "803b0e3689b921a84da254d63375c8641b47be69bcf36f29112b0438b0b44522"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_heldout_paths.csv",
+      "bytes": 21253,
+      "sha256": "7fa90b8a3818a961a0c4b772ac37b0e4c6368104d24b985b7ba5293dddf6ff61"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_nodes.csv",
+      "bytes": 3633,
+      "sha256": "fabc913b9ed2beb5b6892e6c8ee93adf8c275b3df7bac0cf1f21aa09d1644c78"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_rules.txt",
+      "bytes": 2097,
+      "sha256": "217797eecbb7cd02e1714680db33edce2592b0eb955120724289bc8e65dddd0a"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_summary.json",
+      "bytes": 151,
+      "sha256": "442677804db368ffc9c7e25990fc27e04238a1575f6d43666f9e4ef3c13344b7"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_top_features.csv",
+      "bytes": 2924,
+      "sha256": "24b25d731215b4b67ed8be81bdf405541732c128aac9258023f94952539bfd37"
+    },
+    {
+      "path": "interpretability\\A_DECISION_TREE_tree.png",
+      "bytes": 564893,
+      "sha256": "6c1c1a0278b28935ddaea2be7e076a1a4b673515caac45eb556aff34c23117a0"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_all_features.csv",
+      "bytes": 164197,
+      "sha256": "1dec921f9a36d56220f9705fe13ece12cdf53f4c86be285e7e32e32111af887e"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_feature_stability.csv",
+      "bytes": 286481,
+      "sha256": "fd079ab5285695a512bd1b962b0b72127f0a203028ff53dfc723a6c58b3058d4"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_fold_features.csv",
+      "bytes": 711030,
+      "sha256": "c6da897e945b2b6d32399f3769e19499b966cf703092d23ffb4b71b4a88c9856"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_heldout_contributions.csv",
+      "bytes": 64526,
+      "sha256": "e22150693eb6cc9c8e8ed3abffa307061dd73a4f4bc6c7455319c76f648bf385"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_intercepts.csv",
+      "bytes": 219,
+      "sha256": "7899ac57d33e61a29f7f799448203e1bbd7cb74656d77958111d777b009af444"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_summary.json",
+      "bytes": 154,
+      "sha256": "bbcba0a210228ca8d0989feaa4b5d168caefd87dc346f603ff2a38694b5729c8"
+    },
+    {
+      "path": "interpretability\\A_LOGISTIC_REGRESSION_top_features.csv",
+      "bytes": 24223,
+      "sha256": "b5e732b99307b03c6662bc0c371d5b6def0670421e6531a98bea894efd93dfe9"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_all_features.csv",
+      "bytes": 145294,
+      "sha256": "af2e8b46d1571443f2a6dc22e4dde2727ed644c9d5d1cb8637f4fe23dbf42352"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_feature_stability.csv",
+      "bytes": 265497,
+      "sha256": "d9c7988dabe6f4fcb5b90fa9924d702cd7ea7bb4c5aa9747fcc6473ad960151d"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_fold_features.csv",
+      "bytes": 625739,
+      "sha256": "05a09cecc23d4d375bddea8c051427316bf7829f62d437c297075b17afa3bc79"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_heldout_contributions.csv",
+      "bytes": 56696,
+      "sha256": "34f568f3594a06627cc8f84b497080a29991d6d4d5db18fb5419822403089741"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_intercepts.csv",
+      "bytes": 157,
+      "sha256": "d4443e7896f96fbadd3bf8066801fb84875e2ff808f727096208175f6d85a296"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_summary.json",
+      "bytes": 154,
+      "sha256": "bbcba0a210228ca8d0989feaa4b5d168caefd87dc346f603ff2a38694b5729c8"
+    },
+    {
+      "path": "interpretability\\A_RIDGE_top_features.csv",
+      "bytes": 21678,
+      "sha256": "1417ac06c2efd7c0f5d9770bff1c0d7cba4c51aad17090119191e0f9360d5176"
+    },
+    {
+      "path": "interpretability\\B_COMPLEMENT_NB_all_features.csv",
+      "bytes": 163525,
+      "sha256": "1e8d217c85eee3f893e8bee85235ba36a48768c776241a4f6382ca3b3333d090"
+    },
+    {
+      "path": "interpretability\\B_COMPLEMENT_NB_feature_stability.csv",
+      "bytes": 277801,
+      "sha256": "f470a500d47d203f91057b77b7a4942434bf2b09f5117360ac42cd1b10b21113"
+    },
+    {
+      "path": "interpretability\\B_COMPLEMENT_NB_fold_features.csv",
+      "bytes": 714495,
+      "sha256": "08f6a46040341416396a67b32e3cb4499f4f747ac88e69c9f0bfd80a391fe970"
+    },
+    {
+      "path": "interpretability\\B_COMPLEMENT_NB_heldout_contributions.csv",
+      "bytes": 64939,
+      "sha256": "702392d0359e032e82f95ce944483568393ee239d6b21ab2d9f8b11fe558b315"
+    },
+    {
+      "path": "interpretability\\B_COMPLEMENT_NB_summary.json",
+      "bytes": 153,
+      "sha256": "3c6725c11acec5095f470df6bcc53a51e96f875799d5b37ee3199763f8f3e949"
+    },
+    {
+      "path": "interpretability\\B_COMPLEMENT_NB_top_features.csv",
+      "bytes": 12234,
+      "sha256": "10e8e334d4006140662538cf320c1b4e29e3ae7ecf1800353008e398e1ff1ace"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_all_features.csv",
+      "bytes": 29702,
+      "sha256": "253d79b81e6ea3d430d972b5af54b4ba37d04605c326fc84ceecd8c597c67a27"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_feature_stability.csv",
+      "bytes": 40918,
+      "sha256": "2a8ef4ee5164652c7aeaa474b70f17b68c73b1438d787e838245bda0924f07c3"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_fold_features.csv",
+      "bytes": 118881,
+      "sha256": "2465652c66afa2dd6c51b8fa28d57c2f2a4597b0c3d080f53ce7764405c9b629"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_heldout_paths.csv",
+      "bytes": 21145,
+      "sha256": "492098a2e96af19aff1e30f8ae2b8bfb7ce64f7d306a32d80ed70b9b6316c350"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_nodes.csv",
+      "bytes": 3585,
+      "sha256": "09287d0b2567f7ac63ec47b04a658474bf6d1cbcc1e47d2189d584b8a2c27c31"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_rules.txt",
+      "bytes": 2093,
+      "sha256": "8c790e0b19c2f9e7f505be00063937bb2c32d26bb13702c1673d002ec1e98414"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_summary.json",
+      "bytes": 151,
+      "sha256": "7f734f27fb660d40a2492c4a50ebf5dafeaac56aece776aebc1407abdbdbf3f4"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_top_features.csv",
+      "bytes": 2888,
+      "sha256": "6d73f8e5d9e9d0785cf76dec9fea1584c2eaa00a0611305bedbbc26f4ab5f327"
+    },
+    {
+      "path": "interpretability\\B_DECISION_TREE_tree.png",
+      "bytes": 558138,
+      "sha256": "15d33659c782934d9656a946bab42822fa77163124bd7825f9c76bf64d7eb232"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_all_features.csv",
+      "bytes": 163624,
+      "sha256": "484b5645d53c85d6734310ec1a4a6ed96a8d8b952484b4ab74a479c8fe240fea"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_feature_stability.csv",
+      "bytes": 284976,
+      "sha256": "e8260a94d73fd5a0c4d9b20290b19202795b698b01bfefc72b201a353e8e1076"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_fold_features.csv",
+      "bytes": 709703,
+      "sha256": "daaf6c51ec1734e1a1e40f2480f9616491375e974cecf1ade6a900eaee3e39e0"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_heldout_contributions.csv",
+      "bytes": 65816,
+      "sha256": "adbd1c69740d071bf34c96bfb29cb6e2f376ceacfa96fd4467bd4acc705fc89e"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_intercepts.csv",
+      "bytes": 214,
+      "sha256": "378422a7ff828ed7a726ac358014fdb6fcdd3664970e929f20c1e5cd2368f170"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_summary.json",
+      "bytes": 154,
+      "sha256": "480b539e689722f30d20604d6b475b8eea17d7f90a64ff7829462d636bd18c51"
+    },
+    {
+      "path": "interpretability\\B_LOGISTIC_REGRESSION_top_features.csv",
+      "bytes": 24003,
+      "sha256": "bff6841eb6aa0740c894a2c20f9fd9e9fdf520c3f194a1c1b879d3d4b7716c4d"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_all_features.csv",
+      "bytes": 147982,
+      "sha256": "cbfc7edf0e6f8b06a434764308d5981b9d439c30031c5d7ea2d6aac5b91a292b"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_feature_stability.csv",
+      "bytes": 267259,
+      "sha256": "6beae2ab04b16579b8bd5632e262d88672643bb807e1477e8b301783a7e3755b"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_fold_features.csv",
+      "bytes": 630314,
+      "sha256": "745de9857ab43920bb60b25b04e91f1639379409268b1a27165f50966dab4d61"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_heldout_contributions.csv",
+      "bytes": 59638,
+      "sha256": "0319904185f3188141cc6c2f0b685988d7896db2222e462c7e13a6ba704b5bf4"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_intercepts.csv",
+      "bytes": 158,
+      "sha256": "571ddde0e1f14be8659559cb5351b9eb637a2e6bdfaa0303e2c507deea5fd666"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_summary.json",
+      "bytes": 154,
+      "sha256": "480b539e689722f30d20604d6b475b8eea17d7f90a64ff7829462d636bd18c51"
+    },
+    {
+      "path": "interpretability\\B_RIDGE_top_features.csv",
+      "bytes": 22013,
+      "sha256": "6132bbc330ce302e6a99cde8602cdf40f40d401d382e25315325d9ebd7204f61"
+    },
+    {
+      "path": "interpretability\\C_COMPLEMENT_NB_all_features.csv",
+      "bytes": 165915,
+      "sha256": "b81ba85be086b03a8cd12f819f183ce444653b083672741009580812f5174f12"
+    },
+    {
+      "path": "interpretability\\C_COMPLEMENT_NB_feature_stability.csv",
+      "bytes": 281240,
+      "sha256": "74c3e6d4a4855f3fb8074c677cfc25d2c05625396a324c0152604ef09d61adfd"
+    },
+    {
+      "path": "interpretability\\C_COMPLEMENT_NB_fold_features.csv",
+      "bytes": 725337,
+      "sha256": "f5b0a9932651de97a9e8e160e06474ab65e8f0c0c1dc11ad689452796551aaa1"
+    },
+    {
+      "path": "interpretability\\C_COMPLEMENT_NB_heldout_contributions.csv",
+      "bytes": 66991,
+      "sha256": "054494652547474012f3cceab6f69ba24f36e357761ee9de6913d421ab741325"
+    },
+    {
+      "path": "interpretability\\C_COMPLEMENT_NB_summary.json",
+      "bytes": 153,
+      "sha256": "960dc8bd7539e06eebceeb34e01a89982845239e1bb9cf91d169b2bfcf221340"
+    },
+    {
+      "path": "interpretability\\C_COMPLEMENT_NB_top_features.csv",
+      "bytes": 12224,
+      "sha256": "15394b3a44b5cf1290b9624cc2c68e85c8ba1bbdfa100ae3ea33d91fde7f7879"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_all_features.csv",
+      "bytes": 30152,
+      "sha256": "d76a27cf747a66c7296109dddf100b41ce12db4683d1955ae5753102fcbbda6b"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_feature_stability.csv",
+      "bytes": 41005,
+      "sha256": "d1016b5c5b3020f7be0436f0b34a14bb2f9eb116cf27bcc4e050f01e55702cbd"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_fold_features.csv",
+      "bytes": 120565,
+      "sha256": "f17dfa36e204fd8872c371352bd36d0608c46a4ed3f1f139bbb77f8bc5c6f84a"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_heldout_paths.csv",
+      "bytes": 21611,
+      "sha256": "1361e6c2e0dfc554ce575c17e3882339c3f54fde415c1ff3edc27a0dc2488ba4"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_nodes.csv",
+      "bytes": 3601,
+      "sha256": "bc5c5771124fd011f7391c521e438c1757d58000ea01ad52b739df3ed665f8b4"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_rules.txt",
+      "bytes": 2100,
+      "sha256": "2be1ff8e286920f9b4ce29f4d2e46982d3c2c2ca7d1013d4759100da283a8be9"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_summary.json",
+      "bytes": 151,
+      "sha256": "9de1ee607462e9ae36671685bac93dc190857e4f4baa48b8aa9b35774968be8e"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_top_features.csv",
+      "bytes": 2913,
+      "sha256": "39456ab47eeb448976ca80d15f07c4fb61aa8bbeea9f521cb2e2681a2173c0f7"
+    },
+    {
+      "path": "interpretability\\C_DECISION_TREE_tree.png",
+      "bytes": 557514,
+      "sha256": "932638572c6171915fc154cf0e53b3ec59802f485545e23c3b7c738def650a1e"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_all_features.csv",
+      "bytes": 164603,
+      "sha256": "0ae572e95b95ace2ac6852d809262b44a8b3d5321c640242163cefa330d26ec7"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_feature_stability.csv",
+      "bytes": 287925,
+      "sha256": "710160cb5f5c03b9276ae284546a7b78eac019fc03c95593da24386b62165c76"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_fold_features.csv",
+      "bytes": 719393,
+      "sha256": "84f4e404b8f18682c419863e3bd94ecdd121565db85712c99e9950b4e034969d"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_heldout_contributions.csv",
+      "bytes": 66841,
+      "sha256": "dca6bd6ebc4d178fcb2e4c16ecea52a016635df8b07c83e9dd82964c665fc5b4"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_intercepts.csv",
+      "bytes": 210,
+      "sha256": "a6b1fba25213068c90c4052a068953f1f10574ca9470abccff62156dbc3ccdd8"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_summary.json",
+      "bytes": 154,
+      "sha256": "4fdab74be1da3e6681be47117137f38bd9aee95634ee3599ad09fb08130a55ec"
+    },
+    {
+      "path": "interpretability\\C_LOGISTIC_REGRESSION_top_features.csv",
+      "bytes": 23879,
+      "sha256": "6d68b3d15be264921eea11b8889b04f0b38e675bb9213af0650fd661d7604df9"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_all_features.csv",
+      "bytes": 148705,
+      "sha256": "cf5ced742de65ab7d4dcf91f5a905e34620457a15d49cc6d4a314ddcc8453855"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_feature_stability.csv",
+      "bytes": 268548,
+      "sha256": "ed6b1616b7a2682735af4f64e01b531c74055e007b16f47f9ce5ef1b60eb5ff2"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_fold_features.csv",
+      "bytes": 636502,
+      "sha256": "ee0788738f3ced43d9d10bab408417a95a208e49f90f7d38c6269873a614f44a"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_heldout_contributions.csv",
+      "bytes": 60141,
+      "sha256": "cf8e7c00e7c09a18f5498c8d547a961882a663393de8786acd804639e5cd360c"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_intercepts.csv",
+      "bytes": 157,
+      "sha256": "4a4776c94ead396c5902ec98de84e2cdcdfc11a70d8e8669a8443ec945513ff7"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_summary.json",
+      "bytes": 154,
+      "sha256": "4fdab74be1da3e6681be47117137f38bd9aee95634ee3599ad09fb08130a55ec"
+    },
+    {
+      "path": "interpretability\\C_RIDGE_top_features.csv",
+      "bytes": 21700,
+      "sha256": "ee806e14409251a27061307c845a48a0ccd7632a1d9c21018ae4104c61c580e1"
+    },
+    {
+      "path": "interpretability\\D_FROZEN_MINILM_heldout_named_auxiliary_contributions.csv",
+      "bytes": 41306,
+      "sha256": "6f6d7b13ad8439f50ae0e1167f6fe207766ee2d5ea8e70ffcc7365ca2510786d"
+    },
+    {
+      "path": "interpretability\\D_FROZEN_MINILM_named_auxiliary_features.csv",
+      "bytes": 3757,
+      "sha256": "24d46edb553dbe36b9217f84219d3bd78e8f880ba7a2aa66f8c785a27fea62ba"
+    },
+    {
+      "path": "interpretability\\D_FROZEN_MINILM_named_auxiliary_fold_features.csv",
+      "bytes": 16145,
+      "sha256": "0929b8d49addb8d87c8a4c5b734c43c05524f1f718a7bf0e816c234004825698"
+    },
+    {
+      "path": "interpretability\\D_FROZEN_MINILM_named_auxiliary_stability.csv",
+      "bytes": 5604,
+      "sha256": "27aaac3e0502a44105f4ab7ec0909eaa7ac06a7909976f0232d5367b3e98a66a"
+    },
+    {
+      "path": "interpretability\\D_FROZEN_MINILM_summary.json",
+      "bytes": 207,
+      "sha256": "0c8e89783189c75156d7cb255761337a1ce0cb3b24b05dedd049b47b552310d1"
+    },
+    {
+      "path": "metrics\\A_COMPLEMENT_NB_cv.csv",
+      "bytes": 619,
+      "sha256": "4934a322f7828ebeebb029fbdbb63947a28fbea55c5786ab97181dc5867cb1cd"
+    },
+    {
+      "path": "metrics\\A_COMPLEMENT_NB_heldout.json",
+      "bytes": 920,
+      "sha256": "0fa6545a6ae8852a2d20d917ceeac07b7f24289651080bb43ce958313243547e"
+    },
+    {
+      "path": "metrics\\A_DECISION_TREE_cv.csv",
+      "bytes": 803,
+      "sha256": "21744923f0492a07a60cfc96c957bbf4c7bfd4c3a45aea543dcbda9db46998c2"
+    },
+    {
+      "path": "metrics\\A_DECISION_TREE_heldout.json",
+      "bytes": 919,
+      "sha256": "ea2ec5bc353de77e08835b5d4cf5f41d45402ac948f2b0d43439169554e396b0"
+    },
+    {
+      "path": "metrics\\A_LOGISTIC_REGRESSION_cv.csv",
+      "bytes": 600,
+      "sha256": "19bd94df05ab5ad208fc701a1c288b36144dd82db97b0ab662a4b52400dc6f0b"
+    },
+    {
+      "path": "metrics\\A_LOGISTIC_REGRESSION_heldout.json",
+      "bytes": 918,
+      "sha256": "710b788fadb4b8d6461ad8e911803be86bc9aa56ffde5023f2034834fbdd1460"
+    },
+    {
+      "path": "metrics\\A_RIDGE_cv.csv",
+      "bytes": 622,
+      "sha256": "9a13b8cbe40df8c44ea53c33a8869072d37295c2ea50a963f5a741bf0ddc76b7"
+    },
+    {
+      "path": "metrics\\A_RIDGE_heldout.json",
+      "bytes": 935,
+      "sha256": "56cbe8789123f7ccd4ea8a9aa342b0851ad684b2fc2f698ac7ddff2dbb7c26c5"
+    },
+    {
+      "path": "metrics\\analysis_population.json",
+      "bytes": 890,
+      "sha256": "e8367af2910cd5c339e751696b567179586a38386494905767bb83028fccf335"
+    },
+    {
+      "path": "metrics\\B_COMPLEMENT_NB_cv.csv",
+      "bytes": 604,
+      "sha256": "3eabe15e4db37409d384ae03780bbed29d0565f5d1ac38be4fae75c8a15e0f8f"
+    },
+    {
+      "path": "metrics\\B_COMPLEMENT_NB_heldout.json",
+      "bytes": 934,
+      "sha256": "96888e5693014a0556ed8f2c35f8d172d82ace65c2a3d390f3343da85f6cc06d"
+    },
+    {
+      "path": "metrics\\B_DECISION_TREE_cv.csv",
+      "bytes": 803,
+      "sha256": "2563610afaad95e4eda8a66a2b7e2de83a70a809a94d9c7e3fedf16bd393adf0"
+    },
+    {
+      "path": "metrics\\B_DECISION_TREE_heldout.json",
+      "bytes": 919,
+      "sha256": "91b4f599849c1a7365e5cbca0b678819f5359265676d84309507e9138ce6097c"
+    },
+    {
+      "path": "metrics\\B_LOGISTIC_REGRESSION_cv.csv",
+      "bytes": 598,
+      "sha256": "5f8ee1b2b78a299d19923ea638bb38a14fb042fa281c2b3286502c6eaa0dc9e8"
+    },
+    {
+      "path": "metrics\\B_LOGISTIC_REGRESSION_heldout.json",
+      "bytes": 936,
+      "sha256": "104f5c8937f62fc0fd0984c17bc80754512d710ba3806763adeb9007221e9693"
+    },
+    {
+      "path": "metrics\\B_RIDGE_cv.csv",
+      "bytes": 617,
+      "sha256": "c50ac6fd38344bef1f886623b83b204360708f678a8feefca742c004f03b5d7c"
+    },
+    {
+      "path": "metrics\\B_RIDGE_heldout.json",
+      "bytes": 951,
+      "sha256": "a0e899a221708c88c1c49324cdc670d23044d6cdf4d6f351fe877d2f5c088264"
+    },
+    {
+      "path": "metrics\\BASELINE_MOST_FREQUENT_cv.csv",
+      "bytes": 383,
+      "sha256": "388f37525ad8e7114ce6bdcc644550bd5b6e388807eae693bd3f6478439e9aa2"
+    },
+    {
+      "path": "metrics\\BASELINE_MOST_FREQUENT_heldout.json",
+      "bytes": 840,
+      "sha256": "1c6cb4732fccc428f6e5c4538592d4c27d6da71513a3a031bb6a02c72fff61e6"
+    },
+    {
+      "path": "metrics\\BASELINE_STRATIFIED_RANDOM_cv.csv",
+      "bytes": 486,
+      "sha256": "45d1cb070e83bfece2519dc09b8b414a75dfa486a381810c7c4247937bce4175"
+    },
+    {
+      "path": "metrics\\BASELINE_STRATIFIED_RANDOM_heldout.json",
+      "bytes": 921,
+      "sha256": "fdac097f2b8b3207123b7bfa34d6be82f8dc6cc989f84a7d4825bed9060f0c01"
+    },
+    {
+      "path": "metrics\\C_COMPLEMENT_NB_cv.csv",
+      "bytes": 601,
+      "sha256": "14a77a3c2dff8ce6b6a21f23b63feb4afca675b5865a09247c74ce1abd9c495f"
+    },
+    {
+      "path": "metrics\\C_COMPLEMENT_NB_heldout.json",
+      "bytes": 917,
+      "sha256": "2a86d9f65bf4c0897d8a415b1b700b6d546df6460e3406aff2cd37f50dfd3a3e"
+    },
+    {
+      "path": "metrics\\C_DECISION_TREE_cv.csv",
+      "bytes": 808,
+      "sha256": "5467b63a65b6abbfb24d1eee67e5e0bc5f6c22b5c00c91c12b526871dffd3be4"
+    },
+    {
+      "path": "metrics\\C_DECISION_TREE_heldout.json",
+      "bytes": 904,
+      "sha256": "254b5aa31cf48a90c2d2c7c0664cfe4199d4407e4c2a00bd9cea89a84f993895"
+    },
+    {
+      "path": "metrics\\C_LOGISTIC_REGRESSION_cv.csv",
+      "bytes": 603,
+      "sha256": "f0002c06a8ececa0ed8558867c805f235b4e633745712a8818612dfde86898af"
+    },
+    {
+      "path": "metrics\\C_LOGISTIC_REGRESSION_heldout.json",
+      "bytes": 930,
+      "sha256": "5b0807aa1080e21d162576f11f4809af93fbacdeb80a45113779adf0392591d4"
+    },
+    {
+      "path": "metrics\\C_RIDGE_cv.csv",
+      "bytes": 606,
+      "sha256": "00f15afea60f4f1898c1c62b63394b63409d427a7c59d911212c40d28613aa1a"
+    },
+    {
+      "path": "metrics\\C_RIDGE_heldout.json",
+      "bytes": 932,
+      "sha256": "5da3a1ac9ffc88c3489e047b01a17d747011d60ecd239a5856e111f8c64f65f3"
+    },
+    {
+      "path": "metrics\\D_FROZEN_MINILM_cv.csv",
+      "bytes": 569,
+      "sha256": "3648814125d457683b0da57f3bc11ac1168391f2ecc44a8d6aa1fbfb33dfa979"
+    },
+    {
+      "path": "metrics\\D_FROZEN_MINILM_heldout.json",
+      "bytes": 935,
+      "sha256": "18aad62abda203e425748be9a25c28292b629449f6c8eb7e59804302308dcd87"
+    },
+    {
+      "path": "metrics\\E_FINETUNED_BERT_cv.csv",
+      "bytes": 468,
+      "sha256": "61555d70dd43973e41bded457115a05756cf50efab94dd9b9141063a79ec91f6"
+    },
+    {
+      "path": "metrics\\E_FINETUNED_BERT_heldout.json",
+      "bytes": 906,
+      "sha256": "02f075aff41ac3333bb970d94032833a5fadeb53f25b6a76a0aaf5e767a83068"
+    },
+    {
+      "path": "metrics\\heldout_full_metrics.json",
+      "bytes": 16941,
+      "sha256": "0ac08d4960b9100c2e3dbf24816b43dbb34d0876ecb3d39dacca20d3f0ec3208"
+    },
+    {
+      "path": "models\\A_COMPLEMENT_NB\\estimator.joblib",
+      "bytes": 35426,
+      "sha256": "1f251b1ef1f777b9cdeb19e0e552cbe6d2d95d2fd544ca5d3e7e614d55658c09"
+    },
+    {
+      "path": "models\\A_COMPLEMENT_NB\\selected_parameters.json",
+      "bytes": 33,
+      "sha256": "845836f4eac56f2fd433dbd28bd8ff42f936749f1c6f0f467c76cdb73524aa6a"
+    },
+    {
+      "path": "models\\A_DECISION_TREE\\estimator.joblib",
+      "bytes": 16948,
+      "sha256": "5f14e8d9bee6fdb1aa50ee86d2ea9ce5688ec69c99bb2192eeff40124e6810ef"
+    },
+    {
+      "path": "models\\A_DECISION_TREE\\selected_parameters.json",
+      "bytes": 72,
+      "sha256": "b7fc8dc13162b95685c1d05a3d137c4e35def727b11e47f01e9a198fc82d03fa"
+    },
+    {
+      "path": "models\\A_LOGISTIC_REGRESSION\\estimator.joblib",
+      "bytes": 23362,
+      "sha256": "d9f70284541c120646cd4c0893c2fc9a4e1427e3daf6fac79491a9f6807428f7"
+    },
+    {
+      "path": "models\\A_LOGISTIC_REGRESSION\\selected_parameters.json",
+      "bytes": 28,
+      "sha256": "a1c7145a5a08dd0459acab37dad6d68007927ff570cafafbc3ec6e2e1788b8f2"
+    },
+    {
+      "path": "models\\A_RIDGE\\estimator.joblib",
+      "bytes": 23490,
+      "sha256": "dbd86722dddce72d788d0a1f1978b6d8b36bc05f9af5a6bec0c633aee694b4f4"
+    },
+    {
+      "path": "models\\A_RIDGE\\selected_parameters.json",
+      "bytes": 32,
+      "sha256": "a647201474ed1963db4ce7fec05ad16686c921c697cc79003be050784478556a"
+    },
+    {
+      "path": "models\\B_COMPLEMENT_NB\\estimator.joblib",
+      "bytes": 40722,
+      "sha256": "4ec24c309f5dbb7e04f0a3fddffe8db7ef6dc32ea7865ecceaae116d635aa2b6"
+    },
+    {
+      "path": "models\\B_COMPLEMENT_NB\\selected_parameters.json",
+      "bytes": 32,
+      "sha256": "a647201474ed1963db4ce7fec05ad16686c921c697cc79003be050784478556a"
+    },
+    {
+      "path": "models\\B_DECISION_TREE\\estimator.joblib",
+      "bytes": 21700,
+      "sha256": "37480dda9cc16cbf4df8eafcfe66f0030cf53841a4543f89ab79aedbc4eb2748"
+    },
+    {
+      "path": "models\\B_DECISION_TREE\\selected_parameters.json",
+      "bytes": 72,
+      "sha256": "b7fc8dc13162b95685c1d05a3d137c4e35def727b11e47f01e9a198fc82d03fa"
+    },
+    {
+      "path": "models\\B_LOGISTIC_REGRESSION\\estimator.joblib",
+      "bytes": 28386,
+      "sha256": "e504c1070f0cab89d7bb53ce992bdfa4342988ed57233cdff421c2e9b382c610"
+    },
+    {
+      "path": "models\\B_LOGISTIC_REGRESSION\\selected_parameters.json",
+      "bytes": 28,
+      "sha256": "ca54202daff26f3f44c17c2ac552e0eca540b31c237a98e3acd4ba1f32f1436f"
+    },
+    {
+      "path": "models\\B_RIDGE\\estimator.joblib",
+      "bytes": 28498,
+      "sha256": "7df4d49d88ddfce2000da17bb33a994efb885d6b9171d8abe5f36e0c361d7fe3"
+    },
+    {
+      "path": "models\\B_RIDGE\\selected_parameters.json",
+      "bytes": 33,
+      "sha256": "845836f4eac56f2fd433dbd28bd8ff42f936749f1c6f0f467c76cdb73524aa6a"
+    },
+    {
+      "path": "models\\BASELINE_MOST_FREQUENT\\estimator.joblib",
+      "bytes": 967,
+      "sha256": "1ad226694f478de79f808335b953800301c90905430c311ba371bafd5b001833"
+    },
+    {
+      "path": "models\\BASELINE_MOST_FREQUENT\\selected_parameters.json",
+      "bytes": 2,
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "models\\BASELINE_STRATIFIED_RANDOM\\estimator.joblib",
+      "bytes": 967,
+      "sha256": "1f36ddf1ab03c157f8130e37a075d8c4e19f567f486aa44b435d4f90393eb04b"
+    },
+    {
+      "path": "models\\BASELINE_STRATIFIED_RANDOM\\selected_parameters.json",
+      "bytes": 2,
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "models\\C_COMPLEMENT_NB\\estimator.joblib",
+      "bytes": 42834,
+      "sha256": "f20785713cd111204f0367eb58189f6e3175ec0880a42d409e512ad06b50c32a"
+    },
+    {
+      "path": "models\\C_COMPLEMENT_NB\\selected_parameters.json",
+      "bytes": 32,
+      "sha256": "a647201474ed1963db4ce7fec05ad16686c921c697cc79003be050784478556a"
+    },
+    {
+      "path": "models\\C_DECISION_TREE\\estimator.joblib",
+      "bytes": 22884,
+      "sha256": "7ec86e497b566f6a61aabc8401efaddff1362100c118c5689c8da4ffc572820f"
+    },
+    {
+      "path": "models\\C_DECISION_TREE\\selected_parameters.json",
+      "bytes": 72,
+      "sha256": "b7fc8dc13162b95685c1d05a3d137c4e35def727b11e47f01e9a198fc82d03fa"
+    },
+    {
+      "path": "models\\C_LOGISTIC_REGRESSION\\estimator.joblib",
+      "bytes": 30130,
+      "sha256": "113ca90f9f1d2ceee7f3bbc1b7b3c6888c90749c9ea1e2aa427a1cf198c89f29"
+    },
+    {
+      "path": "models\\C_LOGISTIC_REGRESSION\\selected_parameters.json",
+      "bytes": 29,
+      "sha256": "8d98614fbee8c432f621677a96f9abe7a4812ba52aab99c24755528b642d022e"
+    },
+    {
+      "path": "models\\C_RIDGE\\estimator.joblib",
+      "bytes": 30242,
+      "sha256": "e69bea10fdc33defe183a7812a3fd1280ea0b11cb6269aedfd73793510974a7b"
+    },
+    {
+      "path": "models\\C_RIDGE\\selected_parameters.json",
+      "bytes": 32,
+      "sha256": "a647201474ed1963db4ce7fec05ad16686c921c697cc79003be050784478556a"
+    },
+    {
+      "path": "models\\D_FROZEN_MINILM\\checkpoint_metadata.json",
+      "bytes": 309,
+      "sha256": "9be21d72456ed973617af77caf8aaaed4fcbe099b1bc5933eb62bd1407a5406d"
+    },
+    {
+      "path": "models\\D_FROZEN_MINILM\\estimator.joblib",
+      "bytes": 13327,
+      "sha256": "6bfe50111268bd2131fb4a1859c799388d61644809c71136f48e6e6995c44bea"
+    },
+    {
+      "path": "models\\D_FROZEN_MINILM\\selected_parameters.json",
+      "bytes": 23,
+      "sha256": "e200169b259f6921e515de5f1dc5e6d9a7cf857ab05ec7123c490feab2b410ea"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\checkpoint_metadata.json",
+      "bytes": 345,
+      "sha256": "52b793c48661182201ebec8cdd7e4b40613e0f3560202ed6063166fbd7963ff5"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\metadata_scaler.joblib",
+      "bytes": 5801,
+      "sha256": "2f2ce49ffbd92264a7c4bcce8782bcb4bc6ac5c432c04bbdebdc17e80ccf1e44"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\model_state.pt",
+      "bytes": 438024169,
+      "sha256": "c833727ebc78bf5926c7033218886350ed630f0e78abbe779438f070a9f0b05f"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_1\\fold_training_record.json",
+      "bytes": 4486,
+      "sha256": "c69d75f5e5b981d4e3f66c7a9deda2082c5c9d6eaac7e706623f4ac5aecfffcc"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_1\\training_history.csv",
+      "bytes": 308,
+      "sha256": "6ca6373c11f21b0e2488978e4fbafc6144c9803594165c882a9d9cb87c9f7e8d"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_2\\fold_training_record.json",
+      "bytes": 4486,
+      "sha256": "8d56c0648b7aa9e6973ab3516b73b47a0c3016d556406d4c0a442137ea39706b"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_2\\training_history.csv",
+      "bytes": 345,
+      "sha256": "0ce3f2c727e4aad4eec6696135810a8ef912ab892be391738dd4bfea52927c89"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_3\\fold_training_record.json",
+      "bytes": 4486,
+      "sha256": "4a9de843aa4c9b8cf91273c7a6f75f50e67343adec8e5e108af3e5424826feb9"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_3\\training_history.csv",
+      "bytes": 363,
+      "sha256": "a7044f6df8699144363502988e2ff19ef89361f63957b22f5963db97e8c26af7"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_4\\fold_training_record.json",
+      "bytes": 4486,
+      "sha256": "d26e3f93daf3b99975960a6107ca5983d2a8cc2d34d75212dbfa09d976081ddc"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_4\\training_history.csv",
+      "bytes": 369,
+      "sha256": "b4730a2b14ebbb61f39adea265c8223a35409006ce38099b1c10dda0bbd8afc5"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_5\\fold_training_record.json",
+      "bytes": 4486,
+      "sha256": "b16c41b21274b9981aa993300e590a50abf51fab48a1ab157a2562595d9a2ef7"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\outer_folds\\fold_5\\training_history.csv",
+      "bytes": 366,
+      "sha256": "66886055a3f50f6b1021caa8d31eaa274cb9e20700ddfcca165a514b4645b465"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\tokenizer\\tokenizer.json",
+      "bytes": 711659,
+      "sha256": "12175ab768677ff09e87ee56ecc4c4b9ce53e2adb92d2bba9d34c2a5ca2ce0e5"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\tokenizer\\tokenizer_config.json",
+      "bytes": 366,
+      "sha256": "71cd48543bec670f50e0c9c3556df16b1f58ea720ead6a1b4675f08870c60b17"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\training_history.csv",
+      "bytes": 114,
+      "sha256": "a4d7db78c9881fb340c68ba35cc1765a0cd0335c23613fcc867e5b484f083adf"
+    },
+    {
+      "path": "models\\E_FINETUNED_BERT\\training_settings.joblib",
+      "bytes": 2361,
+      "sha256": "5dbcd3031027027813ba5c676eadbe9d5b0042f111e29e7bb71b2eccbec3a038"
+    },
+    {
+      "path": "predictions\\A_COMPLEMENT_NB_cv.csv",
+      "bytes": 2108,
+      "sha256": "bbfc0adda3c89ccd18bc5aef33f425710d51e6d504af52e2cb40e15bf843e4c2"
+    },
+    {
+      "path": "predictions\\A_COMPLEMENT_NB_heldout.csv",
+      "bytes": 1269,
+      "sha256": "a030570bff43dad948b4fd4cc68f8944eac7c0079bceb3187c6d8e22a219d1a9"
+    },
+    {
+      "path": "predictions\\A_DECISION_TREE_cv.csv",
+      "bytes": 2108,
+      "sha256": "5a4ee7f8991f4baa0fd3ca2e6b3b7012594f5689b326cd821242a0fc643e62f1"
+    },
+    {
+      "path": "predictions\\A_DECISION_TREE_heldout.csv",
+      "bytes": 1269,
+      "sha256": "de53e14f8f95c4ccd3448343799e005939cd6f5c252e48e5c2804a015d00156a"
+    },
+    {
+      "path": "predictions\\A_LOGISTIC_REGRESSION_cv.csv",
+      "bytes": 2108,
+      "sha256": "6970b674cabf5f7db67b1eb512e0690c0e60e45609eed19dbf35d507d231b146"
+    },
+    {
+      "path": "predictions\\A_LOGISTIC_REGRESSION_heldout.csv",
+      "bytes": 1569,
+      "sha256": "514e992c107a0ac0c1f3e1ee4f7bd2cfdb3f5ac15b9efae8f117b48256d5714a"
+    },
+    {
+      "path": "predictions\\A_RIDGE_cv.csv",
+      "bytes": 2108,
+      "sha256": "a5c14242bc15601f7cf4f167e96e6f694b0ec2564c07981281a53b4912029d13"
+    },
+    {
+      "path": "predictions\\A_RIDGE_heldout.csv",
+      "bytes": 869,
+      "sha256": "e258dd9682e9458973ee5fd22b8ee3326939beb1c5ff6c8c055ddcecd8954b6a"
+    },
+    {
+      "path": "predictions\\B_COMPLEMENT_NB_cv.csv",
+      "bytes": 2108,
+      "sha256": "a4291a7f9ff16d2af48334eeacff1fbe927e80999db59f0ba752e82161337d2b"
+    },
+    {
+      "path": "predictions\\B_COMPLEMENT_NB_heldout.csv",
+      "bytes": 1269,
+      "sha256": "a35497763b4438df823304940a75724b2beba0e9cfb8c297cfcbbb1903f7c9f9"
+    },
+    {
+      "path": "predictions\\B_DECISION_TREE_cv.csv",
+      "bytes": 2108,
+      "sha256": "863b19e19667d19391e460ba026a1ad2fa66715a0820c4ea978b97964cf94910"
+    },
+    {
+      "path": "predictions\\B_DECISION_TREE_heldout.csv",
+      "bytes": 1269,
+      "sha256": "75cb09db0fc0d72548d110f5324563d77920159c9858b0661d1fb6ed7d5dac70"
+    },
+    {
+      "path": "predictions\\B_LOGISTIC_REGRESSION_cv.csv",
+      "bytes": 2108,
+      "sha256": "31ca1e84328f4385796b0f36a8b23ec7a8cc108d10484f01f5a37ac0391b535a"
+    },
+    {
+      "path": "predictions\\B_LOGISTIC_REGRESSION_heldout.csv",
+      "bytes": 1569,
+      "sha256": "87355a5ab1f3ba2960f7ff5dcb9513c85882bbada563588c5982599754661560"
+    },
+    {
+      "path": "predictions\\B_RIDGE_cv.csv",
+      "bytes": 2108,
+      "sha256": "9b840fe872865d639c08c4d55879bb2866e99b599fb9d74440591c8797b5f8f1"
+    },
+    {
+      "path": "predictions\\B_RIDGE_heldout.csv",
+      "bytes": 869,
+      "sha256": "7a3ab9545fdabcd5f408f09c56623c84342bfc43bc54f41b6af40d0db44ce292"
+    },
+    {
+      "path": "predictions\\BASELINE_MOST_FREQUENT_cv.csv",
+      "bytes": 2108,
+      "sha256": "3cc9cfa2bb7a299b52131e7c405637bb096858a5a4e983ec6cfa40a34cc32410"
+    },
+    {
+      "path": "predictions\\BASELINE_MOST_FREQUENT_heldout.csv",
+      "bytes": 1619,
+      "sha256": "ad7556b0a5229f36d230c5e86e25a607d4eb115b24588a67561cf099df2c289b"
+    },
+    {
+      "path": "predictions\\BASELINE_STRATIFIED_RANDOM_cv.csv",
+      "bytes": 2108,
+      "sha256": "6a611d2713b44e3013575a88d271f8519d689ad8037f4a19187ad382b49e1eb1"
+    },
+    {
+      "path": "predictions\\BASELINE_STRATIFIED_RANDOM_heldout.csv",
+      "bytes": 1819,
+      "sha256": "94ffbc9e2dd22e1190bacd4999dd4d45626c0aef04fd09f79727432f2129518e"
+    },
+    {
+      "path": "predictions\\C_COMPLEMENT_NB_cv.csv",
+      "bytes": 2108,
+      "sha256": "1bec781922c9f755cb2dfe0acc13637d0a9a62b88381f38162c783c825e1ae4f"
+    },
+    {
+      "path": "predictions\\C_COMPLEMENT_NB_heldout.csv",
+      "bytes": 1269,
+      "sha256": "c2628c7603d0d30ccef0e86ae735ac96e722b6de2ab79db9bd74a122849903c2"
+    },
+    {
+      "path": "predictions\\C_DECISION_TREE_cv.csv",
+      "bytes": 2108,
+      "sha256": "3a47fd8c5dd950936f598acf51160466103dbea8f2898ed3a5896a055118955f"
+    },
+    {
+      "path": "predictions\\C_DECISION_TREE_heldout.csv",
+      "bytes": 1269,
+      "sha256": "5aa5460350dd05cff865b2936b89c34226d9f55e587181f2b68423c51dbd40ff"
+    },
+    {
+      "path": "predictions\\C_LOGISTIC_REGRESSION_cv.csv",
+      "bytes": 2108,
+      "sha256": "33ea50a1b28da37397968377c397ab3df5a56f8c5a41f2367ec9b932ee8afb06"
+    },
+    {
+      "path": "predictions\\C_LOGISTIC_REGRESSION_heldout.csv",
+      "bytes": 1569,
+      "sha256": "6437210d86c57ed103e2c2d584766a42c8bda4d9c1600c723e7e9b4c9ec564fd"
+    },
+    {
+      "path": "predictions\\C_RIDGE_cv.csv",
+      "bytes": 2108,
+      "sha256": "6c7754ff61c80b08ac296d5e53c3b4f3f89747557a3d40138487fa74b2268b5a"
+    },
+    {
+      "path": "predictions\\C_RIDGE_heldout.csv",
+      "bytes": 869,
+      "sha256": "8aaa64f773cdee07cadfb1a7eeef3943b35d2913c30c3193cca843f3068317f5"
+    },
+    {
+      "path": "predictions\\D_FROZEN_MINILM_cv.csv",
+      "bytes": 2108,
+      "sha256": "9a0e2f58ca83cde33d2dd487c6b4cb956b067a1eee8d02498215de251fd80f08"
+    },
+    {
+      "path": "predictions\\D_FROZEN_MINILM_heldout.csv",
+      "bytes": 1269,
+      "sha256": "7680f05e068386d14cda43a123d348f92860540b35bef179d3e67e9b65343779"
+    },
+    {
+      "path": "predictions\\E_FINETUNED_BERT_cv.csv",
+      "bytes": 2108,
+      "sha256": "4a1a54fc6df1adf5403f689ffb924970fa98e927a379da4aefc81e1f138d750e"
+    },
+    {
+      "path": "predictions\\E_FINETUNED_BERT_heldout.csv",
+      "bytes": 5282,
+      "sha256": "dc20415ea2f11e761d57cee0f98459c34b9ef82b8223bc0fe95993407952b042"
+    },
+    {
+      "path": "reproducibility\\run_2026-08-05T13-13-38.313456_00-00.json",
+      "bytes": 2853,
+      "sha256": "cde72ad642d8c34a6634c12638d6a77f90d403ae3ea0970e066fee5bbe805224"
+    },
+    {
+      "path": "tables\\all_feature_stability.csv",
+      "bytes": 2574703,
+      "sha256": "3741c362de67c24666e8ea97d56924cfcb641451a6dbd46996eced7d7428ecd3"
+    },
+    {
+      "path": "tables\\all_interpretable_model_features.csv",
+      "bytes": 1498951,
+      "sha256": "c0f68eee84a35d8b23b408f39c8a9c87f44508ff9ee0a308d05d63f63f642dea"
+    },
+    {
+      "path": "tables\\cv_paired_differences.csv",
+      "bytes": 71325,
+      "sha256": "5232d1e6918c1c83ec62b4530c736abf0feed7ae2e83ff1efa8d1e379cc7e99f"
+    },
+    {
+      "path": "tables\\cv_summary.csv",
+      "bytes": 6150,
+      "sha256": "48f7dd26e23131a80c471dbcc800e77ee8665c76dade69b40f88e34305006890"
+    },
+    {
+      "path": "tables\\heldout_bootstrap_metric_intervals.csv",
+      "bytes": 6713,
+      "sha256": "a19c3ded310363cbf0d08bd823ec2903ee18c46330f21f38e5a0dade070e1136"
+    },
+    {
+      "path": "tables\\heldout_bootstrap_pairwise_differences.csv",
+      "bytes": 66555,
+      "sha256": "140cb668893e59965b6a2dbc17718c4a9425f29d1ab6097cdf99a81232f604a0"
+    },
+    {
+      "path": "tables\\heldout_error_cases_only.csv",
+      "bytes": 589932,
+      "sha256": "7eaa567b2c5668b41cca62cc282f251cfa5d5d1e4fa7268afb7e98cec819274c"
+    },
+    {
+      "path": "tables\\heldout_ordinal_error_summary.csv",
+      "bytes": 994,
+      "sha256": "a78c98d513d100d594793d4b781fb8c0273527d2805947a563b702e5ca009ca2"
+    },
+    {
+      "path": "tables\\heldout_per_class_metrics.csv",
+      "bytes": 3569,
+      "sha256": "be6b6b27e0b05d8d4b614971c92e6c50789dea6dff1c92dc4e730f03cd9416d6"
+    },
+    {
+      "path": "tables\\heldout_prediction_cases.csv",
+      "bytes": 925572,
+      "sha256": "c215bf8e6ebeec843b893295205c17617d0ed23842584839a7081c63410ceb7c"
+    },
+    {
+      "path": "tables\\heldout_summary.csv",
+      "bytes": 1813,
+      "sha256": "e55ccf11676af7394407f04a8cefde3ec1e769b3872901705962209d6585c342"
+    },
+    {
+      "path": "tables\\rq1_class_distribution.csv",
+      "bytes": 510,
+      "sha256": "e1e2729c4fdecf8d282752e2d27779e92f80339637fe91acea4212e59401251d"
+    },
+    {
+      "path": "tables\\rq2_cv_ablation_differences.csv",
+      "bytes": 5206,
+      "sha256": "05556829cd24faf775e69f3b47ae7d7541ddc53c0bec9e8ddb7dc8f83fdf7c6b"
+    },
+    {
+      "path": "tables\\rq2_decision_tree_top_features.csv",
+      "bytes": 30116,
+      "sha256": "c8c409089d199b29f74ca2f55aef9a56fcc19f19a9d91c6ae3d60fba97d88df1"
+    },
+    {
+      "path": "tables\\rq2_heldout_ablation_bootstrap.csv",
+      "bytes": 4836,
+      "sha256": "75f30cd1f041b72e5b40a41663b835064acd881fd1f8feb4f8a3fba9fc417911"
+    },
+    {
+      "path": "tables\\rq2_minilm_named_auxiliary_stability.csv",
+      "bytes": 5525,
+      "sha256": "2a946da0d10abc99ddd4fa87e15cc3708d8d48d6b63f8f491823d1f46b047a82"
+    },
+    {
+      "path": "tables\\rq2_minilm_named_auxiliary_weights.csv",
+      "bytes": 3731,
+      "sha256": "248c035e8c6139b6ab6e31157b5294c16dbeb39e32558902d7e872a000ff36bd"
+    },
+    {
+      "path": "tables\\rq2_named_feature_model_weights.csv",
+      "bytes": 15005,
+      "sha256": "8edc117a2c26eccce8fecd4df1b423d6c631c9e3a16d8fa3e73f2b0861923bca"
+    },
+    {
+      "path": "tables\\rq2_textual_feature_consensus.csv",
+      "bytes": 11700,
+      "sha256": "a4bf8f8114f8b4ca27273ddbb13ee001aa7733b01e45a270807947b80c3e9c5e"
+    },
+    {
+      "path": "tables\\rq3_performance_interpretability_tradeoff.csv",
+      "bytes": 2365,
+      "sha256": "fcdf1ee1277a4182504429654ac8b697b0e5d2ffce1efac91daa13640b79e308"
+    }
+  ]
+}

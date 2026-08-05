@@ -1,0 +1,7 @@
+{
+  "named_auxiliary_feature_rows": 24,
+  "named_auxiliary_fold_rows": 120,
+  "named_auxiliary_stability_rows": 24,
+  "named_auxiliary_local_rows": 300,
+  "unnamed_embedding_dimensions_excluded": 384
+}

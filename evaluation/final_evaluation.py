@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -11,18 +10,12 @@ import numpy as np
 import pandas as pd
 from sklearn.base import clone
 from sklearn.metrics import make_scorer
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold
 
 from evaluation.metrics import calculate_metrics, quadratic_weighted_kappa
+from evaluation.reproducibility import sha256_file
+from features.content_groups import content_group_ids, validate_group_labels
 from models.finetuned_bert import predict_bert, train_bert_model
-
-
-def _file_sha256(path: str | Path) -> str:
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as file:
-        for chunk in iter(lambda: file.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _load_indices(path: str | Path) -> np.ndarray:
@@ -42,19 +35,24 @@ def load_saved_split(
     excluded_indices_path: str | Path,
     split_manifest_path: str | Path | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Recover labelled rows while proving complete source-row coverage."""
-    if split_manifest_path is not None:
-        manifest = json.loads(Path(split_manifest_path).read_text(encoding="utf-8"))
-        if manifest.get("dataset_sha256") != _file_sha256(dataset_path):
-            raise ValueError(
-                "dataset.csv changed after its split was generated. Run "
-                "python -m scripts.prepare_data --overwrite-split first."
-            )
+    """Recover labelled rows while proving full 250-row source coverage."""
     data = pd.read_csv(dataset_path).reset_index(drop=True)
     data.insert(0, "row_index", np.arange(len(data), dtype=int))
     train_indices = _load_indices(train_indices_path)
     test_indices = _load_indices(test_indices_path)
     excluded_indices = _load_indices(excluded_indices_path)
+    if split_manifest_path is not None:
+        manifest = json.loads(Path(split_manifest_path).read_text(encoding="utf-8"))
+        if manifest.get("dataset_sha256") != sha256_file(dataset_path):
+            raise ValueError("Dataset bytes do not match the frozen split manifest.")
+        for key, path in (
+            ("train_indices_sha256", train_indices_path),
+            ("test_indices_sha256", test_indices_path),
+            ("excluded_indices_sha256", excluded_indices_path),
+        ):
+            recorded = manifest.get(key)
+            if recorded is not None and recorded != sha256_file(path):
+                raise ValueError(f"{path} does not match the frozen split manifest.")
     split_sets = [set(values) for values in (train_indices, test_indices, excluded_indices)]
     if any(
         split_sets[first] & split_sets[second]
@@ -77,8 +75,9 @@ def load_saved_split(
         if frame["label"].isna().any():
             raise ValueError("Supervised split contains an unassigned label.")
         frame["label"] = pd.to_numeric(frame["label"]).astype(int)
-        if not set(frame["label"]).issubset({1, 2, 3, 4}):
-            raise ValueError("Supervised labels must be integers from 1 through 4.")
+        validate_group_labels(frame)
+    if set(content_group_ids(training)) & set(content_group_ids(heldout)):
+        raise ValueError("Duplicate transcript content crosses the held-out split.")
     return training, heldout
 
 
@@ -91,8 +90,9 @@ def fit_selected_estimator(
     seed: int = 42,
     n_jobs: int = 1,
 ) -> tuple[Any, dict[str, Any]]:
-    """Select parameters with stratified CV and refit on all training rows."""
-    splitter = StratifiedKFold(
+    """Select parameters with grouped CV and refit on all training rows."""
+    groups = content_group_ids(training_data)
+    splitter = StratifiedGroupKFold(
         n_splits=folds,
         shuffle=True,
         random_state=seed,
@@ -109,6 +109,7 @@ def fit_selected_estimator(
     search.fit(
         training_data.drop(columns=[target_column]),
         training_data[target_column],
+        groups=groups,
     )
     return search.best_estimator_, dict(search.best_params_)
 

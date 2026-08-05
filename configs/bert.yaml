@@ -15,8 +15,8 @@ num_labels: 4
 # These are descriptions, not CSV column names. The two lexical rates are
 # derived from title + transcript inside each fitted pipeline.
 derived_auxiliary_features:
-  - certainty_rate
-  - hedge_rate
+  - certainty_score
+  - hedge_score
 raw_auxiliary_columns:
   - likes
   - comments

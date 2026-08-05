@@ -8,6 +8,14 @@ import numpy as np
 import pandas as pd
 
 from models.frozen_minilm import FrozenMiniLMClassifier
+from models.logistic_regression import build_logistic_regression
+from models.complement_naive_bayes import build_complement_naive_bayes
+from models.decision_tree import build_decision_tree
+from models.condition_registry import CONDITION_NAMES
+from scripts.train_models import (
+    ensure_iterative_estimator_converged,
+    ensure_no_prohibited_predictors,
+)
 from models.ridge_classifier import build_ridge_classifier
 
 
@@ -43,6 +51,40 @@ class FakeSentenceEncoder:
 
 
 class ModelTests(unittest.TestCase):
+    def test_registry_contains_exactly_fourteen_experimental_conditions(self) -> None:
+        self.assertEqual(len(CONDITION_NAMES), 14)
+        self.assertEqual(len(set(CONDITION_NAMES)), 14)
+
+    def test_nonconverged_iterative_fit_is_rejected(self) -> None:
+        estimator = types.SimpleNamespace(
+            classifier_=types.SimpleNamespace(n_iter_=np.asarray([2000]), max_iter=2000)
+        )
+        with self.assertRaisesRegex(RuntimeError, "without a confirmed"):
+            ensure_iterative_estimator_converged(estimator, "TEST")
+
+    def test_fitted_pipeline_contains_no_annotation_leakage(self) -> None:
+        data = model_frame()
+        model = build_logistic_regression("C", max_features=50).fit(
+            data.drop(columns=["label"]), data["label"]
+        )
+        ensure_no_prohibited_predictors(model, "C_LOGISTIC_REGRESSION")
+
+    def test_all_twelve_interpretable_conditions_fit_and_predict(self) -> None:
+        data = model_frame()
+        builders = (
+            build_logistic_regression,
+            build_ridge_classifier,
+            build_complement_naive_bayes,
+            build_decision_tree,
+        )
+        for builder in builders:
+            for feature_set in ("A", "B", "C"):
+                model = builder(feature_set, max_features=50)
+                model.fit(data.drop(columns=["label"]), data["label"])
+                predictions = model.predict(data.drop(columns=["label"]))
+                self.assertEqual(len(predictions), len(data))
+                self.assertTrue(set(predictions).issubset({1, 2, 3, 4}))
+
     def test_ridge_fits_and_predicts_all_feature_sets(self) -> None:
         data = model_frame()
         for feature_set in ("A", "B", "C"):
@@ -51,6 +93,7 @@ class ModelTests(unittest.TestCase):
             predictions = model.predict(data.drop(columns=["label"]))
             self.assertEqual(len(predictions), len(data))
             self.assertTrue(set(predictions).issubset({1, 2, 3, 4}))
+            ensure_iterative_estimator_converged(model, f"{feature_set}_RIDGE")
 
     def test_frozen_minilm_derives_six_features_from_raw_csv_inputs(self) -> None:
         data = model_frame()

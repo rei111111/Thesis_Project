@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import random
 from dataclasses import dataclass
 from pathlib import Path
@@ -410,3 +411,21 @@ def save_bert_artifacts(
     result.tokenizer.save_pretrained(directory / "tokenizer")
     pd.DataFrame(result.history).to_csv(directory / "training_history.csv", index=False)
     joblib.dump(result.settings, directory / "training_settings.joblib")
+    tokenizer_revision = getattr(result.tokenizer, "init_kwargs", {}).get(
+        "_commit_hash"
+    )
+    encoder_revision = getattr(result.model.bert.config, "_commit_hash", None)
+    metadata = {
+        "model_name": result.settings.get("model_name"),
+        "encoder_commit_hash": encoder_revision,
+        "tokenizer_commit_hash": tokenizer_revision,
+        "best_epoch": result.best_epoch,
+        "auxiliary_feature_names": result.metadata_scaler.get_feature_names_out().tolist(),
+        "auxiliary_feature_count": len(
+            result.metadata_scaler.get_feature_names_out()
+        ),
+    }
+    (directory / "checkpoint_metadata.json").write_text(
+        json.dumps(metadata, indent=2),
+        encoding="utf-8",
+    )
