@@ -1,13 +1,14 @@
 {
-  "source_rows": 248,
-  "modelled_rows": 248,
-  "excluded_unassigned_rows": 0,
+  "source_rows": 250,
+  "modelled_rows": 246,
+  "excluded_unassigned_rows": 4,
   "class_distribution": {
-    "1": 10,
-    "2": 9,
-    "3": 84,
-    "4": 145
+    "1": 101,
+    "2": 52,
+    "3": 73,
+    "4": 20
   },
+  "duplicate_transcript_groups": 1,
   "source_columns": [
     "title",
     "transcript",
@@ -19,8 +20,6 @@
     "false_claims",
     "label"
   ],
-  "author_annotations_recalculated": false,
-  "duplicate_content_handling": false,
   "derived_columns_written_to_source": [],
-  "dataset_sha256": "1ca071ff647a0e34534dc1e5c56486b75bf46d04f9a1d757f7b7d500e816de13"
+  "dataset_sha256": "932943e2990947392fcea728c0c4b4130f4211fea7ff81e47273de5f5cb3af77"
 }
