@@ -1,32 +1,25 @@
 {
-  "dataset_sha256": "932943e2990947392fcea728c0c4b4130f4211fea7ff81e47273de5f5cb3af77",
-  "source_rows": 250,
-  "modelled_rows": 246,
-  "excluded_rows": 4,
-  "training_rows": 196,
+  "dataset_sha256": "1ca071ff647a0e34534dc1e5c56486b75bf46d04f9a1d757f7b7d500e816de13",
+  "source_rows": 248,
+  "modelled_rows": 248,
+  "excluded_rows": 0,
+  "training_rows": 198,
   "heldout_rows": 50,
   "training_class_distribution": {
-    "1": 81,
-    "2": 41,
-    "3": 58,
-    "4": 16
+    "1": 8,
+    "2": 7,
+    "3": 67,
+    "4": 116
   },
   "heldout_class_distribution": {
-    "1": 20,
-    "2": 11,
-    "3": 15,
-    "4": 4
+    "1": 2,
+    "2": 2,
+    "3": 17,
+    "4": 29
   },
-  "splitter": "StratifiedGroupKFold",
-  "group_key": "sha256(normalized transcript)",
-  "heldout_folds": 5,
-  "heldout_fold": 1,
-  "heldout_fold_setting": "auto",
-  "heldout_target_rows": 50,
-  "heldout_fold_selection_rule": "minimum absolute size error; then minimum class-distribution error; then lowest fold index",
+  "splitter": "train_test_split(stratified)",
+  "test_size": 0.2,
   "seed": 42,
   "unassigned_rows_are_excluded": true,
-  "train_indices_sha256": "f266f951e00409e3895dd7b3193a488a51fc2a91be07efa05d0023934605f83e",
-  "test_indices_sha256": "65f42a3b377f91519435dce5819ca4c31e2c8eb7dae9d39a0d84ed897b3074a5",
-  "excluded_indices_sha256": "51c60be0d15a5e0a249de5271493a3e47dce86d8ee9527b72f3ac0881e2810c1"
+  "duplicate_content_handling": false
 }

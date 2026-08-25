@@ -86,6 +86,9 @@ class BertVideoDataset(Dataset):
 
     def __getitem__(self, index: int) -> dict[str, Any]:
         row = self.data.iloc[index]
+        transcript = row.get("transcript", "")
+        if pd.isna(transcript):
+            transcript = ""
         encoded = self.tokenizer(
             str(row.get("title", "")),
             str(row.get("transcript", "")),
