@@ -4,6 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import pandas as pd
+
 from evaluation.interpretability import (
     aggregate_fold_stability,
     extract_global_features,
@@ -12,6 +14,7 @@ from evaluation.interpretability import (
     save_interpretability_artifacts,
     extract_minilm_auxiliary_features,
     save_minilm_auxiliary_artifacts,
+    select_top_features,
 )
 from models.decision_tree import build_decision_tree
 from models.logistic_regression import build_logistic_regression
@@ -54,8 +57,6 @@ class InterpretabilityTests(unittest.TestCase):
             fold_frames.append(
                 extract_global_features(model, "A_LOGISTIC_REGRESSION", fold=fold)
             )
-        import pandas as pd
-
         stability = aggregate_fold_stability(
             pd.concat(fold_frames, ignore_index=True), fold_count=2, top_k=3
         )
@@ -97,6 +98,34 @@ class InterpretabilityTests(unittest.TestCase):
                 directory,
             )
             self.assertEqual(summary["unnamed_embedding_dimensions_excluded"], 384)
+
+    def test_top_feature_views_have_correct_sign_and_unique_ranks(self) -> None:
+        data = model_frame(rows_per_class=5)
+        model = build_logistic_regression("C", max_features=50).fit(
+            data.drop(columns=["label"]), data["label"]
+        )
+        features = extract_global_features(model, "C_LOGISTIC_REGRESSION")
+        for _, group in features.dropna(subset=["absolute_rank"]).groupby(
+            "class_label"
+        ):
+            self.assertEqual(
+                group["absolute_rank"].nunique(), len(group["absolute_rank"])
+            )
+        selected = select_top_features(features, top_k=4)
+        positive = selected.loc[selected["ranking_view"].eq("largest_positive")]
+        negative = selected.loc[selected["ranking_view"].eq("largest_negative")]
+        self.assertTrue(positive["weight"].gt(0).all())
+        self.assertTrue(negative["weight"].lt(0).all())
+
+    def test_zero_importance_tree_features_are_not_reported_as_top(self) -> None:
+        data = model_frame(rows_per_class=5)
+        model = build_decision_tree("C", max_features=50).fit(
+            data.drop(columns=["label"]), data["label"]
+        )
+        features = extract_global_features(model, "C_DECISION_TREE")
+        selected = select_top_features(features, top_k=30)
+        self.assertTrue(selected["weight"].gt(0).all())
+        self.assertLessEqual(len(selected), 30)
 
 
 if __name__ == "__main__":

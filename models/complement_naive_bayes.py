@@ -23,6 +23,9 @@ def build_complement_naive_bayes(
     stop_words: str | None = "english",
     certainty_terms: tuple[str, ...] = DEFAULT_CERTAINTY_TERMS,
     hedge_terms: tuple[str, ...] = DEFAULT_HEDGE_TERMS,
+    text_columns: tuple[str, ...] = ("title", "transcript"),
+    engagement_transform: str = "log1p",
+    platform_column: str = "platform",
 ) -> Pipeline:
     """Create a leakage-safe CNB pipeline with guaranteed non-negative input."""
     preprocessor = build_interpretable_preprocessor(
@@ -33,6 +36,9 @@ def build_complement_naive_bayes(
         stop_words=stop_words,
         certainty_terms=certainty_terms,
         hedge_terms=hedge_terms,
+        text_columns=text_columns,
+        engagement_transform=engagement_transform,
+        platform_column=platform_column,
     )
     return Pipeline(
         [

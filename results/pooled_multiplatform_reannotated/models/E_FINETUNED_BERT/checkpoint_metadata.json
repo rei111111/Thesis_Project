@@ -1,0 +1,22 @@
+{
+  "model_name": "bert-base-uncased",
+  "requested_revision": null,
+  "encoder_commit_hash": "86b5e0934494bd15c9632b12f734a8a67f723594",
+  "tokenizer_commit_hash": "86b5e0934494bd15c9632b12f734a8a67f723594",
+  "checkpoint_identity_resolved": true,
+  "hidden_size": 768,
+  "metadata_dimension": 6,
+  "classifier_input_dimension": 774,
+  "num_labels": 4,
+  "maximum_sequence_length": 256,
+  "best_epoch": 4,
+  "auxiliary_feature_names": [
+    "certainty_score",
+    "hedge_score",
+    "likes_within_platform_percentile",
+    "comments_within_platform_percentile",
+    "views_within_platform_percentile",
+    "duration_sec_within_platform_percentile"
+  ],
+  "auxiliary_feature_count": 6
+}

@@ -1,5 +1,6 @@
-version: thesis_v3_certainty_hedge_only
+version: thesis_v4_corrected_longest_nonoverlap
 unit: matches_per_100_tokens
+matching_rule: longest_non_overlapping_token_sequence_across_both_lexicons
 
 # Operational lexical features. Changing these lists creates a new experimental
 # condition and should be recorded before rerunning the models.
@@ -23,7 +24,7 @@ certainty_terms:
   - demonstrates
   - doubtless
   - establish
-  - stablished
+  - established
   - evident
   - evidently
   - find
@@ -113,7 +114,7 @@ hedge_terms:
   - in general
   - in most cases
   - in most instances
-  - in my opinon
+  - in my opinion
   - in my view
   - in this view
   - in our opinion
@@ -141,7 +142,7 @@ hedge_terms:
   - probable
   - probably
   - quite
-  - rather x
+  - rather
   - relatively
   - roughly
   - seems

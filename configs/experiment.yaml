@@ -2,6 +2,7 @@ seed: 42
 
 data:
   dataset_path: data/dataset.csv
+  source_links_path: YT_Shorts_wm222dk_transcription/collection_of_all_links.txt
   train_indices_path: data/train_indices.csv
   test_indices_path: data/test_indices.csv
   excluded_indices_path: data/excluded_indices.csv
@@ -9,10 +10,14 @@ data:
   validation_report_path: data/validation_report.json
   target_column: label
   expected_rows: 250
-  # A label can be assigned from one or more claims. A blank label is accepted
-  # only when the annotation contains fewer than two eligible claims.
-  minimum_claims_for_assigned_label: 1
+  # The thesis inclusion/label rule requires at least two eligible claims.
+  # A blank label is accepted only below that same threshold.
+  minimum_claims_for_assigned_label: 2
   unassigned_allowed_below_claims: 2
+  maximum_duration_seconds: 180
+  # Audit flag only: rows below this Latin-letter fraction require manual
+  # review against the stated English-language inclusion criterion.
+  minimum_latin_letter_fraction_for_review: 0.80
 
 split:
   # One grouped fold is frozen as the 20% final held-out set. The same thesis
@@ -23,6 +28,10 @@ split:
   # Select the group-safe fold closest to ceil(20% of labelled rows), breaking
   # ties by class-distribution error and then fold number.
   heldout_fold: auto
+  # The published frozen row split was originally generated from exact
+  # normalized-transcript groups. Near-duplicate groups are a stricter,
+  # independent safety audit and must also remain within one partition.
+  generation_grouping: exact_normalized_transcript_sha256
 
 features:
   linguistic_lexicon_path: configs/linguistic_lexicons.yaml
@@ -52,7 +61,12 @@ decision_tree:
 
 minilm:
   model_name: sentence-transformers/all-MiniLM-L6-v2
+  # Set to an immutable Hub commit for a definitive rerun. The resolved commit
+  # is also written to the model artifacts.
+  revision: null
   batch_size: 32
+  expected_embedding_dimension: 384
+  expected_max_sequence_length: 256
   c_values: [0.1, 1.0, 10.0]
 
 evaluation:

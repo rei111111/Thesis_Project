@@ -21,3 +21,5 @@ results/models/*
 !results/tables/.gitkeep
 !results/figures/.gitkeep
 !results/models/.gitkeep
+
+/results/pooled_multiplatform_reannotated/models/E_FINETUNED_BERT/model_state.pt

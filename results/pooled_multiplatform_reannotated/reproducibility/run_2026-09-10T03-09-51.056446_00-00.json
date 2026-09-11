@@ -1,0 +1,279 @@
+{
+  "created_utc": "2026-09-10T03:09:51.056446+00:00",
+  "run_name": "pooled_multiplatform_reannotated",
+  "requested_model": "all",
+  "command": [
+    "C:\\Users\\wamiq\\Desktop\\2DV50E_Thesis\\Code Deliverables\\Thesis_Project\\.venv\\Scripts\\python.exe",
+    "-m",
+    "scripts.train_models",
+    "--config",
+    "configs/experiment_multiplatform.yaml",
+    "--model",
+    "all"
+  ],
+  "random_seed": 42,
+  "input_files": {
+    "experiment_config": {
+      "path": "configs\\experiment_multiplatform.yaml",
+      "sha256": "6258fe08603cda9601d7da471911d0f4d372921cd31aa2da70c820bcbd8ccbc2"
+    },
+    "bert_config": {
+      "path": "configs\\bert.yaml",
+      "sha256": "0f4544e5bfa9f5d50a3a5e992e97ba43e3fa74e9074db5857055730d0282cc16"
+    },
+    "linguistic_lexicons": {
+      "path": "configs\\linguistic_lexicons.yaml",
+      "sha256": "18fba565838494169b6f02b13e3b2fa445bc37a99b07c41e88b7b705b19ed1f0"
+    },
+    "train_indices": {
+      "path": "data\\multiplatform\\train_indices.csv",
+      "sha256": "035bd005df5991b26b17bf92fe7d6de16426b2d10755cbecb9a3b858ed2ec0a7"
+    },
+    "test_indices": {
+      "path": "data\\multiplatform\\test_indices.csv",
+      "sha256": "bb2b48fa4bd31768bfc1d8bc5ba885cc2e27bd92cce5a89d825f3cab61ddb255"
+    },
+    "excluded_indices": {
+      "path": "data\\multiplatform\\excluded_indices.csv",
+      "sha256": "e5bf7d6f21902caa6f76c5287fd683617ddf7d2fd05d8bc225e7fe4b74196374"
+    },
+    "split_manifest": {
+      "path": "data\\multiplatform\\split_manifest.json",
+      "sha256": "4d1c719bdcd70ec92d7a72d61b32d8f8cc61de6b0d2e47dff09fcc19ca18e42d"
+    },
+    "dataset_youtube": {
+      "path": "data\\dataset.csv",
+      "sha256": "b8d0366457a9223e4a19d038bb15552366a3d7eb22941c278438f415586f8a1f"
+    },
+    "dataset_tiktok": {
+      "path": "data\\adhd_misinformation_tiktok.csv",
+      "sha256": "81371b7bcbb0a0b83c692a717755378c681482b47a5e8e8b5074671d3bd27eb1"
+    }
+  },
+  "scientific_code": {
+    "sha256": "9f963bdbec6bf929b447e782d7a7c5019539135c410f807f48bcdb3e01bcce68",
+    "files": [
+      {
+        "path": "evaluation\\cross_validation.py",
+        "bytes": 14042,
+        "sha256": "f408606390de6045542dd8380b48244b03c65ac2b1b7da9bb4686bbf3d07648e"
+      },
+      {
+        "path": "evaluation\\feature_associations.py",
+        "bytes": 13005,
+        "sha256": "f1fbba8d074cb4db2c2f5419b333754868828068520eba73b276a5cf57b841cb"
+      },
+      {
+        "path": "evaluation\\final_evaluation.py",
+        "bytes": 12942,
+        "sha256": "6fb4d6c6b0567285994a226267389fb9f0beb00b96519378dd65e2482187bcf0"
+      },
+      {
+        "path": "evaluation\\interpretability.py",
+        "bytes": 30001,
+        "sha256": "da6ea70cb307e381519e7b0529e87878525f38588b945beaa9110d5d2b6c1d19"
+      },
+      {
+        "path": "evaluation\\metrics.py",
+        "bytes": 15070,
+        "sha256": "ec17516fc3d3b0f1264a38d1e9dbf2e7c9d14bcfa45bfeec6a2ab2c527306447"
+      },
+      {
+        "path": "evaluation\\report_validation.py",
+        "bytes": 6068,
+        "sha256": "74f9675499ee34aa15be9e81a261a5e6c81ae2b391e870fe5f09debdda82fdae"
+      },
+      {
+        "path": "evaluation\\reproducibility.py",
+        "bytes": 10596,
+        "sha256": "12f5cecedb2d2efe5c59a645fa1b1b9ebbb49f5c20fcb108cd390e03092be6c4"
+      },
+      {
+        "path": "evaluation\\resampling.py",
+        "bytes": 1496,
+        "sha256": "66c123928cffe5cff267da019e8d4d3755dc374a71f016932c21853159a37e98"
+      },
+      {
+        "path": "evaluation\\stratification.py",
+        "bytes": 4331,
+        "sha256": "91f3622406bd742e1d216415c279b25f1186b02e8585027e1a02f7a06fc8c6fc"
+      },
+      {
+        "path": "features\\content_groups.py",
+        "bytes": 6703,
+        "sha256": "283eeae44ac6d70adec30ecb067e92c1a2b3edac66406b157927e89b6518f39b"
+      },
+      {
+        "path": "features\\linguistic_features.py",
+        "bytes": 11387,
+        "sha256": "dbdfe8e294a73a368464eb81db5f3420b7c0d0702b8c523e3a121aa891bd4352"
+      },
+      {
+        "path": "features\\metadata_features.py",
+        "bytes": 10403,
+        "sha256": "dc9caa3f03e835308c56a7b89d52e2604d4f84dfa9f4087896f5098bcf1bacbc"
+      },
+      {
+        "path": "features\\text_features.py",
+        "bytes": 8102,
+        "sha256": "3a353fe52f2c4d9963c2a826e90c4c2d61fc722364ee13b36a51f32a204c7259"
+      },
+      {
+        "path": "features\\transformer_features.py",
+        "bytes": 5350,
+        "sha256": "7ce0fb308a21d9f6c3a2290b7ba1bb528f8ce11e2cb0aa72266807cee2665c38"
+      },
+      {
+        "path": "models\\baselines.py",
+        "bytes": 491,
+        "sha256": "f66cd47cc5748e73aac8cecacf36d30bcacad5dd46335a5d7725c3df06cb7a2c"
+      },
+      {
+        "path": "models\\complement_naive_bayes.py",
+        "bytes": 1801,
+        "sha256": "e058ac2b396d7cf1802a07dfc07a440f9e40d8a77f3c19a727dc35a0b7f5870f"
+      },
+      {
+        "path": "models\\condition_registry.py",
+        "bytes": 1965,
+        "sha256": "93bd0fb513184c6fcc42ebb70dd49ed7a3b6be9fe3dfed4725d30b3b2dd48508"
+      },
+      {
+        "path": "models\\decision_tree.py",
+        "bytes": 2018,
+        "sha256": "c017083951d507941d60c559d503c6a747504a8bef443f92f7f886ecffc871ab"
+      },
+      {
+        "path": "models\\finetuned_bert.py",
+        "bytes": 23371,
+        "sha256": "a32b8d316e15eb524acf978c10525c6790b0f6d6d932bf1db1379a72011971de"
+      },
+      {
+        "path": "models\\frozen_minilm.py",
+        "bytes": 7485,
+        "sha256": "8138e096be6790333fbc7288a27421d20fff31ab01acacc32151245dfabaec43"
+      },
+      {
+        "path": "models\\logistic_regression.py",
+        "bytes": 1885,
+        "sha256": "9fea4239f102948308f5e3b1ca856c1f34d66a50d6f7d93bd406c36cf86f5c65"
+      },
+      {
+        "path": "models\\ridge_classifier.py",
+        "bytes": 1674,
+        "sha256": "537b1c6474ab685e391891bd0c86256e18b9c9d4459110ebbeaec2e8d3eee96e"
+      },
+      {
+        "path": "scripts\\generate_results.py",
+        "bytes": 56714,
+        "sha256": "1e7bcb9ba0e1a2a42eb8df473e71b37573bcd5754b44ccbaa9bb806d3a428ac1"
+      },
+      {
+        "path": "scripts\\multiplatform_data.py",
+        "bytes": 26365,
+        "sha256": "1c14bde775ea13f5569ca2c72ad73d09dbcb775e391814fe9d089b562c37945c"
+      },
+      {
+        "path": "scripts\\prepare_data.py",
+        "bytes": 33637,
+        "sha256": "146494eb1ba7ff0c88e58d4367d5050e91f8606f5ab2aa2313feb6d3f814d4e2"
+      },
+      {
+        "path": "scripts\\run_sensitivity.py",
+        "bytes": 2056,
+        "sha256": "9c54973fadf22ae3726346fcef90c8a54e586b50cf7c9b872da919c92a57d7b8"
+      },
+      {
+        "path": "scripts\\train_models.py",
+        "bytes": 33678,
+        "sha256": "23f3de1d8c614328796f7f9e02fd1a698d8138e858474c257d79f58d982c4123"
+      },
+      {
+        "path": "scripts\\validate_study_outputs.py",
+        "bytes": 27664,
+        "sha256": "2aab7a6d90a25c438ba55d7c73a45fb520dd119e488e8f6d92d9195e1e9c0062"
+      }
+    ]
+  },
+  "completed_conditions": [
+    "BASELINE_STRATIFIED_RANDOM"
+  ],
+  "output_files": [
+    {
+      "path": "results\\pooled_multiplatform_reannotated\\metrics\\BASELINE_STRATIFIED_RANDOM_cv.csv",
+      "bytes": 512,
+      "sha256": "10d4e6223acc9ea031d613630c1a2b6d22f04ab3cfefd71021727252334e0692"
+    },
+    {
+      "path": "results\\pooled_multiplatform_reannotated\\metrics\\BASELINE_STRATIFIED_RANDOM_heldout.json",
+      "bytes": 1014,
+      "sha256": "9bf5cfa7c8fe1f89dbbb2b3d1e2bab5e41176e6070a62023ad1b7de272ad0c08"
+    },
+    {
+      "path": "results\\pooled_multiplatform_reannotated\\models\\BASELINE_STRATIFIED_RANDOM\\estimator.joblib",
+      "bytes": 999,
+      "sha256": "72ba34fa144b6488dbaa31bc1a007e252ca55b787d5dcdf56c27d624632b717e"
+    },
+    {
+      "path": "results\\pooled_multiplatform_reannotated\\models\\BASELINE_STRATIFIED_RANDOM\\selected_parameters.json",
+      "bytes": 2,
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "path": "results\\pooled_multiplatform_reannotated\\predictions\\BASELINE_STRATIFIED_RANDOM_cv.csv",
+      "bytes": 12898,
+      "sha256": "a8bac0fa58f14c04af2e19a58dd319b62ff7ef7fe51538156761c8f128ee8b9b"
+    },
+    {
+      "path": "results\\pooled_multiplatform_reannotated\\predictions\\BASELINE_STRATIFIED_RANDOM_heldout.csv",
+      "bytes": 5785,
+      "sha256": "c4385c63488aee2c6defae2e67ae1ee0504a6e3c9155f80a5e8267b0abe255cf"
+    }
+  ],
+  "exclusions": {
+    "total_claims": []
+  },
+  "package_versions": {
+    "numpy": "2.5.1",
+    "pandas": "2.3.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "joblib": "1.5.3",
+    "PyYAML": "6.0.3",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "torch": "2.12.1+cu126",
+    "transformers": "5.14.1",
+    "sentence-transformers": "5.6.1"
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 141 Stepping 1, GenuineIntel",
+    "logical_cpu_count": 12,
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "torch_cuda_available": true,
+    "torch_cuda_version": "12.6",
+    "torch_cudnn_version": 91002,
+    "gpu_count": 1,
+    "gpu_names": [
+      "NVIDIA GeForce GTX 1650 with Max-Q Design"
+    ]
+  },
+  "git_commit": "58af283d15b4518c4c24e3ba10fa760da0d82cf5",
+  "checkpoint_names": {
+    "frozen_sentence_transformer": "sentence-transformers/all-MiniLM-L6-v2",
+    "fine_tuned_transformer": "bert-base-uncased"
+  },
+  "extra": {
+    "training_rows_used": 392,
+    "heldout_rows_used": 99,
+    "interpretability_exported": true,
+    "data_mode": "pooled_multiplatform",
+    "text_columns": [
+      "transcript"
+    ],
+    "engagement_transform": "within_platform_percentile"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "protocol": "pooled_multiplatform_v1",
+  "combined_source_sha256": "73c2c3eeeb6af4a6d96aec5be07b334e1c2039da4224f7eccc14fe3b62d7fbe9",
+  "source_files": [
+    {
+      "name": "youtube",
+      "path": "data\\dataset.csv",
+      "sha256": "b8d0366457a9223e4a19d038bb15552366a3d7eb22941c278438f415586f8a1f",
+      "rows": 250,
+      "columns": [
+        "title",
+        "transcript",
+        "likes",
+        "comments",
+        "views",
+        "duration_sec",
+        "total_claims",
+        "false_claims",
+        "label"
+      ]
+    },
+    {
+      "name": "tiktok",
+      "path": "data\\adhd_misinformation_tiktok.csv",
+      "sha256": "81371b7bcbb0a0b83c692a717755378c681482b47a5e8e8b5074671d3bd27eb1",
+      "rows": 248,
+      "columns": [
+        "title",
+        "transcript",
+        "likes",
+        "comments",
+        "views",
+        "duration_sec",
+        "total_claims",
+        "false_claims",
+        "label"
+      ]
+    }
+  ],
+  "source_rows": 498,
+  "modelled_rows": 491,
+  "excluded_rows": 7,
+  "training_rows": 392,
+  "heldout_rows": 99,
+  "training_platform_distribution": {
+    "tiktok": 198,
+    "youtube": 194
+  },
+  "heldout_platform_distribution": {
+    "tiktok": 50,
+    "youtube": 49
+  },
+  "training_class_distribution": {
+    "1": 96,
+    "2": 46,
+    "3": 117,
+    "4": 133
+  },
+  "heldout_class_distribution": {
+    "1": 24,
+    "2": 12,
+    "3": 30,
+    "4": 33
+  },
+  "training_platform_label_distribution": {
+    "tiktok|1": 8,
+    "tiktok|2": 7,
+    "tiktok|3": 67,
+    "tiktok|4": 116,
+    "youtube|1": 88,
+    "youtube|2": 39,
+    "youtube|3": 50,
+    "youtube|4": 17
+  },
+  "heldout_platform_label_distribution": {
+    "tiktok|1": 2,
+    "tiktok|2": 2,
+    "tiktok|3": 17,
+    "tiktok|4": 29,
+    "youtube|1": 22,
+    "youtube|2": 10,
+    "youtube|3": 13,
+    "youtube|4": 4
+  },
+  "splitter": "StratifiedGroupKFold",
+  "heldout_folds": 5,
+  "heldout_fold": 1,
+  "heldout_fold_setting": "auto",
+  "heldout_target_rows": 99,
+  "seed": 42,
+  "stratification_columns": [
+    "platform"
+  ],
+  "stratification_target": "label",
+  "split_generation_grouping": "near_duplicate_transcript_connected_components",
+  "split_generation_group_method": "connected components of token-sequence similarity >= 0.80 for texts with >= 20 tokens, after length-ratio >= 0.70 and token-Jaccard >= 0.50 prefilters",
+  "unassigned_rows_are_excluded": true,
+  "title_placeholder_audit": [
+    {
+      "source": "youtube",
+      "declared_values": [],
+      "placeholder_rows": 0,
+      "advisory_only": true,
+      "excluded_from_pooled_text": true
+    },
+    {
+      "source": "tiktok",
+      "declared_values": [
+        "video"
+      ],
+      "placeholder_rows": 248,
+      "advisory_only": true,
+      "excluded_from_pooled_text": true
+    }
+  ],
+  "raw_csvs_modified": false,
+  "train_indices_sha256": "035bd005df5991b26b17bf92fe7d6de16426b2d10755cbecb9a3b858ed2ec0a7",
+  "test_indices_sha256": "bb2b48fa4bd31768bfc1d8bc5ba885cc2e27bd92cce5a89d825f3cab61ddb255",
+  "excluded_indices_sha256": "e5bf7d6f21902caa6f76c5287fd683617ddf7d2fd05d8bc225e7fe4b74196374"
+}

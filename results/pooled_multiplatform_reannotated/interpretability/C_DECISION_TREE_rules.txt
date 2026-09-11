@@ -1,0 +1,95 @@
+Rules apply to transformed float32 model inputs.
+if text__symptoms <= 0.0940028764307499:
+    if text__talking <= 0.022087890654802322:
+        if text__way <= 0.07509763911366463:
+            if text__away <= 0.05768333934247494:
+                if text__dopamine <= 0.07126924395561218:
+                    if text__adults <= 0.034870099276304245:
+                        if text__thing <= 0.0608743317425251:
+                            predict class 1
+                        else:  # text__thing > 0.0608743317425251
+                            predict class 3
+                    else:  # text__adults > 0.034870099276304245
+                        if text__actually <= 0.06933196261525154:
+                            predict class 1
+                        else:  # text__actually > 0.06933196261525154
+                            predict class 2
+                else:  # text__dopamine > 0.07126924395561218
+                    if text__ve <= 0.0884406752884388:
+                        if text__feel <= 0.08371401578187943:
+                            predict class 3
+                        else:  # text__feel > 0.08371401578187943
+                            predict class 4
+                    else:  # text__ve > 0.0884406752884388
+                        predict class 4
+            else:  # text__away > 0.05768333934247494
+                if engagement__views_within_platform_percentile <= 0.34416328370571136:
+                    predict class 4
+                else:  # engagement__views_within_platform_percentile > 0.34416328370571136
+                    predict class 4
+        else:  # text__way > 0.07509763911366463
+            if engagement__duration_sec_within_platform_percentile <= 0.3380323797464371:
+                if text__time <= 0.047472212463617325:
+                    if text__brain <= 0.06988546438515186:
+                        predict class 4
+                    else:  # text__brain > 0.06988546438515186
+                        predict class 4
+                else:  # text__time > 0.047472212463617325
+                    predict class 3
+            else:  # engagement__duration_sec_within_platform_percentile > 0.3380323797464371
+                if engagement__comments_within_platform_percentile <= 0.38530927896499634:
+                    predict class 1
+                else:  # engagement__comments_within_platform_percentile > 0.38530927896499634
+                    if text__sense <= 0.04173421859741211:
+                        if text__just <= 0.11952247843146324:
+                            predict class 2
+                        else:  # text__just > 0.11952247843146324
+                            predict class 3
+                    else:  # text__sense > 0.04173421859741211
+                        predict class 4
+    else:  # text__talking > 0.022087890654802322
+        if text__means <= 0.02110081911087036:
+            if text__like <= 0.015791870653629303:
+                predict class 2
+            else:  # text__like > 0.015791870653629303
+                if text__going <= 0.030234171077609062:
+                    predict class 1
+                else:  # text__going > 0.030234171077609062
+                    if text__want <= 0.11632669344544411:
+                        predict class 3
+                    else:  # text__want > 0.11632669344544411
+                        predict class 4
+        else:  # text__means > 0.02110081911087036
+            predict class 2
+else:  # text__symptoms > 0.0940028764307499
+    if text__symptoms <= 0.16354601830244064:
+        if text__person <= 0.032223984599113464:
+            if text__things <= 0.0945032387971878:
+                if text__video <= 0.04531284049153328:
+                    if linguistic__certainty_score <= 1.2307808995246887:
+                        if text__let <= 0.027356714010238647:
+                            predict class 2
+                        else:  # text__let > 0.027356714010238647
+                            predict class 3
+                    else:  # linguistic__certainty_score > 1.2307808995246887
+                        if text__actually <= 0.022983187809586525:
+                            predict class 2
+                        else:  # text__actually > 0.022983187809586525
+                            predict class 2
+                else:  # text__video > 0.04531284049153328
+                    predict class 1
+            else:  # text__things > 0.0945032387971878
+                predict class 1
+        else:  # text__person > 0.032223984599113464
+            predict class 1
+    else:  # text__symptoms > 0.16354601830244064
+        if text__issues <= 0.06517340242862701:
+            if engagement__duration_sec_within_platform_percentile <= 0.1275903321802616:
+                predict class 2
+            else:  # engagement__duration_sec_within_platform_percentile > 0.1275903321802616
+                if linguistic__certainty_score <= 1.431901454925537:
+                    predict class 1
+                else:  # linguistic__certainty_score > 1.431901454925537
+                    predict class 1
+        else:  # text__issues > 0.06517340242862701
+            predict class 3

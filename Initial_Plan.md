@@ -1,4 +1,14 @@
- # Initial Project Plan
+# Archived Initial Project Plan — Superseded
+
+> **Do not use this file as an implementation specification.** It records an
+> abandoned early design (500 videos, a 400/100 split, source `video_id` and
+> `platform` columns, an exclamation feature, and seven auxiliary values). The
+> authoritative short-form final thesis instead uses 250 source rows, 246
+> labelled rows, a frozen 196/50 split, the documented nine-column source CSV,
+> and six auxiliary values: certainty, hedge, likes, comments, views, and
+> duration. See `README.md`, `configs/`, `VALIDITY_AUDIT.md`, and
+> `IMPLEMENTATION_MANIFEST.md` for the active implementation. This historical
+> text is retained only to explain project evolution.
 
 # 1. Project Goal
 

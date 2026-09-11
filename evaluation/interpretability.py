@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 from sklearn.naive_bayes import ComplementNB
-from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 
 def _normalise_feature_name(name: object) -> tuple[str, str]:
@@ -49,6 +49,39 @@ def _classifier(estimator: Any) -> Any:
         return estimator.named_steps["classifier"]
     except (AttributeError, KeyError) as exc:
         raise TypeError("Expected a fitted Pipeline with a classifier step.") from exc
+
+
+def _assign_feature_ranks(frame: pd.DataFrame) -> pd.DataFrame:
+    """Assign deterministic unique ranks, leaving zero/inapplicable ranks blank."""
+    result = frame.copy()
+    for column in ("absolute_rank", "positive_rank", "negative_rank"):
+        result[column] = pd.Series(pd.NA, index=result.index, dtype="Int64")
+    for _, group in result.groupby("class_label", dropna=False, sort=False):
+        absolute = group.loc[group["absolute_weight"].gt(0)].sort_values(
+            ["absolute_weight", "feature", "feature_index"],
+            ascending=[False, True, True],
+            kind="stable",
+        )
+        positive = group.loc[group["weight"].gt(0)].sort_values(
+            ["weight", "feature", "feature_index"],
+            ascending=[False, True, True],
+            kind="stable",
+        )
+        negative = group.loc[group["weight"].lt(0)].sort_values(
+            ["weight", "feature", "feature_index"],
+            ascending=[True, True, True],
+            kind="stable",
+        )
+        result.loc[absolute.index, "absolute_rank"] = np.arange(
+            1, len(absolute) + 1
+        )
+        result.loc[positive.index, "positive_rank"] = np.arange(
+            1, len(positive) + 1
+        )
+        result.loc[negative.index, "negative_rank"] = np.arange(
+            1, len(negative) + 1
+        )
+    return result
 
 
 def extract_global_features(
@@ -133,21 +166,7 @@ def extract_global_features(
         ["positive", "negative"],
         default="zero",
     )
-    frame["absolute_rank"] = (
-        frame.groupby("class_label", dropna=False)["absolute_weight"]
-        .rank(method="min", ascending=False)
-        .astype(int)
-    )
-    frame["positive_rank"] = (
-        frame.groupby("class_label", dropna=False)["weight"]
-        .rank(method="min", ascending=False)
-        .astype(int)
-    )
-    frame["negative_rank"] = (
-        frame.groupby("class_label", dropna=False)["weight"]
-        .rank(method="min", ascending=True)
-        .astype(int)
-    )
+    frame = _assign_feature_ranks(frame)
     return frame.sort_values(
         ["class_label", "absolute_rank", "feature"],
         kind="stable",
@@ -162,13 +181,19 @@ def select_top_features(frame: pd.DataFrame, top_k: int) -> pd.DataFrame:
     for _, group in frame.groupby("class_label", dropna=False, sort=False):
         weight_type = str(group["weight_type"].iloc[0])
         if weight_type == "coefficient":
-            positive = group.nsmallest(top_k, "positive_rank").copy()
+            positive = group.loc[group["weight"].gt(0)].nsmallest(
+                top_k, "positive_rank"
+            ).copy()
             positive["ranking_view"] = "largest_positive"
-            negative = group.nsmallest(top_k, "negative_rank").copy()
+            negative = group.loc[group["weight"].lt(0)].nsmallest(
+                top_k, "negative_rank"
+            ).copy()
             negative["ranking_view"] = "largest_negative"
             output.extend([positive, negative])
         else:
-            strongest = group.nsmallest(top_k, "absolute_rank").copy()
+            strongest = group.loc[group["absolute_weight"].gt(0)].nsmallest(
+                top_k, "absolute_rank"
+            ).copy()
             strongest["ranking_view"] = "strongest_weight"
             output.append(strongest)
     return pd.concat(output, ignore_index=True) if output else frame.iloc[0:0]
@@ -261,16 +286,29 @@ def aggregate_fold_stability(
 
 
 def tree_rule_text(estimator: Any) -> str:
+    """Export complete rules with unambiguous names and round-trip thresholds."""
     classifier = _classifier(estimator)
     if not isinstance(classifier, DecisionTreeClassifier):
         raise TypeError("Readable rules are available only for Decision Trees.")
-    names, _ = feature_names(estimator)
-    return export_text(
-        classifier,
-        feature_names=list(names),
-        decimals=5,
-        show_weights=True,
-    )
+    names = estimator.named_steps["features"].get_feature_names_out()
+    tree = classifier.tree_
+    lines = ["Rules apply to transformed float32 model inputs."]
+
+    def visit(node: int, depth: int) -> None:
+        indent = "    " * depth
+        if tree.children_left[node] == tree.children_right[node]:
+            label = classifier.classes_[int(np.argmax(tree.value[node]))]
+            lines.append(f"{indent}predict class {int(label)}")
+            return
+        name = str(names[int(tree.feature[node])])
+        threshold = repr(float(tree.threshold[node]))
+        lines.append(f"{indent}if {name} <= {threshold}:")
+        visit(int(tree.children_left[node]), depth + 1)
+        lines.append(f"{indent}else:  # {name} > {threshold}")
+        visit(int(tree.children_right[node]), depth + 1)
+
+    visit(0, 0)
+    return "\n".join(lines) + "\n"
 
 
 def _tree_depths(classifier: DecisionTreeClassifier) -> np.ndarray:
@@ -405,7 +443,9 @@ def local_tree_paths(
         raise TypeError("Tree paths require a Decision Tree estimator.")
     names, groups = feature_names(estimator)
     predictors = data.drop(columns=["label"], errors="ignore")
-    matrix = _transformed_matrix(estimator, predictors)
+    # sklearn's tree converts inputs to float32 before deciding a branch.
+    # Use those same values for the explanation, including sparse matrices.
+    matrix = _transformed_matrix(estimator, predictors).astype(np.float32)
     paths = classifier.decision_path(matrix)
     leaves = classifier.apply(matrix)
     predictions = classifier.predict(matrix)
@@ -465,7 +505,7 @@ def save_tree_figure(
     classifier = _classifier(estimator)
     if not isinstance(classifier, DecisionTreeClassifier):
         raise TypeError("Tree figure requires a Decision Tree estimator.")
-    names, _ = feature_names(estimator)
+    names = estimator.named_steps["features"].get_feature_names_out()
     figure, axis = plt.subplots(figsize=(26, 14))
     plot_tree(
         classifier,
@@ -600,21 +640,7 @@ def extract_minilm_auxiliary_features(
         ["positive", "negative"],
         default="zero",
     )
-    frame["absolute_rank"] = (
-        frame.groupby("class_label")["absolute_weight"]
-        .rank(method="min", ascending=False)
-        .astype(int)
-    )
-    frame["positive_rank"] = (
-        frame.groupby("class_label")["weight"]
-        .rank(method="min", ascending=False)
-        .astype(int)
-    )
-    frame["negative_rank"] = (
-        frame.groupby("class_label")["weight"]
-        .rank(method="min", ascending=True)
-        .astype(int)
-    )
+    frame = _assign_feature_ranks(frame)
     return frame.sort_values(["class_label", "absolute_rank"]).reset_index(drop=True)
 
 

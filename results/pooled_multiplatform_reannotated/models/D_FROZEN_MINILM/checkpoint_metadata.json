@@ -1,0 +1,38 @@
+{
+  "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "requested_revision": null,
+  "model_commit_hash": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "outer_fold_model_commit_hashes": [
+    "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  ],
+  "outer_fold_embedding_dimensions": [
+    384,
+    384,
+    384,
+    384,
+    384
+  ],
+  "outer_fold_max_sequence_lengths": [
+    256,
+    256,
+    256,
+    256,
+    256
+  ],
+  "embedding_dimension": 384,
+  "expected_embedding_dimension": 384,
+  "max_sequence_length": 256,
+  "expected_max_sequence_length": 256,
+  "named_auxiliary_features": [
+    "certainty_score",
+    "hedge_score",
+    "likes_within_platform_percentile",
+    "comments_within_platform_percentile",
+    "views_within_platform_percentile",
+    "duration_sec_within_platform_percentile"
+  ]
+}

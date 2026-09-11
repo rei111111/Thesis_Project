@@ -12,6 +12,7 @@ from features.linguistic_features import (
     DEFAULT_CERTAINTY_TERMS,
     DEFAULT_HEDGE_TERMS,
     LinguisticFeatureExtractor,
+    calculate_linguistic_scores,
     score_per_100_tokens,
     validate_lexicons,
 )
@@ -52,6 +53,28 @@ class FeatureTests(unittest.TestCase):
         self.assertEqual(score_per_100_tokens("may", ["may"]), 100.0)
         self.assertEqual(score_per_100_tokens("mayonnaise", ["may"]), 0.0)
 
+    def test_nested_cross_lexicon_phrases_are_not_double_counted(self) -> None:
+        certainty, hedge = calculate_linguistic_scores(
+            "There is no doubt about it",
+            certainty_terms=("no doubt",),
+            hedge_terms=("doubt",),
+        )
+        self.assertGreater(certainty, 0)
+        self.assertEqual(hedge, 0)
+        certainty, hedge = calculate_linguistic_scores(
+            "A certain amount remains",
+            certainty_terms=("certain",),
+            hedge_terms=("certain amount",),
+        )
+        self.assertEqual(certainty, 0)
+        self.assertGreater(hedge, 0)
+
+    def test_corrected_lexicon_terms_replace_literal_typos(self) -> None:
+        self.assertIn("established", DEFAULT_CERTAINTY_TERMS)
+        self.assertNotIn("stablished", DEFAULT_CERTAINTY_TERMS)
+        self.assertIn("in my opinion", DEFAULT_HEDGE_TERMS)
+        self.assertIn("rather", DEFAULT_HEDGE_TERMS)
+
     def test_linguistic_scores_are_derived_without_mutating_data(self) -> None:
         data = sample_frame()
         original_columns = tuple(data.columns)
@@ -90,6 +113,15 @@ class FeatureTests(unittest.TestCase):
             dimensions.append(matrix.shape[1])
         self.assertLess(dimensions[0], dimensions[1])
         self.assertLess(dimensions[1], dimensions[2])
+
+    def test_tfidf_does_not_inject_a_literal_sep_word(self) -> None:
+        preprocessor = build_ridge_preprocessor("A", max_features=30)
+        preprocessor.fit(sample_frame())
+        names = {
+            str(value).split("__")[-1]
+            for value in preprocessor.get_feature_names_out()
+        }
+        self.assertNotIn("sep", names)
 
 
 if __name__ == "__main__":

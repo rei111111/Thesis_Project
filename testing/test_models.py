@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import importlib.util
+import tempfile
 import types
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
+import joblib
 import numpy as np
 import pandas as pd
 
@@ -15,6 +19,7 @@ from models.condition_registry import CONDITION_NAMES
 from scripts.train_models import (
     ensure_iterative_estimator_converged,
     ensure_no_prohibited_predictors,
+    run_bert,
 )
 from models.ridge_classifier import build_ridge_classifier
 
@@ -41,6 +46,8 @@ def model_frame(rows_per_class: int = 4) -> pd.DataFrame:
 
 
 class FakeSentenceEncoder:
+    max_seq_length = 256
+
     def encode(self, texts: list[str], **_: object) -> np.ndarray:
         embeddings = np.zeros((len(texts), 384), dtype=np.float32)
         for index, text in enumerate(texts):
@@ -50,10 +57,20 @@ class FakeSentenceEncoder:
         return embeddings
 
 
+class FakeRevisionedSentenceEncoder(FakeSentenceEncoder):
+    def _first_module(self) -> object:
+        return types.SimpleNamespace(
+            auto_model=types.SimpleNamespace(
+                config=types.SimpleNamespace(_commit_hash="f" * 40)
+            )
+        )
+
+
 class ModelTests(unittest.TestCase):
     def test_registry_contains_exactly_fourteen_experimental_conditions(self) -> None:
         self.assertEqual(len(CONDITION_NAMES), 14)
         self.assertEqual(len(set(CONDITION_NAMES)), 14)
+
 
     def test_nonconverged_iterative_fit_is_rejected(self) -> None:
         estimator = types.SimpleNamespace(
@@ -68,6 +85,18 @@ class ModelTests(unittest.TestCase):
             data.drop(columns=["label"]), data["label"]
         )
         ensure_no_prohibited_predictors(model, "C_LOGISTIC_REGRESSION")
+
+    def test_text_token_named_label_is_not_mistaken_for_source_leakage(self) -> None:
+        data = model_frame()
+        data["transcript"] = data["transcript"] + " label"
+        model = build_logistic_regression("A", max_features=100).fit(
+            data.drop(columns=["label"]), data["label"]
+        )
+        self.assertIn(
+            "text__label",
+            set(model.named_steps["features"].get_feature_names_out()),
+        )
+        ensure_no_prohibited_predictors(model, "A_LOGISTIC_REGRESSION")
 
     def test_all_twelve_interpretable_conditions_fit_and_predict(self) -> None:
         data = model_frame()
@@ -103,6 +132,110 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(model.embedding_dimension_, 384)
         self.assertEqual(model.auxiliary_dimension_, 6)
         self.assertEqual(len(predictions), len(data))
+
+    def test_saved_minilm_reloads_the_resolved_checkpoint_revision(self) -> None:
+        data = model_frame()
+        initial_encoder = FakeRevisionedSentenceEncoder()
+        with patch(
+            "models.frozen_minilm.load_minilm_encoder",
+            return_value=initial_encoder,
+        ):
+            model = FrozenMiniLMClassifier().fit(
+                data.drop(columns=["label"]), data["label"]
+            )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "estimator.joblib"
+            joblib.dump(model, path)
+            restored = joblib.load(path)
+            reloaded_encoder = FakeRevisionedSentenceEncoder()
+            with patch(
+                "models.frozen_minilm.load_minilm_encoder",
+                return_value=reloaded_encoder,
+            ) as loader:
+                restored.predict(data.drop(columns=["label"]))
+        self.assertEqual(loader.call_args.args[2], "f" * 40)
+
+    def test_bert_run_checks_revisions_and_saves_heldout_predictions(self) -> None:
+        data = model_frame(rows_per_class=1)
+        training = data.copy()
+        heldout = data.copy()
+        settings = {"seed": 42, "evaluation": {"outer_folds": 2}}
+        bert_settings = {"model_name": "bert-base-uncased", "resolved_revision": "a" * 40}
+        lexicons = {"certainty_terms": ("clearly",), "hedge_terms": ("may",)}
+        revision = "a" * 40
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            metrics = root / "metrics"
+            predictions = root / "predictions"
+            models = root / "models"
+            interpretability = root / "interpretability"
+            for path in (metrics, predictions, models, interpretability):
+                path.mkdir()
+
+            def fake_outer_cv(**kwargs: object) -> object:
+                output = Path(str(kwargs["output_directory"]))
+                for fold in (1, 2):
+                    fold_directory = output / f"fold_{fold}"
+                    fold_directory.mkdir(parents=True)
+                    (fold_directory / "fold_training_record.json").write_text(
+                        '{"encoder_commit_hash":"'
+                        + revision
+                        + '","tokenizer_commit_hash":"'
+                        + revision
+                        + '"}',
+                        encoding="utf-8",
+                    )
+                return types.SimpleNamespace(best_epochs=[1, 2])
+
+            def fake_final_bert(**kwargs: object) -> pd.DataFrame:
+                output = Path(str(kwargs["output_directory"]))
+                output.mkdir(parents=True, exist_ok=True)
+                (output / "checkpoint_metadata.json").write_text(
+                    '{"encoder_commit_hash":"'
+                    + revision
+                    + '","tokenizer_commit_hash":"'
+                    + revision
+                    + '"}',
+                    encoding="utf-8",
+                )
+                return pd.DataFrame(
+                    {
+                        "row_index": heldout["row_index"],
+                        "condition": "E_FINETUNED_BERT",
+                        "true_label": heldout["label"],
+                        "prediction": heldout["label"],
+                    }
+                )
+
+            with (
+                patch(
+                    "scripts.train_models.result_paths",
+                    return_value=(metrics, predictions, models, interpretability),
+                ),
+                patch(
+                    "scripts.train_models.run_bert_outer_cross_validation",
+                    side_effect=fake_outer_cv,
+                ),
+                patch("scripts.train_models.save_cross_validation_result"),
+                patch(
+                    "scripts.train_models.fit_final_bert",
+                    side_effect=fake_final_bert,
+                ),
+                patch("scripts.train_models.save_heldout_predictions") as save,
+            ):
+                run_bert(
+                    training,
+                    heldout,
+                    settings,
+                    bert_settings,
+                    lexicons,
+                    overwrite=False,
+                    device=None,
+                    run_name="primary",
+                )
+
+        save.assert_called_once()
 
     @unittest.skipUnless(
         importlib.util.find_spec("torch") is not None,

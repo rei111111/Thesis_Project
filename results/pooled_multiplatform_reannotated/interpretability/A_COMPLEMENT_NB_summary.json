@@ -1,0 +1,7 @@
+{
+  "global_feature_rows": 1200,
+  "top_feature_rows": 80,
+  "fold_feature_rows": 6000,
+  "stability_rows": 1456,
+  "local_explanation_rows": 989
+}

@@ -1,0 +1,16 @@
+condition,fold,class_label,feature_index,feature,feature_group,weight_type,weight,absolute_weight,direction,absolute_rank,positive_rank,negative_rank,ranking_view
+B_DECISION_TREE,final_training_fit,all,253,symptoms,textual,gini_importance,0.2458658014374839,0.2458658014374839,positive,1,1,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,17,adults,textual,gini_importance,0.07511037862754112,0.07511037862754112,positive,2,2,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,27,away,textual,gini_importance,0.07489362132911632,0.07489362132911632,positive,3,3,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,263,thing,textual,gini_importance,0.07455082600964237,0.07455082600964237,positive,4,4,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,78,dopamine,textual,gini_importance,0.07335502898122391,0.07335502898122391,positive,5,5,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,288,way,textual,gini_importance,0.06974877221577289,0.06974877221577289,positive,6,6,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,256,talking,textual,gini_importance,0.06487084952104503,0.06487084952104503,positive,7,7,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,301,hedge_score,handcrafted_linguistic,gini_importance,0.06469535435257967,0.06469535435257967,positive,8,8,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,220,say,textual,gini_importance,0.049652153399345214,0.049652153399345214,positive,9,9,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,67,different,textual,gini_importance,0.045785923392500774,0.045785923392500774,positive,10,10,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,23,attention,textual,gini_importance,0.040662296000883835,0.040662296000883835,positive,11,11,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,141,just,textual,gini_importance,0.03445485588331699,0.03445485588331699,positive,12,12,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,110,going,textual,gini_importance,0.034238152041683914,0.034238152041683914,positive,13,13,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,32,better,textual,gini_importance,0.03212198547810796,0.03212198547810796,positive,14,14,,strongest_weight
+B_DECISION_TREE,final_training_fit,all,9,adhd,textual,gini_importance,0.019994001329756244,0.019994001329756244,positive,15,15,,strongest_weight

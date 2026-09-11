@@ -1,6 +1,6 @@
 {
   "fold": 2,
-  "best_epoch": 4,
+  "best_epoch": 2,
   "outer_training_rows": 156,
   "fitting_rows": 140,
   "early_stopping_rows": 16,

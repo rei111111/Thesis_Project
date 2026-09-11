@@ -1,0 +1,98 @@
+Rules apply to transformed float32 model inputs.
+if text__symptoms <= 0.0940028764307499:
+    if text__talking <= 0.022087890654802322:
+        if text__way <= 0.07509763911366463:
+            if text__away <= 0.05768333934247494:
+                if text__dopamine <= 0.07126924395561218:
+                    if text__adults <= 0.034870099276304245:
+                        if text__thing <= 0.0608743317425251:
+                            predict class 1
+                        else:  # text__thing > 0.0608743317425251
+                            predict class 3
+                    else:  # text__adults > 0.034870099276304245
+                        if text__actually <= 0.06933196261525154:
+                            predict class 1
+                        else:  # text__actually > 0.06933196261525154
+                            predict class 2
+                else:  # text__dopamine > 0.07126924395561218
+                    if text__ve <= 0.0884406752884388:
+                        if text__feel <= 0.08371401578187943:
+                            predict class 3
+                        else:  # text__feel > 0.08371401578187943
+                            predict class 4
+                    else:  # text__ve > 0.0884406752884388
+                        predict class 4
+            else:  # text__away > 0.05768333934247494
+                if text__know <= 0.11225903034210205:
+                    predict class 4
+                else:  # text__know > 0.11225903034210205
+                    predict class 4
+        else:  # text__way > 0.07509763911366463
+            if text__say <= 0.044601812958717346:
+                if text__different <= 0.03894618898630142:
+                    if text__know <= 0.08323932439088821:
+                        if text__like <= 0.1413813754916191:
+                            predict class 2
+                        else:  # text__like > 0.1413813754916191
+                            predict class 1
+                    else:  # text__know > 0.08323932439088821
+                        predict class 4
+                else:  # text__different > 0.03894618898630142
+                    if text__like <= 0.07845171354711056:
+                        predict class 3
+                    else:  # text__like > 0.07845171354711056
+                        predict class 4
+            else:  # text__say > 0.044601812958717346
+                if text__lot <= 0.05592464841902256:
+                    predict class 4
+                else:  # text__lot > 0.05592464841902256
+                    predict class 3
+    else:  # text__talking > 0.022087890654802322
+        if text__means <= 0.02110081911087036:
+            if text__like <= 0.015791870653629303:
+                predict class 2
+            else:  # text__like > 0.015791870653629303
+                if text__going <= 0.030234171077609062:
+                    predict class 1
+                else:  # text__going > 0.030234171077609062
+                    if text__adhd <= 0.1282799020409584:
+                        predict class 3
+                    else:  # text__adhd > 0.1282799020409584
+                        predict class 4
+        else:  # text__means > 0.02110081911087036
+            predict class 2
+else:  # text__symptoms > 0.0940028764307499
+    if text__symptoms <= 0.16354601830244064:
+        if text__person <= 0.032223984599113464:
+            if text__things <= 0.0945032387971878:
+                if text__video <= 0.04531284049153328:
+                    if text__attention <= 0.027454694733023643:
+                        if text__time <= 0.04215211048722267:
+                            predict class 2
+                        else:  # text__time > 0.04215211048722267
+                            predict class 2
+                    else:  # text__attention > 0.027454694733023643
+                        if text__adhd <= 0.1459394320845604:
+                            predict class 2
+                        else:  # text__adhd > 0.1459394320845604
+                            predict class 2
+                else:  # text__video > 0.04531284049153328
+                    predict class 1
+            else:  # text__things > 0.0945032387971878
+                predict class 1
+        else:  # text__person > 0.032223984599113464
+            predict class 1
+    else:  # text__symptoms > 0.16354601830244064
+        if text__issues <= 0.06517340242862701:
+            if text__adhd <= 0.16348376125097275:
+                if text__attention <= 0.09196263924241066:
+                    predict class 1
+                else:  # text__attention > 0.09196263924241066
+                    predict class 1
+            else:  # text__adhd > 0.16348376125097275
+                if text__adhd <= 0.21589282155036926:
+                    predict class 2
+                else:  # text__adhd > 0.21589282155036926
+                    predict class 1
+        else:  # text__issues > 0.06517340242862701
+            predict class 3

@@ -1,0 +1,91 @@
+{
+  "created_utc": "2026-08-05T15:28:03.749573+00:00",
+  "run_name": "primary",
+  "requested_model": "all",
+  "command": [
+    "C:\\Users\\wamiq\\Desktop\\2DV50E_Thesis\\Code Deliverables\\Thesis_Project\\.venv\\Scripts\\python.exe",
+    "-m",
+    "scripts.train_models",
+    "--model",
+    "all",
+    "--device",
+    "cuda",
+    "--overwrite-heldout"
+  ],
+  "random_seed": 42,
+  "input_files": {
+    "dataset": {
+      "path": "data\\dataset.csv",
+      "sha256": "932943e2990947392fcea728c0c4b4130f4211fea7ff81e47273de5f5cb3af77"
+    },
+    "experiment_config": {
+      "path": "configs\\experiment.yaml",
+      "sha256": "0c47134ff124ad5a272353ea2531de19cdad2a21f62f25d0e9087700bcf713ae"
+    },
+    "bert_config": {
+      "path": "configs\\bert.yaml",
+      "sha256": "8db35a912d5c2ab6e5eff4bcf944eef0b3ed1bfe94fb2a23fdf042577b9950cc"
+    },
+    "linguistic_lexicons": {
+      "path": "configs\\linguistic_lexicons.yaml",
+      "sha256": "d5aa5f979bb62c16b7715875989e1a5de7516e22ac65a92e6c6092cd1d0f32bc"
+    },
+    "train_indices": {
+      "path": "data\\train_indices.csv",
+      "sha256": "f266f951e00409e3895dd7b3193a488a51fc2a91be07efa05d0023934605f83e"
+    },
+    "test_indices": {
+      "path": "data\\test_indices.csv",
+      "sha256": "65f42a3b377f91519435dce5819ca4c31e2c8eb7dae9d39a0d84ed897b3074a5"
+    },
+    "excluded_indices": {
+      "path": "data\\excluded_indices.csv",
+      "sha256": "51c60be0d15a5e0a249de5271493a3e47dce86d8ee9527b72f3ac0881e2810c1"
+    },
+    "split_manifest": {
+      "path": "data\\split_manifest.json",
+      "sha256": "75d9b52739a6f8e9e5fa6420caa8ae24c34c4760a0ce151558de804aa9aa1502"
+    }
+  },
+  "exclusions": {
+    "total_claims": []
+  },
+  "package_versions": {
+    "numpy": "2.5.1",
+    "pandas": "2.3.3",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.9.0",
+    "joblib": "1.5.3",
+    "PyYAML": "6.0.3",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "torch": "2.12.1+cu126",
+    "transformers": "5.14.1",
+    "sentence-transformers": "5.6.1"
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 141 Stepping 1, GenuineIntel",
+    "logical_cpu_count": 12,
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "torch_cuda_available": true,
+    "torch_cuda_version": "12.6",
+    "torch_cudnn_version": 91002,
+    "gpu_count": 1,
+    "gpu_names": [
+      "NVIDIA GeForce GTX 1650 with Max-Q Design"
+    ]
+  },
+  "git_commit": "e44ad7a306a4b95ca76a5ee21e02dd5b6560641a",
+  "checkpoint_names": {
+    "frozen_sentence_transformer": "sentence-transformers/all-MiniLM-L6-v2",
+    "fine_tuned_transformer": "bert-base-uncased"
+  },
+  "extra": {
+    "training_rows_used": 196,
+    "heldout_rows_used": 50,
+    "interpretability_exported": true
+  }
+}

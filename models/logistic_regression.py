@@ -22,6 +22,9 @@ def build_logistic_regression(
     random_state: int = 42,
     certainty_terms: tuple[str, ...] = DEFAULT_CERTAINTY_TERMS,
     hedge_terms: tuple[str, ...] = DEFAULT_HEDGE_TERMS,
+    text_columns: tuple[str, ...] = ("title", "transcript"),
+    engagement_transform: str = "log1p",
+    platform_column: str = "platform",
 ) -> Pipeline:
     """Create a balanced, leakage-safe Logistic Regression pipeline."""
     preprocessor = build_interpretable_preprocessor(
@@ -32,6 +35,9 @@ def build_logistic_regression(
         stop_words=stop_words,
         certainty_terms=certainty_terms,
         hedge_terms=hedge_terms,
+        text_columns=text_columns,
+        engagement_transform=engagement_transform,
+        platform_column=platform_column,
     )
     classifier = LogisticRegression(
         C=c_value,

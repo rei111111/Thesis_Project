@@ -1,0 +1,554 @@
+{
+  "protocol": "pooled_multiplatform_v1",
+  "source_files": [
+    {
+      "name": "youtube",
+      "path": "data\\dataset.csv",
+      "sha256": "b8d0366457a9223e4a19d038bb15552366a3d7eb22941c278438f415586f8a1f",
+      "rows": 250,
+      "columns": [
+        "title",
+        "transcript",
+        "likes",
+        "comments",
+        "views",
+        "duration_sec",
+        "total_claims",
+        "false_claims",
+        "label"
+      ]
+    },
+    {
+      "name": "tiktok",
+      "path": "data\\adhd_misinformation_tiktok.csv",
+      "sha256": "81371b7bcbb0a0b83c692a717755378c681482b47a5e8e8b5074671d3bd27eb1",
+      "rows": 248,
+      "columns": [
+        "title",
+        "transcript",
+        "likes",
+        "comments",
+        "views",
+        "duration_sec",
+        "total_claims",
+        "false_claims",
+        "label"
+      ]
+    }
+  ],
+  "combined_source_sha256": "73c2c3eeeb6af4a6d96aec5be07b334e1c2039da4224f7eccc14fe3b62d7fbe9",
+  "source_rows": 498,
+  "modelled_rows": 491,
+  "excluded_unassigned_rows": 7,
+  "platform_distribution": {
+    "tiktok": 248,
+    "youtube": 250
+  },
+  "class_distribution": {
+    "1": 120,
+    "2": 58,
+    "3": 147,
+    "4": 166
+  },
+  "platform_label_distribution": {
+    "tiktok|1": 10,
+    "tiktok|2": 9,
+    "tiktok|3": 84,
+    "tiktok|4": 145,
+    "youtube|1": 110,
+    "youtube|2": 49,
+    "youtube|3": 63,
+    "youtube|4": 21
+  },
+  "exact_duplicate_transcript_groups": 1,
+  "duplicate_or_near_duplicate_content_groups": 11,
+  "cross_platform_content_groups": 7,
+  "duplicate_or_near_duplicate_content_group_records": [
+    {
+      "content_group": "017bbf78fdb4d425f955dd2948a0af589db03cba5abf4bc4d9437e240e984790",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 130,
+          "record_id": "youtube:000130",
+          "platform": "youtube",
+          "source_row": 130
+        },
+        {
+          "row_index": 319,
+          "record_id": "tiktok:000069",
+          "platform": "tiktok",
+          "source_row": 69
+        }
+      ]
+    },
+    {
+      "content_group": "0faae0989cbca150f9b8081589d1d6d3daf6e924207ed32ac9288994aa38e73a",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 200,
+          "record_id": "youtube:000200",
+          "platform": "youtube",
+          "source_row": 200
+        },
+        {
+          "row_index": 325,
+          "record_id": "tiktok:000075",
+          "platform": "tiktok",
+          "source_row": 75
+        }
+      ]
+    },
+    {
+      "content_group": "4072f457f24d5c9c90ceb8179ebc2cd27ab639b7f03c005e728825bbe8e77db7",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 126,
+          "record_id": "youtube:000126",
+          "platform": "youtube",
+          "source_row": 126
+        },
+        {
+          "row_index": 305,
+          "record_id": "tiktok:000055",
+          "platform": "tiktok",
+          "source_row": 55
+        }
+      ]
+    },
+    {
+      "content_group": "450d1f9d6aba9d81d8d8e3d05745006b1f8a524a28c5b6a54f87da33b9befc9a",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 21,
+          "record_id": "youtube:000021",
+          "platform": "youtube",
+          "source_row": 21
+        },
+        {
+          "row_index": 376,
+          "record_id": "tiktok:000126",
+          "platform": "tiktok",
+          "source_row": 126
+        }
+      ]
+    },
+    {
+      "content_group": "6c5a4a59de85d5584e0f0bf5ece582b4866deb3a746dd470cefedc5e7ca8c2ae",
+      "member_count": 2,
+      "platforms": [
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 74,
+          "record_id": "youtube:000074",
+          "platform": "youtube",
+          "source_row": 74
+        },
+        {
+          "row_index": 140,
+          "record_id": "youtube:000140",
+          "platform": "youtube",
+          "source_row": 140
+        }
+      ]
+    },
+    {
+      "content_group": "7df0754605b14264335bfa160fc0731aa1af5189c77196b1d6352f7f8a01cad7",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 4,
+          "record_id": "youtube:000004",
+          "platform": "youtube",
+          "source_row": 4
+        },
+        {
+          "row_index": 265,
+          "record_id": "tiktok:000015",
+          "platform": "tiktok",
+          "source_row": 15
+        }
+      ]
+    },
+    {
+      "content_group": "bf416c9e8ad86d8e744c489e6fcf4afa65186d15cf27909213285443ced39249",
+      "member_count": 2,
+      "platforms": [
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 30,
+          "record_id": "youtube:000030",
+          "platform": "youtube",
+          "source_row": 30
+        },
+        {
+          "row_index": 109,
+          "record_id": "youtube:000109",
+          "platform": "youtube",
+          "source_row": 109
+        }
+      ]
+    },
+    {
+      "content_group": "d65fd655575f1c69d900e4cc9216675865dad719375175d523165757b2380b8f",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 13,
+          "record_id": "youtube:000013",
+          "platform": "youtube",
+          "source_row": 13
+        },
+        {
+          "row_index": 313,
+          "record_id": "tiktok:000063",
+          "platform": "tiktok",
+          "source_row": 63
+        }
+      ]
+    },
+    {
+      "content_group": "df1c2ef81fb71b80324fd9dd4b5d1c89e2ac96562669592f29bf2d6996feb526",
+      "member_count": 2,
+      "platforms": [
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 129,
+          "record_id": "youtube:000129",
+          "platform": "youtube",
+          "source_row": 129
+        },
+        {
+          "row_index": 246,
+          "record_id": "youtube:000246",
+          "platform": "youtube",
+          "source_row": 246
+        }
+      ]
+    },
+    {
+      "content_group": "e47dc2e788c3958b514383020f7889da04059b29842b45d146a5fc0621f27413",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 90,
+          "record_id": "youtube:000090",
+          "platform": "youtube",
+          "source_row": 90
+        },
+        {
+          "row_index": 329,
+          "record_id": "tiktok:000079",
+          "platform": "tiktok",
+          "source_row": 79
+        }
+      ]
+    },
+    {
+      "content_group": "e86a2fc0bb71a1a1c89110a9347becbd51bc4f8bc923c4a161a8a4b871ef27aa",
+      "member_count": 2,
+      "platforms": [
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 79,
+          "record_id": "youtube:000079",
+          "platform": "youtube",
+          "source_row": 79
+        },
+        {
+          "row_index": 177,
+          "record_id": "youtube:000177",
+          "platform": "youtube",
+          "source_row": 177
+        }
+      ]
+    }
+  ],
+  "cross_platform_content_group_records": [
+    {
+      "content_group": "017bbf78fdb4d425f955dd2948a0af589db03cba5abf4bc4d9437e240e984790",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 130,
+          "record_id": "youtube:000130",
+          "platform": "youtube",
+          "source_row": 130
+        },
+        {
+          "row_index": 319,
+          "record_id": "tiktok:000069",
+          "platform": "tiktok",
+          "source_row": 69
+        }
+      ]
+    },
+    {
+      "content_group": "0faae0989cbca150f9b8081589d1d6d3daf6e924207ed32ac9288994aa38e73a",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 200,
+          "record_id": "youtube:000200",
+          "platform": "youtube",
+          "source_row": 200
+        },
+        {
+          "row_index": 325,
+          "record_id": "tiktok:000075",
+          "platform": "tiktok",
+          "source_row": 75
+        }
+      ]
+    },
+    {
+      "content_group": "4072f457f24d5c9c90ceb8179ebc2cd27ab639b7f03c005e728825bbe8e77db7",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 126,
+          "record_id": "youtube:000126",
+          "platform": "youtube",
+          "source_row": 126
+        },
+        {
+          "row_index": 305,
+          "record_id": "tiktok:000055",
+          "platform": "tiktok",
+          "source_row": 55
+        }
+      ]
+    },
+    {
+      "content_group": "450d1f9d6aba9d81d8d8e3d05745006b1f8a524a28c5b6a54f87da33b9befc9a",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 21,
+          "record_id": "youtube:000021",
+          "platform": "youtube",
+          "source_row": 21
+        },
+        {
+          "row_index": 376,
+          "record_id": "tiktok:000126",
+          "platform": "tiktok",
+          "source_row": 126
+        }
+      ]
+    },
+    {
+      "content_group": "7df0754605b14264335bfa160fc0731aa1af5189c77196b1d6352f7f8a01cad7",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 4,
+          "record_id": "youtube:000004",
+          "platform": "youtube",
+          "source_row": 4
+        },
+        {
+          "row_index": 265,
+          "record_id": "tiktok:000015",
+          "platform": "tiktok",
+          "source_row": 15
+        }
+      ]
+    },
+    {
+      "content_group": "d65fd655575f1c69d900e4cc9216675865dad719375175d523165757b2380b8f",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 13,
+          "record_id": "youtube:000013",
+          "platform": "youtube",
+          "source_row": 13
+        },
+        {
+          "row_index": 313,
+          "record_id": "tiktok:000063",
+          "platform": "tiktok",
+          "source_row": 63
+        }
+      ]
+    },
+    {
+      "content_group": "e47dc2e788c3958b514383020f7889da04059b29842b45d146a5fc0621f27413",
+      "member_count": 2,
+      "platforms": [
+        "tiktok",
+        "youtube"
+      ],
+      "members": [
+        {
+          "row_index": 90,
+          "record_id": "youtube:000090",
+          "platform": "youtube",
+          "source_row": 90
+        },
+        {
+          "row_index": 329,
+          "record_id": "tiktok:000079",
+          "platform": "tiktok",
+          "source_row": 79
+        }
+      ]
+    }
+  ],
+  "content_group_method": "connected components of token-sequence similarity >= 0.80 for texts with >= 20 tokens, after length-ratio >= 0.70 and token-Jaccard >= 0.50 prefilters",
+  "title_placeholder_audit": [
+    {
+      "source": "youtube",
+      "declared_values": [],
+      "placeholder_rows": 0,
+      "advisory_only": true,
+      "excluded_from_pooled_text": true
+    },
+    {
+      "source": "tiktok",
+      "declared_values": [
+        "video"
+      ],
+      "placeholder_rows": 248,
+      "advisory_only": true,
+      "excluded_from_pooled_text": true
+    }
+  ],
+  "source_validation": {
+    "youtube": {
+      "source_rows": 250,
+      "modelled_rows": 243,
+      "excluded_unassigned_rows": 7,
+      "class_distribution": {
+        "1": 110,
+        "2": 49,
+        "3": 63,
+        "4": 21
+      },
+      "exact_duplicate_transcript_groups": 1,
+      "duplicate_or_near_duplicate_content_groups": 4,
+      "content_group_method": "connected components of token-sequence similarity >= 0.80 for texts with >= 20 tokens, after length-ratio >= 0.70 and token-Jaccard >= 0.50 prefilters",
+      "transcript_language_warnings": {
+        "criterion": "transcript Latin-letter fraction below 0.80",
+        "zero_based_rows": [],
+        "advisory_only": true,
+        "message": "Review flagged transcripts manually. This automated script warning does not determine eligibility or block execution."
+      },
+      "source_columns": [
+        "title",
+        "transcript",
+        "likes",
+        "comments",
+        "views",
+        "duration_sec",
+        "total_claims",
+        "false_claims",
+        "label"
+      ],
+      "derived_columns_written_to_source": []
+    },
+    "tiktok": {
+      "source_rows": 248,
+      "modelled_rows": 248,
+      "excluded_unassigned_rows": 0,
+      "class_distribution": {
+        "1": 10,
+        "2": 9,
+        "3": 84,
+        "4": 145
+      },
+      "exact_duplicate_transcript_groups": 0,
+      "duplicate_or_near_duplicate_content_groups": 0,
+      "content_group_method": "connected components of token-sequence similarity >= 0.80 for texts with >= 20 tokens, after length-ratio >= 0.70 and token-Jaccard >= 0.50 prefilters",
+      "transcript_language_warnings": {
+        "criterion": "transcript Latin-letter fraction below 0.80",
+        "zero_based_rows": [],
+        "advisory_only": true,
+        "message": "Review flagged transcripts manually. This automated script warning does not determine eligibility or block execution."
+      },
+      "source_columns": [
+        "title",
+        "transcript",
+        "likes",
+        "comments",
+        "views",
+        "duration_sec",
+        "total_claims",
+        "false_claims",
+        "label"
+      ],
+      "derived_columns_written_to_source": []
+    }
+  },
+  "raw_csvs_modified": false,
+  "audit_columns_added_in_memory": [
+    "row_index",
+    "record_id",
+    "platform",
+    "source_row"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "complete": true,
+  "validation_tool": {
+    "version": "pooled-artifact-paths-v1",
+    "path": "validate_pooled_results.py",
+    "sha256": "27c2a864fe601780ae6e2e414c2c2a73d4495fd8b312ef88c9fc8c5ba5385041",
+    "original_validator_source_sha256": "2aab7a6d90a25c438ba55d7c73a45fb520dd119e488e8f6d92d9195e1e9c0062",
+    "scientific_code_sha256": "9f963bdbec6bf929b447e782d7a7c5019539135c410f807f48bcdb3e01bcce68"
+  },
+  "source_rows": 498,
+  "source_columns": [
+    "row_index",
+    "record_id",
+    "platform",
+    "source_row",
+    "title",
+    "transcript",
+    "likes",
+    "comments",
+    "views",
+    "duration_sec",
+    "total_claims",
+    "false_claims",
+    "label"
+  ],
+  "experimental_conditions": 14,
+  "primary_manifest_artifacts": 284,
+  "sensitivity_checked": false,
+  "sensitivity_manifest_artifacts": 0,
+  "primary_results_manifest": "results\\pooled_multiplatform_reannotated\\results_manifest.json",
+  "sensitivity_results_manifest": null
+}

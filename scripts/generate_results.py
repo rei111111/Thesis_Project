@@ -23,12 +23,24 @@ from evaluation.metrics import (
     class_distribution_table,
     ordinal_error_summary,
 )
+from evaluation.reproducibility import (
+    scientific_code_manifest,
+    validate_training_run_receipts,
+)
+from features.content_groups import content_group_ids
+from evaluation.stratification import StratifiedGroupKFoldByColumns
 from features.linguistic_features import validate_lexicons
+from features.metadata_features import transformer_feature_names
 from models.condition_registry import (
     BASELINE_NAMES,
     CONDITION_BY_NAME,
     CONDITION_NAMES,
     ablation_pairs,
+)
+from scripts.multiplatform_data import (
+    is_multiplatform,
+    load_multiplatform_saved_split,
+    source_input_files,
 )
 
 
@@ -58,14 +70,174 @@ def run_root(run_name: str) -> Path:
     return PROJECT_ROOT / "results" if run_name == "primary" else PROJECT_ROOT / "results" / run_name
 
 
+def required_training_outputs(
+    root: Path,
+    settings: dict[str, Any],
+) -> dict[str, list[Path]]:
+    """List the trained evidence that each condition's receipt must cover."""
+    requirements: dict[str, list[Path]] = {}
+    for condition in expected_names(settings):
+        paths = [
+            root / "metrics" / f"{condition}_cv.csv",
+            root / "metrics" / f"{condition}_heldout.json",
+            root / "predictions" / f"{condition}_cv.csv",
+            root / "predictions" / f"{condition}_heldout.csv",
+        ]
+        model_root = root / "models" / condition
+        if condition != "E_FINETUNED_BERT":
+            paths.extend(
+                [
+                    model_root / "estimator.joblib",
+                    model_root / "selected_parameters.json",
+                ]
+            )
+        if condition in CONDITION_BY_NAME and CONDITION_BY_NAME[condition].interpretable:
+            interpretation = root / "interpretability"
+            paths.extend(
+                [
+                    interpretation / f"{condition}_all_features.csv",
+                    interpretation / f"{condition}_top_features.csv",
+                    interpretation / f"{condition}_fold_features.csv",
+                    interpretation / f"{condition}_feature_stability.csv",
+                    interpretation / f"{condition}_summary.json",
+                ]
+            )
+            if condition.endswith(("LOGISTIC_REGRESSION", "RIDGE")):
+                paths.append(interpretation / f"{condition}_intercepts.csv")
+            if condition.endswith("DECISION_TREE"):
+                paths.extend(
+                    [
+                        interpretation / f"{condition}_rules.txt",
+                        interpretation / f"{condition}_nodes.csv",
+                        interpretation / f"{condition}_heldout_paths.csv",
+                        interpretation / f"{condition}_tree.png",
+                    ]
+                )
+            else:
+                paths.append(
+                    interpretation / f"{condition}_heldout_contributions.csv"
+                )
+        elif condition == "D_FROZEN_MINILM":
+            interpretation = root / "interpretability"
+            paths.extend(
+                [
+                    model_root / "checkpoint_metadata.json",
+                    interpretation / f"{condition}_named_auxiliary_features.csv",
+                    interpretation / f"{condition}_named_auxiliary_fold_features.csv",
+                    interpretation / f"{condition}_named_auxiliary_stability.csv",
+                    interpretation
+                    / f"{condition}_heldout_named_auxiliary_contributions.csv",
+                    interpretation / f"{condition}_summary.json",
+                ]
+            )
+        elif condition == "E_FINETUNED_BERT":
+            paths.extend(
+                [
+                    model_root / "model_state.pt",
+                    model_root / "metadata_scaler.joblib",
+                    model_root / "training_settings.joblib",
+                    model_root / "training_settings.json",
+                    model_root / "training_history.csv",
+                    model_root / "checkpoint_metadata.json",
+                    model_root / "tokenizer" / "tokenizer_config.json",
+                    model_root / "encoder_config" / "config.json",
+                ]
+            )
+            vocabulary = model_root / "tokenizer" / "tokenizer.json"
+            if not vocabulary.is_file():
+                vocabulary = model_root / "tokenizer" / "vocab.txt"
+            paths.append(vocabulary)
+            paths.extend(
+                path for path in (model_root / "tokenizer").rglob("*") if path.is_file()
+            )
+            for fold in range(1, int(settings["evaluation"]["outer_folds"]) + 1):
+                fold_root = model_root / "outer_folds" / f"fold_{fold}"
+                paths.extend(
+                    [
+                        fold_root / "training_history.csv",
+                        fold_root / "fold_training_record.json",
+                    ]
+                )
+        requirements[condition] = paths
+    return requirements
+
+
+def training_input_files(
+    settings: dict[str, Any],
+    experiment_config: str,
+    bert_config: str,
+) -> dict[str, Path]:
+    data_settings = settings["data"]
+    result = {
+        "experiment_config": PROJECT_ROOT / experiment_config,
+        "bert_config": PROJECT_ROOT / bert_config,
+        "linguistic_lexicons": PROJECT_ROOT
+        / settings["features"]["linguistic_lexicon_path"],
+        "train_indices": PROJECT_ROOT / data_settings["train_indices_path"],
+        "test_indices": PROJECT_ROOT / data_settings["test_indices_path"],
+        "excluded_indices": PROJECT_ROOT / data_settings["excluded_indices_path"],
+        "split_manifest": PROJECT_ROOT / data_settings["split_manifest_path"],
+    }
+    if is_multiplatform(settings):
+        result.update(source_input_files(PROJECT_ROOT, data_settings))
+    else:
+        result["dataset"] = PROJECT_ROOT / data_settings["dataset_path"]
+    return result
+
+
 def expected_names(settings: dict[str, Any]) -> tuple[str, ...]:
     include_baselines = bool(settings.get("reporting", {}).get("include_baselines", True))
-    return CONDITION_NAMES + (BASELINE_NAMES if include_baselines else ())
+    if not include_baselines:
+        raise ValueError(
+            "The thesis result contract requires both contextual baselines."
+        )
+    return CONDITION_NAMES + BASELINE_NAMES
+
+
+def _assert_metric_payload_matches(
+    observed: object,
+    expected: object,
+    context: str,
+) -> None:
+    """Compare persisted metric JSON with values recalculated from predictions."""
+    if isinstance(expected, dict):
+        if not isinstance(observed, dict) or set(observed) != set(expected):
+            raise ValueError(f"{context} has missing or unexpected metric fields.")
+        for key in expected:
+            _assert_metric_payload_matches(
+                observed[key], expected[key], f"{context}.{key}"
+            )
+        return
+    if isinstance(expected, list):
+        if not isinstance(observed, list) or len(observed) != len(expected):
+            raise ValueError(f"{context} has a mismatched metric array.")
+        for index, (observed_value, expected_value) in enumerate(
+            zip(observed, expected, strict=True)
+        ):
+            _assert_metric_payload_matches(
+                observed_value, expected_value, f"{context}[{index}]"
+            )
+        return
+    if isinstance(expected, (int, float)) and not isinstance(expected, bool):
+        if (
+            isinstance(observed, bool)
+            or not isinstance(observed, (int, float))
+            or not np.isfinite(float(observed))
+        ):
+            raise ValueError(f"{context} is not a finite numeric metric.")
+        if not np.isclose(
+            float(observed), float(expected), rtol=1e-10, atol=1e-12
+        ):
+            raise ValueError(f"{context} does not match saved predictions.")
+        return
+    if observed != expected:
+        raise ValueError(f"{context} does not match saved predictions.")
 
 
 def load_prediction_files(
     root: Path,
     settings: dict[str, Any],
+    expected_heldout: pd.DataFrame | None = None,
 ) -> dict[str, pd.DataFrame]:
     files = sorted((root / "predictions").glob("*_heldout.csv"))
     if not files:
@@ -82,27 +254,130 @@ def load_prediction_files(
             f"Missing: {missing}; unexpected: {unexpected}."
         )
     required_columns = {"row_index", "true_label", "prediction"}
-    reference = observed[expected[0]]
-    reference_rows = set(reference["row_index"])
-    reference_truth = reference.set_index("row_index")["true_label"].sort_index()
-    for condition, frame in observed.items():
+    validated: dict[str, pd.DataFrame] = {}
+    recalculated_metrics: dict[str, dict[str, object]] = {}
+    for condition, raw_frame in observed.items():
+        frame = raw_frame.copy()
         if not required_columns.issubset(frame.columns):
             raise ValueError(f"{condition} is missing prediction columns.")
+        for column in required_columns:
+            numeric = pd.to_numeric(frame[column], errors="coerce")
+            if (
+                numeric.isna().any()
+                or not np.isfinite(numeric.to_numpy(dtype=float)).all()
+                or not np.equal(numeric, np.floor(numeric)).all()
+            ):
+                raise ValueError(f"{condition} has a non-integer {column} value.")
+            frame[column] = numeric.astype(int)
         if frame["row_index"].duplicated().any():
             raise ValueError(f"{condition} contains duplicate row indices.")
+        if expected_heldout is not None and "platform" in expected_heldout.columns:
+            required_identity = {"record_id", "platform"}
+            if not required_identity.issubset(frame.columns):
+                raise ValueError(
+                    f"{condition} is missing pooled identity columns: "
+                    f"{sorted(required_identity - set(frame.columns))}."
+                )
         if "condition" in frame.columns and not frame["condition"].eq(condition).all():
             raise ValueError(
                 f"{condition} contains a mismatched internal condition name."
             )
+        probability_columns = [
+            f"probability_{label}" for label in (1, 2, 3, 4)
+        ]
+        present_probabilities = [
+            column for column in probability_columns if column in frame.columns
+        ]
+        if present_probabilities:
+            if present_probabilities != probability_columns:
+                raise ValueError(
+                    f"{condition} contains an incomplete probability vector."
+                )
+            probabilities = frame[probability_columns].apply(
+                pd.to_numeric, errors="coerce"
+            ).to_numpy(dtype=float)
+            if (
+                not np.isfinite(probabilities).all()
+                or np.any(probabilities < 0)
+                or np.any(probabilities > 1)
+                or not np.allclose(
+                    probabilities.sum(axis=1), 1.0, rtol=1e-6, atol=1e-6
+                )
+                or not np.array_equal(
+                    probabilities.argmax(axis=1) + 1,
+                    frame["prediction"].to_numpy(dtype=int),
+                )
+            ):
+                raise ValueError(
+                    f"{condition} contains invalid or prediction-inconsistent "
+                    "class probabilities."
+                )
+        recalculated_metrics[condition] = calculate_metrics(
+            frame["true_label"], frame["prediction"]
+        )
+        validated[condition] = frame
+
+    if expected_heldout is not None:
+        expected_truth = (
+            expected_heldout[["row_index", "label"]]
+            .rename(columns={"label": "true_label"})
+            .astype({"row_index": int, "true_label": int})
+            .sort_values("row_index")
+            .set_index("row_index")["true_label"]
+        )
+    else:
+        reference = validated[expected[0]]
+        expected_truth = (
+            reference.set_index("row_index")["true_label"].sort_index()
+        )
+    reference_rows = set(expected_truth.index)
+    for condition, frame in validated.items():
         if set(frame["row_index"]) != reference_rows:
             raise ValueError("Held-out prediction files cover different videos.")
         truth = frame.set_index("row_index")["true_label"].sort_index()
-        if not truth.equals(reference_truth):
-            raise ValueError("Held-out prediction files disagree on true labels.")
-    return {name: observed[name].sort_values("row_index") for name in expected}
+        if not truth.equals(expected_truth):
+            raise ValueError(
+                "Held-out predictions do not match the frozen held-out rows "
+                "and labels."
+            )
+        if expected_heldout is not None and "platform" in expected_heldout.columns:
+            expected_identity = (
+                expected_heldout[["row_index", "record_id", "platform"]]
+                .astype({"row_index": int, "record_id": str, "platform": str})
+                .sort_values("row_index")
+                .reset_index(drop=True)
+            )
+            observed_identity = (
+                frame[["row_index", "record_id", "platform"]]
+                .astype({"row_index": int, "record_id": str, "platform": str})
+                .sort_values("row_index")
+                .reset_index(drop=True)
+            )
+            if not observed_identity.equals(expected_identity):
+                raise ValueError(
+                    f"{condition} pooled identities do not match the frozen split."
+                )
+    for condition in expected:
+        metric_path = root / "metrics" / f"{condition}_heldout.json"
+        if not metric_path.exists():
+            raise FileNotFoundError(f"Missing held-out metrics: {metric_path}")
+        try:
+            stored_metrics = json.loads(metric_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Held-out metric JSON is invalid: {metric_path}") from exc
+        _assert_metric_payload_matches(
+            stored_metrics,
+            recalculated_metrics[condition],
+            f"{condition} held-out metrics",
+        )
+    return {name: validated[name].sort_values("row_index") for name in expected}
 
 
-def load_cv_files(root: Path, settings: dict[str, Any]) -> dict[str, pd.DataFrame]:
+def load_cv_files(
+    root: Path,
+    settings: dict[str, Any],
+    expected_training: pd.DataFrame | None = None,
+) -> dict[str, pd.DataFrame]:
     results: dict[str, pd.DataFrame] = {}
     reference_assignment: pd.DataFrame | None = None
     expected_folds = int(settings["evaluation"]["outer_folds"])
@@ -114,8 +389,21 @@ def load_cv_files(root: Path, settings: dict[str, Any]) -> dict[str, pd.DataFram
         frame = pd.read_csv(path)
         if not required.issubset(frame.columns):
             raise ValueError(f"{path} is missing required CV metric columns.")
-        if len(frame) != expected_folds or frame["fold"].nunique() != expected_folds:
+        fold_values = pd.to_numeric(frame["fold"], errors="coerce")
+        if (
+            fold_values.isna().any()
+            or not np.isfinite(fold_values.to_numpy(dtype=float)).all()
+            or not np.equal(fold_values, np.floor(fold_values)).all()
+        ):
+            raise ValueError(f"{condition} has a non-integer CV fold value.")
+        frame["fold"] = fold_values.astype(int)
+        if (
+            len(frame) != expected_folds
+            or set(frame["fold"]) != set(range(1, expected_folds + 1))
+        ):
             raise ValueError(f"{condition} does not contain {expected_folds} folds.")
+        if not np.isfinite(frame[list(METRIC_NAMES)].to_numpy(dtype=float)).all():
+            raise ValueError(f"{condition} contains a non-finite CV metric.")
         prediction_path = root / "predictions" / f"{condition}_cv.csv"
         if not prediction_path.exists():
             raise FileNotFoundError(f"Missing outer-CV predictions: {prediction_path}")
@@ -123,8 +411,64 @@ def load_cv_files(root: Path, settings: dict[str, Any]) -> dict[str, pd.DataFram
         prediction_columns = {"row_index", "fold", "true_label", "prediction"}
         if not prediction_columns.issubset(predictions.columns):
             raise ValueError(f"{prediction_path} is missing CV prediction columns.")
+        for column in prediction_columns:
+            numeric = pd.to_numeric(predictions[column], errors="coerce")
+            if (
+                numeric.isna().any()
+                or not np.isfinite(numeric.to_numpy(dtype=float)).all()
+                or not np.equal(numeric, np.floor(numeric)).all()
+            ):
+                raise ValueError(f"{condition} has a non-integer CV {column} value.")
+            predictions[column] = numeric.astype(int)
         if predictions["row_index"].duplicated().any():
             raise ValueError(f"{condition} repeats rows across outer folds.")
+        if expected_training is not None and "platform" in expected_training.columns:
+            required_identity = {"record_id", "platform"}
+            if not required_identity.issubset(predictions.columns):
+                raise ValueError(
+                    f"{condition} CV predictions omit pooled identity columns."
+                )
+            expected_identity = (
+                expected_training[["row_index", "record_id", "platform"]]
+                .astype({"row_index": int, "record_id": str, "platform": str})
+                .sort_values("row_index")
+                .reset_index(drop=True)
+            )
+            observed_identity = (
+                predictions[["row_index", "record_id", "platform"]]
+                .astype({"row_index": int, "record_id": str, "platform": str})
+                .sort_values("row_index")
+                .reset_index(drop=True)
+            )
+            if not observed_identity.equals(expected_identity):
+                raise ValueError(
+                    f"{condition} CV identities do not match the frozen "
+                    "pooled training rows."
+                )
+        if not set(predictions["fold"]).issubset(range(1, expected_folds + 1)):
+            raise ValueError(f"{condition} contains an invalid outer-fold number.")
+        calculate_metrics(predictions["true_label"], predictions["prediction"])
+
+        for fold in range(1, expected_folds + 1):
+            fold_predictions = predictions.loc[predictions["fold"].eq(fold)]
+            if fold_predictions.empty:
+                raise ValueError(f"{condition} has no predictions for fold {fold}.")
+            recalculated = calculate_metrics(
+                fold_predictions["true_label"],
+                fold_predictions["prediction"],
+            )
+            metric_row = frame.loc[frame["fold"].eq(fold)].iloc[0]
+            for metric in METRIC_NAMES:
+                if not np.isclose(
+                    float(metric_row[metric]),
+                    float(recalculated[metric]),
+                    rtol=1e-10,
+                    atol=1e-12,
+                ):
+                    raise ValueError(
+                        f"{condition} fold {fold} stored {metric} does not "
+                        "match its saved predictions."
+                    )
         assignment = predictions[["row_index", "fold", "true_label"]].sort_values(
             "row_index"
         ).reset_index(drop=True)
@@ -136,6 +480,54 @@ def load_cv_files(root: Path, settings: dict[str, Any]) -> dict[str, pd.DataFram
                 "fold comparisons would be invalid."
             )
         results[condition] = frame.sort_values("fold").reset_index(drop=True)
+    if expected_training is not None:
+        if reference_assignment is None:
+            raise ValueError("No outer-fold assignments were loaded.")
+        expected_assignment = (
+            expected_training[["row_index", "label"]]
+            .rename(columns={"label": "true_label"})
+            .astype({"row_index": int, "true_label": int})
+            .sort_values("row_index")
+            .reset_index(drop=True)
+        )
+        observed_truth = reference_assignment[["row_index", "true_label"]]
+        if not observed_truth.equals(expected_assignment):
+            raise ValueError(
+                "Outer-CV predictions do not match the frozen training rows "
+                "and labels."
+            )
+        group_frame = expected_training[["row_index"]].copy()
+        group_frame["content_group"] = content_group_ids(expected_training)
+        group_assignments = reference_assignment[["row_index", "fold"]].merge(
+            group_frame,
+            on="row_index",
+            validate="one_to_one",
+        )
+        groups_split_across_folds = (
+            group_assignments.groupby("content_group")["fold"].nunique().gt(1)
+        )
+        if groups_split_across_folds.any():
+            raise ValueError(
+                "Outer-CV assignments split exact or near-duplicate transcript "
+                "content across folds."
+            )
+        if "seed" in settings:
+            ordered = expected_training.reset_index(drop=True)
+            splitter = StratifiedGroupKFoldByColumns(
+                n_splits=expected_folds, random_state=int(settings["seed"]),
+                stratification_columns=tuple(
+                    settings.get("split", {}).get("stratification_columns", ())
+                ),
+            )
+            fold_numbers = np.zeros(len(ordered), dtype=int)
+            for fold, (_, validation) in enumerate(
+                splitter.split(ordered, ordered["label"], content_group_ids(ordered)), 1
+            ):
+                fold_numbers[validation] = fold
+            expected_fold_rows = ordered[["row_index"]].assign(fold=fold_numbers)
+            expected_fold_rows = expected_fold_rows.sort_values("row_index").reset_index(drop=True)
+            if not reference_assignment[["row_index", "fold"]].equals(expected_fold_rows):
+                raise ValueError("Outer-CV assignments do not replay the configured splitter.")
     return results
 
 
@@ -167,7 +559,7 @@ def save_confusion_figure(
 
 def heldout_tables(
     prediction_sets: dict[str, pd.DataFrame],
-    figure_directory: Path,
+    figure_directory: Path | None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, object], pd.DataFrame]:
     summary_rows: list[dict[str, object]] = []
     class_rows: list[dict[str, object]] = []
@@ -201,11 +593,12 @@ def heldout_tables(
                 ),
             }
         )
-        save_confusion_figure(
-            condition,
-            metrics["confusion_matrix"],
-            figure_directory,
-        )
+        if figure_directory is not None:
+            save_confusion_figure(
+                condition,
+                metrics["confusion_matrix"],
+                figure_directory,
+            )
     return (
         pd.DataFrame(summary_rows),
         pd.DataFrame(class_rows),
@@ -341,17 +734,61 @@ def save_rq1_distribution(
     return distribution
 
 
+def save_rq1_platform_distribution(
+    data: pd.DataFrame,
+    tables_directory: Path,
+    confidence_level: float,
+    excluded_total_claims: tuple[int, ...],
+) -> pd.DataFrame:
+    """Save descriptive label distributions separately for each platform."""
+    if "platform" not in data.columns:
+        raise ValueError("Platform-specific RQ1 output requires a platform column.")
+    labelled = data.loc[data["label"].notna()].copy()
+    if excluded_total_claims:
+        labelled = labelled.loc[
+            ~labelled["total_claims"].isin(excluded_total_claims)
+        ]
+    rows: list[pd.DataFrame] = []
+    for platform, selected in labelled.groupby("platform", sort=True):
+        distribution = pd.DataFrame(
+            class_distribution_table(selected["label"], confidence_level)
+        )
+        distribution.insert(0, "platform", str(platform))
+        distribution.insert(2, "category", distribution["label"].map(LABEL_NAMES))
+        rows.append(distribution)
+    result = pd.concat(rows, ignore_index=True)
+    result.to_csv(
+        tables_directory / "rq1_class_distribution_by_platform.csv",
+        index=False,
+    )
+    return result
+
+
 def save_error_cases(
     prediction_sets: dict[str, pd.DataFrame],
     data: pd.DataFrame,
     tables_directory: Path,
 ) -> pd.DataFrame:
     source = data.reset_index(drop=True).copy()
-    source.insert(0, "row_index", np.arange(len(source), dtype=int))
+    if "row_index" not in source.columns:
+        source.insert(0, "row_index", np.arange(len(source), dtype=int))
     rows: list[pd.DataFrame] = []
     for condition, predictions in prediction_sets.items():
+        source_columns = [
+            column
+            for column in (
+                "row_index",
+                "record_id",
+                "platform",
+                "title",
+                "transcript",
+                "total_claims",
+                "false_claims",
+            )
+            if column in source.columns
+        ]
         merged = predictions[["row_index", "true_label", "prediction"]].merge(
-            source[["row_index", "title", "transcript", "total_claims", "false_claims"]],
+            source[source_columns],
             on="row_index",
             validate="one_to_one",
         )
@@ -378,6 +815,7 @@ def save_interpretability_synthesis(
     heldout_summary: pd.DataFrame,
     tables_directory: Path,
     top_k: int,
+    engagement_transform: str = "log1p",
 ) -> None:
     interpretation_directory = root / "interpretability"
     all_frames: list[pd.DataFrame] = []
@@ -452,18 +890,33 @@ def save_interpretability_synthesis(
             )
     all_features = pd.concat(all_frames, ignore_index=True)
     all_stability = pd.concat(stability_frames, ignore_index=True)
-    prohibited = {"row_index", "total_claims", "false_claims", "label"}
-    leaked = sorted(set(all_features["feature"].astype(str)) & prohibited)
+    prohibited = {
+        "row_index",
+        "record_id",
+        "source_row",
+        "platform",
+        "total_claims",
+        "false_claims",
+        "label",
+    }
+    nontext_features = all_features.loc[
+        all_features["feature_group"].ne("textual"), "feature"
+    ].astype(str)
+    leaked = sorted(set(nontext_features) & prohibited)
     if leaked:
         raise ValueError(f"Interpretability exports reveal prohibited predictors: {leaked}")
     all_features.to_csv(tables_directory / "all_interpretable_model_features.csv", index=False)
     all_stability.to_csv(tables_directory / "all_feature_stability.csv", index=False)
 
     c_features = all_features.loc[all_features["condition"].str.startswith("C_")]
+    expected_named = set(
+        transformer_feature_names(engagement_transform)
+    )
     named = c_features.loc[
-        c_features["feature"].isin(
-            ["certainty_score", "hedge_score", "likes", "comments", "views", "duration_sec"]
+        c_features["feature_group"].isin(
+            ["handcrafted_linguistic", "engagement_or_format"]
         )
+        & c_features["feature"].isin(expected_named)
     ].copy()
     if minilm_auxiliary is not None:
         named = pd.concat([named, minilm_auxiliary], ignore_index=True)
@@ -505,6 +958,7 @@ def save_interpretability_synthesis(
     consensus.to_csv(tables_directory / "rq2_textual_feature_consensus.csv", index=False)
     c_features.loc[
         c_features["condition"].eq("C_DECISION_TREE")
+        & c_features["absolute_weight"].gt(0)
         & c_features["absolute_rank"].le(top_k)
     ].to_csv(tables_directory / "rq2_decision_tree_top_features.csv", index=False)
 
@@ -520,6 +974,40 @@ def save_interpretability_synthesis(
     )
 
 
+def platform_heldout_tables(
+    prediction_sets: dict[str, pd.DataFrame],
+    heldout: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Calculate platform-specific and equally weighted platform summaries."""
+    identity = heldout[["row_index", "platform"]].copy()
+    rows: list[dict[str, object]] = []
+    for condition, predictions in prediction_sets.items():
+        aligned = predictions[["row_index", "true_label", "prediction"]].merge(
+            identity,
+            on="row_index",
+            validate="one_to_one",
+        )
+        for platform, selected in aligned.groupby("platform", sort=True):
+            metrics = calculate_metrics(
+                selected["true_label"], selected["prediction"]
+            )
+            rows.append(
+                {
+                    "condition": condition,
+                    "platform": str(platform),
+                    "rows": len(selected),
+                    **{name: metrics[name] for name in METRIC_NAMES},
+                }
+            )
+    by_platform = pd.DataFrame(rows)
+    macro = (
+        by_platform.groupby("condition", as_index=False)[list(METRIC_NAMES)]
+        .mean()
+        .rename(columns={name: f"platform_macro_{name}" for name in METRIC_NAMES})
+    )
+    return by_platform, macro
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as file:
@@ -532,6 +1020,9 @@ def write_results_manifest(
     root: Path,
     settings: dict[str, Any],
     excluded_total_claims: tuple[int, ...],
+    experiment_config: str,
+    bert_config: str,
+    training_receipts: list[Path],
 ) -> None:
     artifact_directories = (
         "metrics",
@@ -553,9 +1044,50 @@ def write_results_manifest(
         "complete_experimental_conditions": list(CONDITION_NAMES),
         "contextual_baselines": list(BASELINE_NAMES),
         "condition_count": len(CONDITION_NAMES),
+        "reported_condition_count": len(CONDITION_NAMES) + len(BASELINE_NAMES),
+        "random_seed": int(settings["seed"]),
+        "data_mode": settings["data"].get("mode", "youtube_only"),
+        "text_columns": list(
+            settings["features"].get(
+                "text_columns", ("title", "transcript")
+            )
+        ),
+        "engagement_transform": settings["features"].get(
+            "engagement_transform", "log1p"
+        ),
+        "stratification_columns": list(
+            settings["split"].get("stratification_columns", ())
+        ),
+        "platform_reporting": bool(
+            settings.get("reporting", {}).get("report_by_platform", False)
+        ),
         "expected_outer_folds": int(settings["evaluation"]["outer_folds"]),
+        "expected_inner_folds": int(settings["evaluation"]["inner_folds"]),
+        "primary_metric": str(settings["evaluation"]["primary_metric"]),
         "bootstrap_resamples": int(settings["evaluation"]["bootstrap_resamples"]),
+        "bootstrap_unit": "content_group" if is_multiplatform(settings) else "label_stratified_row",
+        "association_bootstrap_resamples": int(
+            settings["reporting"]["association_bootstrap_resamples"]
+        ),
+        "confidence_level": float(settings["reporting"]["confidence_level"]),
         "excluded_total_claims": list(excluded_total_claims),
+        "scientific_code_sha256": scientific_code_manifest(PROJECT_ROOT)["sha256"],
+        "source_inputs": {
+            name: {
+                "path": str(path.relative_to(PROJECT_ROOT)),
+                "sha256": sha256(path),
+            }
+            for name, path in training_input_files(
+                settings, experiment_config, bert_config
+            ).items()
+        },
+        "training_run_receipts": [
+            {
+                "path": str(path.relative_to(PROJECT_ROOT)),
+                "sha256": sha256(path),
+            }
+            for path in training_receipts
+        ],
         "artifacts": [
             {
                 "path": str(path.relative_to(root)),
@@ -574,7 +1106,8 @@ def write_results_manifest(
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/experiment.yaml")
-    parser.add_argument("--run-name", default="primary")
+    parser.add_argument("--bert-config", default="configs/bert.yaml")
+    parser.add_argument("--run-name", default=None)
     parser.add_argument("--exclude-total-claims", nargs="*", type=int, default=[])
     parser.add_argument("--bootstrap-resamples", type=int, default=None)
     parser.add_argument("--association-bootstrap-resamples", type=int, default=None)
@@ -584,13 +1117,79 @@ def parse_arguments() -> argparse.Namespace:
 def main() -> None:
     arguments = parse_arguments()
     settings = load_settings(arguments.config)
+    bert_settings = load_settings(arguments.bert_config)
+    arguments.run_name = arguments.run_name or str(
+        settings.get("reporting", {}).get("default_run_name", "primary")
+    )
+    exclusions = tuple(sorted(set(arguments.exclude_total_claims)))
+    sensitivity_name = str(settings["sensitivity"]["run_name"])
+    configured_sensitivity_exclusions = tuple(
+        sorted(set(int(value) for value in settings["sensitivity"]["exclude_total_claims"]))
+    )
+    primary_run_name = str(
+        settings.get("reporting", {}).get("default_run_name", "primary")
+    )
+    if arguments.run_name == primary_run_name and exclusions:
+        raise ValueError("The primary analysis cannot exclude labelled rows.")
+    if (
+        arguments.run_name == sensitivity_name
+        and exclusions != configured_sensitivity_exclusions
+    ):
+        raise ValueError(
+            "The named sensitivity run must use the exclusions in experiment.yaml."
+        )
+    certified_run = arguments.run_name in {primary_run_name, sensitivity_name}
+    if certified_run and (
+        arguments.bootstrap_resamples is not None
+        or arguments.association_bootstrap_resamples is not None
+    ):
+        raise ValueError(
+            "Certified primary/sensitivity runs must use the configured resample counts."
+        )
     if arguments.bootstrap_resamples is not None:
         settings["evaluation"]["bootstrap_resamples"] = arguments.bootstrap_resamples
     if arguments.association_bootstrap_resamples is not None:
         settings["reporting"][
             "association_bootstrap_resamples"
         ] = arguments.association_bootstrap_resamples
+    data_settings = settings["data"]
+    if is_multiplatform(settings):
+        training, heldout, data = load_multiplatform_saved_split(
+            PROJECT_ROOT, settings
+        )
+    else:
+        dataset_path = PROJECT_ROOT / data_settings["dataset_path"]
+        data = pd.read_csv(dataset_path)
+        training, heldout = load_saved_split(
+            dataset_path,
+            PROJECT_ROOT / data_settings["train_indices_path"],
+            PROJECT_ROOT / data_settings["test_indices_path"],
+            PROJECT_ROOT / data_settings["excluded_indices_path"],
+            PROJECT_ROOT / data_settings["split_manifest_path"],
+            split_settings=settings["split"],
+            data_contract=data_settings,
+        )
+    if exclusions:
+        training = training.loc[
+            ~training["total_claims"].isin(exclusions)
+        ].reset_index(drop=True)
+        heldout = heldout.loc[
+            ~heldout["total_claims"].isin(exclusions)
+        ].reset_index(drop=True)
+
     root = run_root(arguments.run_name)
+    training_receipts = validate_training_run_receipts(
+        PROJECT_ROOT,
+        root,
+        expected_names(settings),
+        training_input_files(settings, arguments.config, arguments.bert_config),
+        exclusions={"total_claims": list(exclusions)},
+        required_outputs=required_training_outputs(root, settings),
+        checkpoint_names={
+            "frozen_sentence_transformer": settings["minilm"]["model_name"],
+            "fine_tuned_transformer": bert_settings["model_name"],
+        },
+    )
     tables_directory = root / "tables"
     metrics_directory = root / "metrics"
     figures_directory = root / "figures"
@@ -603,8 +1202,8 @@ def main() -> None:
     ):
         directory.mkdir(parents=True, exist_ok=True)
 
-    prediction_sets = load_prediction_files(root, settings)
-    cv_results = load_cv_files(root, settings)
+    prediction_sets = load_prediction_files(root, settings, heldout)
+    cv_results = load_cv_files(root, settings, training)
     heldout_summary, per_class, full_metrics, errors = heldout_tables(
         prediction_sets,
         figures_directory,
@@ -617,6 +1216,17 @@ def main() -> None:
         json.dumps(full_metrics, indent=2),
         encoding="utf-8",
     )
+    platform_summary: pd.DataFrame | None = None
+    if is_multiplatform(settings):
+        platform_summary, platform_macro = platform_heldout_tables(
+            prediction_sets, heldout
+        )
+        platform_summary.to_csv(
+            tables_directory / "heldout_summary_by_platform.csv", index=False
+        )
+        platform_macro.to_csv(
+            tables_directory / "heldout_platform_macro_summary.csv", index=False
+        )
 
     cv_summary, cv_differences = cv_tables(cv_results)
     cv_summary = add_condition_metadata(
@@ -648,6 +1258,10 @@ def main() -> None:
         resamples=int(settings["evaluation"]["bootstrap_resamples"]),
         seed=int(settings["seed"]),
         confidence_level=float(settings["reporting"]["confidence_level"]),
+        groups=(
+            content_group_ids(heldout.sort_values("row_index"))
+            if is_multiplatform(settings) else None
+        ),
     )
     interval_frame = pd.DataFrame(intervals)
     difference_frame = pd.DataFrame(bootstrap_differences)
@@ -672,10 +1286,6 @@ def main() -> None:
         index=False,
     )
 
-    data_settings = settings["data"]
-    dataset_path = PROJECT_ROOT / data_settings["dataset_path"]
-    data = pd.read_csv(dataset_path)
-    exclusions = tuple(sorted(set(arguments.exclude_total_claims)))
     distribution = save_rq1_distribution(
         data,
         tables_directory,
@@ -683,18 +1293,16 @@ def main() -> None:
         float(settings["reporting"]["confidence_level"]),
         exclusions,
     )
-    training, heldout = load_saved_split(
-        dataset_path,
-        PROJECT_ROOT / data_settings["train_indices_path"],
-        PROJECT_ROOT / data_settings["test_indices_path"],
-        PROJECT_ROOT / data_settings["excluded_indices_path"],
-        PROJECT_ROOT / data_settings["split_manifest_path"],
-    )
-    if exclusions:
-        training = training.loc[~training["total_claims"].isin(exclusions)].reset_index(drop=True)
-        heldout = heldout.loc[~heldout["total_claims"].isin(exclusions)].reset_index(drop=True)
+    if is_multiplatform(settings):
+        save_rq1_platform_distribution(
+            data,
+            tables_directory,
+            float(settings["reporting"]["confidence_level"]),
+            exclusions,
+        )
     full_labelled = data.loc[data["label"].notna()].copy()
-    full_labelled.insert(0, "row_index", full_labelled.index.astype(int))
+    if "row_index" not in full_labelled.columns:
+        full_labelled.insert(0, "row_index", full_labelled.index.astype(int))
     if exclusions:
         full_labelled = full_labelled.loc[
             ~full_labelled["total_claims"].isin(exclusions)
@@ -718,6 +1326,15 @@ def main() -> None:
         ),
         seed=int(settings["seed"]),
         confidence_level=float(settings["reporting"]["confidence_level"]),
+        text_columns=tuple(
+            settings["features"].get("text_columns", ("title", "transcript"))
+        ),
+        engagement_transform=str(
+            settings["features"].get("engagement_transform", "log1p")
+        ),
+        platform_column=str(
+            settings["features"].get("platform_column", "platform")
+        ),
     )
     save_error_cases(prediction_sets, data, tables_directory)
     save_interpretability_synthesis(
@@ -725,9 +1342,13 @@ def main() -> None:
         heldout_summary,
         tables_directory,
         top_k=int(settings["interpretability"]["top_features_per_class"]),
+        engagement_transform=str(
+            settings["features"].get("engagement_transform", "log1p")
+        ),
     )
 
     summary = {
+        "data_mode": data_settings.get("mode", "youtube_only"),
         "source_rows": len(data),
         "labelled_rows_in_rq1": int(distribution["count"].sum()),
         "training_rows_in_analysis": len(training),
@@ -735,6 +1356,26 @@ def main() -> None:
         "source_columns": list(data.columns),
         "source_has_video_id": "video_id" in data.columns,
         "source_has_platform": "platform" in data.columns,
+        "text_columns_used_by_models": list(
+            settings["features"].get(
+                "text_columns", ("title", "transcript")
+            )
+        ),
+        "engagement_transform": settings["features"].get(
+            "engagement_transform", "log1p"
+        ),
+        "platform_distribution": (
+            {
+                str(key): int(value)
+                for key, value in data["platform"]
+                .value_counts()
+                .sort_index()
+                .items()
+            }
+            if "platform" in data.columns
+            else None
+        ),
+        "platform_heldout_metrics_reported": platform_summary is not None,
         "derived_linguistic_features": ["certainty_score", "hedge_score"],
         "experimental_condition_count": len(CONDITION_NAMES),
         "conditions": list(CONDITION_NAMES),
@@ -744,7 +1385,14 @@ def main() -> None:
         json.dumps(summary, indent=2),
         encoding="utf-8",
     )
-    write_results_manifest(root, settings, exclusions)
+    write_results_manifest(
+        root,
+        settings,
+        exclusions,
+        arguments.config,
+        arguments.bert_config,
+        training_receipts,
+    )
     print(
         f"Generated complete RQ1--RQ3 outputs for {len(CONDITION_NAMES)} "
         f"experimental conditions in {root}."

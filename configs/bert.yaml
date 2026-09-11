@@ -1,4 +1,8 @@
 model_name: bert-base-uncased
+expected_hidden_size: 768
+# Set to an immutable Hub commit for a definitive rerun. A null value resolves
+# the current model revision and records the resolved commit in artifacts.
+revision: null
 max_length: 256
 batch_size: 8
 learning_rate: 0.00002
@@ -12,8 +16,9 @@ early_stopping_fraction: 0.10
 seed: 42
 num_labels: 4
 
-# These are descriptions, not CSV column names. The two lexical rates are
-# derived from title + transcript inside each fitted pipeline.
+# These are descriptions, not CSV column names. The active experiment config
+# selects the text columns: title + transcript for the YouTube-only profile,
+# transcript alone for the pooled profile.
 derived_auxiliary_features:
   - certainty_score
   - hedge_score

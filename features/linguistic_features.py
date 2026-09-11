@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable
+from functools import lru_cache
 
 import numpy as np
 import pandas as pd
@@ -18,7 +19,6 @@ from sklearn.base import BaseEstimator, TransformerMixin
 # mirror configs/linguistic_lexicons.yaml exactly. Changing either tuple defines
 # a new experiment and must be reported.
 DEFAULT_CERTAINTY_TERMS = (
-    "absolutely",
     "actually",
     "always",
     "believe",
@@ -54,6 +54,7 @@ DEFAULT_CERTAINTY_TERMS = (
     "indisputably",
     "know",
     "known",
+    "must",
     "never",
     "no doubt",
     "obvious",
@@ -128,7 +129,7 @@ DEFAULT_HEDGE_TERMS = (
     "in general",
     "in most cases",
     "in most instances",
-    "in my opinon",
+    "in my opinion",
     "in my view",
     "in this view",
     "in our opinion",
@@ -156,7 +157,7 @@ DEFAULT_HEDGE_TERMS = (
     "probable",
     "probably",
     "quite",
-    "rather x",
+    "rather",
     "relatively",
     "roughly",
     "seems",
@@ -200,18 +201,90 @@ def tokenize(text: object) -> list[str]:
     return TOKEN_PATTERN.findall(normalized)
 
 
+@lru_cache(maxsize=32)
+def _tokenized_terms(terms: tuple[str, ...]) -> tuple[tuple[str, ...], ...]:
+    return tuple(tuple(tokenize(term)) for term in terms)
+
+
+def _normalised_term_tuple(terms: Iterable[str]) -> tuple[str, ...]:
+    return tuple(str(term).strip().lower() for term in terms)
+
+
 def count_lexicon_matches(tokens: list[str], terms: Iterable[str]) -> int:
-    """Count exact single-word and multi-word lexicon matches."""
-    total = 0
-    for term in terms:
-        term_tokens = tokenize(term)
-        width = len(term_tokens)
-        if width == 0:
+    """Count longest, non-overlapping exact token-sequence matches."""
+    sequences = sorted(
+        (value for value in _tokenized_terms(_normalised_term_tuple(terms)) if value),
+        key=lambda value: (-len(value), value),
+    )
+    matches = 0
+    index = 0
+    while index < len(tokens):
+        matched_width = next(
+            (
+                len(sequence)
+                for sequence in sequences
+                if tuple(tokens[index : index + len(sequence)]) == sequence
+            ),
+            0,
+        )
+        if matched_width:
+            matches += 1
+            index += matched_width
+        else:
+            index += 1
+    return matches
+
+
+@lru_cache(maxsize=32)
+def _linguistic_candidate_index(
+    certainty_terms: tuple[str, ...], hedge_terms: tuple[str, ...]
+) -> dict[str, tuple[tuple[tuple[str, ...], int], ...]]:
+    """Index fixed lexicon sequences by first token; no corpus values are fitted."""
+    candidates = [
+        (sequence, category)
+        for category, terms in enumerate((certainty_terms, hedge_terms))
+        for sequence in _tokenized_terms(terms)
+        if sequence
+    ]
+    candidates.sort(key=lambda item: (-len(item[0]), item[0], item[1]))
+    by_first: dict[str, list[tuple[tuple[str, ...], int]]] = {}
+    for sequence, category in candidates:
+        by_first.setdefault(sequence[0], []).append((sequence, category))
+    return {first: tuple(values) for first, values in by_first.items()}
+
+
+def count_linguistic_matches(
+    tokens: list[str],
+    certainty_terms: Iterable[str],
+    hedge_terms: Iterable[str],
+) -> tuple[int, int]:
+    """Count longest non-overlapping matches across both named lexicons.
+
+    Resolving both lists together prevents nested expressions such as
+    ``no doubt`` from being counted simultaneously as certainty (the phrase)
+    and hedging (the nested word ``doubt``).
+    """
+    candidates = _linguistic_candidate_index(
+        _normalised_term_tuple(certainty_terms), _normalised_term_tuple(hedge_terms)
+    )
+    counts = [0, 0]
+    index = 0
+    while index < len(tokens):
+        match = next(
+            (
+                (sequence, category)
+                for sequence, category in candidates.get(tokens[index], ())
+                if tuple(tokens[index : index + len(sequence)]) == sequence
+            ),
+            None,
+        )
+        if match is None:
+            index += 1
             continue
-        for index in range(len(tokens) - width + 1):
-            if tokens[index : index + width] == term_tokens:
-                total += 1
-    return total
+        sequence, category = match
+        counts[category] += 1
+        index += len(sequence)
+    return counts[0], counts[1]
 
 
 def score_per_100_tokens(text: object, terms: Iterable[str]) -> float:
@@ -229,9 +302,19 @@ def calculate_linguistic_scores(
     hedge_terms: Iterable[str] = DEFAULT_HEDGE_TERMS,
 ) -> tuple[float, float]:
     """Return certainty and hedge scores for one text."""
-    certainty = score_per_100_tokens(text, certainty_terms)
-    hedge = score_per_100_tokens(text, hedge_terms)
-    return certainty, hedge
+    tokens = tokenize(text)
+    if not tokens:
+        return 0.0, 0.0
+    certainty_matches, hedge_matches = count_linguistic_matches(
+        tokens,
+        certainty_terms,
+        hedge_terms,
+    )
+    denominator = len(tokens)
+    return (
+        100.0 * certainty_matches / denominator,
+        100.0 * hedge_matches / denominator,
+    )
 
 
 def validate_lexicons(
@@ -245,17 +328,30 @@ def validate_lexicons(
     The experiment therefore rejects overlaps instead of silently double
     counting them.
     """
-    certainty = tuple(str(term).strip().lower() for term in certainty_terms)
-    hedge = tuple(str(term).strip().lower() for term in hedge_terms)
+    certainty = _normalised_term_tuple(certainty_terms)
+    hedge = _normalised_term_tuple(hedge_terms)
     if not certainty or not hedge:
         raise ValueError("Both linguistic lexicons must contain terms.")
     if any(not term for term in certainty + hedge):
         raise ValueError("Linguistic lexicons cannot contain blank terms.")
+    certainty_tokenized = _tokenized_terms(certainty)
+    hedge_tokenized = _tokenized_terms(hedge)
+    if any(not tokens for tokens in certainty_tokenized + hedge_tokenized):
+        raise ValueError("Every linguistic lexicon term must contain word tokens.")
     certainty_duplicates = sorted(
-        term for term in set(certainty) if certainty.count(term) > 1
+        " ".join(tokens)
+        for tokens in set(certainty_tokenized)
+        if certainty_tokenized.count(tokens) > 1
     )
-    hedge_duplicates = sorted(term for term in set(hedge) if hedge.count(term) > 1)
-    overlap = sorted(set(certainty) & set(hedge))
+    hedge_duplicates = sorted(
+        " ".join(tokens)
+        for tokens in set(hedge_tokenized)
+        if hedge_tokenized.count(tokens) > 1
+    )
+    overlap = sorted(
+        " ".join(tokens)
+        for tokens in set(certainty_tokenized) & set(hedge_tokenized)
+    )
     if certainty_duplicates or hedge_duplicates or overlap:
         raise ValueError(
             "Linguistic lexicons must be disjoint and duplicate-free. "
@@ -267,12 +363,13 @@ def validate_lexicons(
         "hedge_term_count": len(hedge),
         "overlap": overlap,
         "unit": "matches_per_100_word_tokens",
+        "matching_rule": "longest_non_overlapping_across_both_lexicons",
         "feature_names": list(DERIVED_LINGUISTIC_FEATURES),
     }
 
 
 class LinguisticFeatureExtractor(BaseEstimator, TransformerMixin):
-    """Create two lexical rates from raw title/transcript columns."""
+    """Create two lexical rates from one or more preselected text columns."""
 
     def __init__(
         self,
@@ -287,21 +384,23 @@ class LinguisticFeatureExtractor(BaseEstimator, TransformerMixin):
         values: object,
         target: object = None,
     ) -> "LinguisticFeatureExtractor":
+        validate_lexicons(self.certainty_terms, self.hedge_terms)
         return self
 
     def transform(self, values: object) -> np.ndarray:
         if isinstance(values, pd.DataFrame):
-            title = values.iloc[:, 0].fillna("").astype(str)
-            transcript = values.iloc[:, 1].fillna("").astype(str)
+            if values.shape[1] < 1:
+                raise ValueError(
+                    "LinguisticFeatureExtractor needs at least one text column."
+                )
+            combined = values.fillna("").astype(str).agg(" ".join, axis=1)
         else:
             array = np.asarray(values, dtype=object)
-            if array.ndim != 2 or array.shape[1] != 2:
+            if array.ndim != 2 or array.shape[1] < 1:
                 raise ValueError(
-                    "LinguisticFeatureExtractor expects title and transcript."
+                    "LinguisticFeatureExtractor expects one or more text columns."
                 )
-            title = pd.Series(array[:, 0]).fillna("").astype(str)
-            transcript = pd.Series(array[:, 1]).fillna("").astype(str)
-        combined = title + " " + transcript
+            combined = pd.DataFrame(array).fillna("").astype(str).agg(" ".join, axis=1)
         scores = [
             calculate_linguistic_scores(
                 text,

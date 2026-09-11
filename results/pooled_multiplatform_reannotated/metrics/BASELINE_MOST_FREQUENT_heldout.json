@@ -1,0 +1,58 @@
+{
+  "quadratic_weighted_kappa": 0.0,
+  "accuracy": 0.3333333333333333,
+  "weighted_f1": 0.16666666666666666,
+  "mean_absolute_error": 1.2727272727272727,
+  "per_class": {
+    "1": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 24
+    },
+    "2": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 12
+    },
+    "3": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 30
+    },
+    "4": {
+      "precision": 0.3333333333333333,
+      "recall": 1.0,
+      "f1": 0.5,
+      "support": 33
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      0,
+      24
+    ],
+    [
+      0,
+      0,
+      0,
+      12
+    ],
+    [
+      0,
+      0,
+      0,
+      30
+    ],
+    [
+      0,
+      0,
+      0,
+      33
+    ]
+  ]
+}

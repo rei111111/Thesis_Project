@@ -6,6 +6,8 @@ from collections.abc import Callable
 import itertools
 from statistics import NormalDist
 
+from evaluation.resampling import bootstrap_indices
+
 import numpy as np
 from sklearn.metrics import (
     accuracy_score,
@@ -20,13 +22,51 @@ from sklearn.metrics import (
 LABELS = (1, 2, 3, 4)
 
 
+def validate_label_array(values: object, name: str) -> np.ndarray:
+    """Return a strict 1--4 integer array without lossy coercion."""
+    try:
+        numeric = np.asarray(values, dtype=float)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{name} must contain numeric integer labels.") from exc
+    if numeric.ndim != 1 or numeric.size == 0:
+        raise ValueError(f"{name} must be a non-empty one-dimensional array.")
+    if not np.isfinite(numeric).all():
+        raise ValueError(f"{name} must contain finite labels.")
+    if not np.equal(numeric, np.floor(numeric)).all():
+        raise ValueError(f"{name} must contain integer labels without truncation.")
+    result = numeric.astype(np.int64)
+    if not set(np.unique(result)).issubset(LABELS):
+        raise ValueError(f"{name} must contain only labels 1 through 4.")
+    return result
+
+
+def _validate_label_pair(
+    true_labels: object,
+    predictions: object,
+) -> tuple[np.ndarray, np.ndarray]:
+    truth = validate_label_array(true_labels, "True labels")
+    predicted = validate_label_array(predictions, "Predictions")
+    if truth.shape != predicted.shape:
+        raise ValueError("True labels and predictions must have equal shapes.")
+    return truth, predicted
+
+
+def _qwk(true_labels: object, predictions: object) -> float:
+    # Keep the ordinal spacing even if a subset has no observations of a class.
+    value = float(cohen_kappa_score(
+        true_labels, predictions, labels=LABELS, weights="quadratic"
+    ))
+    if not np.isfinite(value):
+        raise ValueError("Quadratic weighted kappa is undefined for these labels.")
+    return value
+
+
 def quadratic_weighted_kappa(
     true_labels: object,
     predictions: object,
 ) -> float:
-    return float(
-        cohen_kappa_score(true_labels, predictions, weights="quadratic")
-    )
+    truth, predicted = _validate_label_pair(true_labels, predictions)
+    return _qwk(truth, predicted)
 
 
 def calculate_metrics(
@@ -34,10 +74,7 @@ def calculate_metrics(
     predictions: object,
 ) -> dict[str, object]:
     """Calculate the metrics specified in the thesis."""
-    true_array = np.asarray(true_labels, dtype=int)
-    prediction_array = np.asarray(predictions, dtype=int)
-    if true_array.shape != prediction_array.shape:
-        raise ValueError("True labels and predictions must have equal shapes.")
+    true_array, prediction_array = _validate_label_pair(true_labels, predictions)
 
     precision, recall, class_f1, support = precision_recall_fscore_support(
         true_array,
@@ -55,10 +92,7 @@ def calculate_metrics(
         for index, label in enumerate(LABELS)
     }
     return {
-        "quadratic_weighted_kappa": quadratic_weighted_kappa(
-            true_array,
-            prediction_array,
-        ),
+        "quadratic_weighted_kappa": _qwk(true_array, prediction_array),
         "accuracy": float(accuracy_score(true_array, prediction_array)),
         "weighted_f1": float(
             f1_score(
@@ -83,7 +117,7 @@ def calculate_metrics(
 
 def metric_function(name: str) -> Callable[[object, object], float]:
     functions = {
-        "quadratic_weighted_kappa": quadratic_weighted_kappa,
+        "quadratic_weighted_kappa": _qwk,
         "accuracy": lambda true, predicted: float(
             accuracy_score(true, predicted)
         ),
@@ -108,11 +142,18 @@ def paired_stratified_bootstrap(
     seed: int = 42,
 ) -> dict[str, float]:
     """Compare two aligned prediction arrays with label-stratified resampling."""
-    true_array = np.asarray(true_labels, dtype=int)
-    first = np.asarray(predictions_a, dtype=int)
-    second = np.asarray(predictions_b, dtype=int)
+    true_array = validate_label_array(true_labels, "True labels")
+    first = validate_label_array(predictions_a, "First predictions")
+    second = validate_label_array(predictions_b, "Second predictions")
     if not (len(true_array) == len(first) == len(second)):
         raise ValueError("Bootstrap inputs must contain the same videos.")
+    if (
+        not isinstance(resamples, (int, np.integer))
+        or isinstance(resamples, (bool, np.bool_))
+        or int(resamples) < 1
+    ):
+        raise ValueError("resamples must be a positive integer.")
+    resamples = int(resamples)
 
     calculate = metric_function(metric_name)
     random_generator = np.random.default_rng(seed)
@@ -174,9 +215,9 @@ def class_distribution_table(
     confidence_level: float = 0.95,
 ) -> list[dict[str, object]]:
     """Counts, proportions, and Wilson intervals for RQ1."""
-    values = np.asarray(labels, dtype=int)
-    if not set(values).issubset(LABELS):
-        raise ValueError("Class distribution labels must be between 1 and 4.")
+    values = validate_label_array(labels, "Class distribution labels")
+    if not 0 < confidence_level < 1:
+        raise ValueError("confidence_level must be between zero and one.")
     rows: list[dict[str, object]] = []
     for label in LABELS:
         count = int(np.sum(values == label))
@@ -207,6 +248,7 @@ def bootstrap_many_conditions(
     resamples: int = 10000,
     seed: int = 42,
     confidence_level: float = 0.95,
+    groups: object = None,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
     """Reuse the same stratified resamples for all models and all pairs.
 
@@ -214,18 +256,23 @@ def bootstrap_many_conditions(
     expensive metric calculation separately for each of the 91 condition
     pairs in the fourteen-condition design.
     """
-    truth = np.asarray(true_labels, dtype=int)
+    truth = validate_label_array(true_labels, "True labels")
     condition_names = list(predictions_by_condition)
     predictions = {
-        name: np.asarray(values, dtype=int)
+        name: validate_label_array(values, f"Predictions for {name}")
         for name, values in predictions_by_condition.items()
     }
     if not condition_names:
         raise ValueError("At least one condition is required.")
     if any(len(values) != len(truth) for values in predictions.values()):
         raise ValueError("Every condition must predict the same held-out rows.")
-    if resamples < 1:
-        raise ValueError("resamples must be positive.")
+    if (
+        not isinstance(resamples, (int, np.integer))
+        or isinstance(resamples, (bool, np.bool_))
+        or int(resamples) < 1
+    ):
+        raise ValueError("resamples must be a positive integer.")
+    resamples = int(resamples)
     if not 0 < confidence_level < 1:
         raise ValueError("confidence_level must be between zero and one.")
 
@@ -234,23 +281,38 @@ def bootstrap_many_conditions(
         metric: np.empty((resamples, len(condition_names)), dtype=float)
         for metric in metric_names
     }
-    generator = np.random.default_rng(seed)
-    class_indices = [np.flatnonzero(truth == label) for label in np.unique(truth)]
-    for iteration in range(resamples):
-        sampled = np.concatenate(
-            [
-                generator.choice(indices, size=len(indices), replace=True)
-                for indices in class_indices
-            ]
+    # Compute every condition/replicate from its fixed 4x4 confusion matrix.
+    # This is algebraically the same metric calculation as sklearn and avoids
+    # hundreds of thousands of estimator-validation calls during reporting.
+    prediction_matrix = np.stack([predictions[name] for name in condition_names])
+    distances = np.abs(np.arange(4)[:, None] - np.arange(4)[None, :])
+    for iteration, sampled in enumerate(
+        bootstrap_indices(truth, resamples, seed, groups)
+    ):
+        encoded = 4 * (truth[sampled][None, :] - 1) + prediction_matrix[:, sampled] - 1
+        matrices = np.stack([
+            np.bincount(row, minlength=16).reshape(4, 4) for row in encoded
+        ]).astype(float)
+        actual = matrices.sum(axis=2)
+        predicted = matrices.sum(axis=1)
+        totals = actual.sum(axis=1)
+        correct = np.diagonal(matrices, axis1=1, axis2=2)
+        expected = actual[:, :, None] * predicted[:, None, :] / totals[:, None, None]
+        denominator = (expected * distances ** 2).sum(axis=(1, 2))
+        with np.errstate(divide="ignore", invalid="ignore"):
+            qwk = 1 - (matrices * distances ** 2).sum(axis=(1, 2)) / denominator
+        class_f1 = np.divide(
+            2 * correct, actual + predicted,
+            out=np.zeros_like(correct), where=(actual + predicted) != 0,
         )
-        sampled_truth = truth[sampled]
-        for condition_index, condition in enumerate(condition_names):
-            sampled_predictions = predictions[condition][sampled]
-            for metric, function in functions.items():
-                samples[metric][iteration, condition_index] = function(
-                    sampled_truth,
-                    sampled_predictions,
-                )
+        values = {
+            "quadratic_weighted_kappa": qwk,
+            "accuracy": correct.sum(axis=1) / totals,
+            "weighted_f1": (class_f1 * actual).sum(axis=1) / totals,
+            "mean_absolute_error": (matrices * distances).sum(axis=(1, 2)) / totals,
+        }
+        for metric in functions:
+            samples[metric][iteration] = values[metric]
 
     tail = (1.0 - confidence_level) / 2.0
     intervals: list[dict[str, object]] = []
@@ -273,6 +335,9 @@ def bootstrap_many_conditions(
                     "ci_high": float(np.nanquantile(distribution, 1.0 - tail)),
                     "confidence_level": confidence_level,
                     "valid_resamples": int(np.isfinite(distribution).sum()),
+                    "resampling_unit": "content_group" if groups is not None else "label_stratified_row",
+                    "bootstrap_resamples_requested": resamples,
+                    "bootstrap_seed": seed,
                     "higher_is_better": higher_is_better,
                 }
             )
@@ -296,6 +361,9 @@ def bootstrap_many_conditions(
                     "ci_high": float(np.nanquantile(distribution, 1.0 - tail)),
                     "confidence_level": confidence_level,
                     "valid_resamples": int(np.isfinite(distribution).sum()),
+                    "resampling_unit": "content_group" if groups is not None else "label_stratified_row",
+                    "bootstrap_resamples_requested": resamples,
+                    "bootstrap_seed": seed,
                     "higher_is_better": higher_is_better,
                 }
             )
@@ -307,10 +375,7 @@ def ordinal_error_summary(
     predictions: object,
 ) -> dict[str, object]:
     """Direction and distance of held-out errors for sensitive-task analysis."""
-    truth = np.asarray(true_labels, dtype=int)
-    predicted = np.asarray(predictions, dtype=int)
-    if truth.shape != predicted.shape:
-        raise ValueError("True labels and predictions must align.")
+    truth, predicted = _validate_label_pair(true_labels, predictions)
     distance = predicted - truth
     absolute = np.abs(distance)
     return {

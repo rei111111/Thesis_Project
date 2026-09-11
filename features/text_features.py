@@ -28,20 +28,27 @@ NUMERIC_SCALING_MODES = ("standard", "minmax", "none")
 
 
 class TextColumnCombiner(BaseEstimator, TransformerMixin):
-    """Combine title and transcript without fitting corpus statistics."""
+    """Combine one or more preselected text columns without corpus statistics."""
 
     def fit(self, values: object, target: object = None) -> "TextColumnCombiner":
         return self
 
     def transform(self, values: object) -> np.ndarray:
         if isinstance(values, pd.DataFrame):
-            title = values.iloc[:, 0].fillna("").astype(str)
-            transcript = values.iloc[:, 1].fillna("").astype(str)
+            if values.shape[1] < 1:
+                raise ValueError("TextColumnCombiner needs at least one text column.")
+            combined = values.fillna("").astype(str).agg(" ".join, axis=1)
         else:
             array = np.asarray(values, dtype=object)
-            title = pd.Series(array[:, 0]).fillna("").astype(str)
-            transcript = pd.Series(array[:, 1]).fillna("").astype(str)
-        return (title + " [SEP] " + transcript).to_numpy(dtype=object)
+            if array.ndim != 2 or array.shape[1] < 1:
+                raise ValueError(
+                    "TextColumnCombiner expects one or more text columns."
+                )
+            combined = pd.DataFrame(array).fillna("").astype(str).agg(" ".join, axis=1)
+        # A literal "[SEP]" becomes the ordinary TF--IDF token "sep" and
+        # consumes one of the 300 vocabulary slots. A space preserves the word
+        # boundary without injecting an undocumented predictor.
+        return combined.to_numpy(dtype=object)
 
     def get_feature_names_out(self, input_features: object = None) -> np.ndarray:
         return np.asarray(["combined_text"], dtype=object)
@@ -87,6 +94,9 @@ def build_interpretable_preprocessor(
     stop_words: str | None = "english",
     certainty_terms: tuple[str, ...] = DEFAULT_CERTAINTY_TERMS,
     hedge_terms: tuple[str, ...] = DEFAULT_HEDGE_TERMS,
+    text_columns: tuple[str, ...] = ("title", "transcript"),
+    engagement_transform: str = "log1p",
+    platform_column: str = "platform",
 ) -> ColumnTransformer:
     """Build feature set A, B, or C inside a fitted model pipeline.
 
@@ -103,6 +113,8 @@ def build_interpretable_preprocessor(
         raise ValueError(
             f"numeric_scaling must be one of {NUMERIC_SCALING_MODES}"
         )
+    if not text_columns or len(set(text_columns)) != len(text_columns):
+        raise ValueError("text_columns must contain unique column names.")
 
     text_pipeline = Pipeline(
         [
@@ -119,7 +131,7 @@ def build_interpretable_preprocessor(
         ]
     )
     transformers: list[tuple[str, object, list[str]]] = [
-        ("text", text_pipeline, ["title", "transcript"])
+        ("text", text_pipeline, list(text_columns))
     ]
 
     if normalized_set in ("B", "C"):
@@ -133,23 +145,38 @@ def build_interpretable_preprocessor(
             ]
         )
         transformers.append(
-            ("linguistic", linguistic_pipeline, ["title", "transcript"])
+            ("linguistic", linguistic_pipeline, list(text_columns))
         )
 
     if normalized_set == "C":
-        engagement_pipeline = Pipeline(
-            [
-                ("imputer", SimpleImputer(strategy="median")),
-                (
-                    "log1p",
-                    FunctionTransformer(safe_log1p, feature_names_out="one-to-one"),
-                ),
-                ("scaler", _numeric_scaler(numeric_scaling)),
-            ]
-        )
-        transformers.append(
-            ("engagement", engagement_pipeline, list(ENGAGEMENT_COLUMNS))
-        )
+        if engagement_transform == "within_platform_percentile":
+            from features.metadata_features import WithinPlatformPercentileTransformer
+
+            engagement_pipeline = WithinPlatformPercentileTransformer(
+                platform_column=platform_column,
+                value_columns=ENGAGEMENT_COLUMNS,
+            )
+            engagement_columns = [platform_column, *ENGAGEMENT_COLUMNS]
+        elif engagement_transform == "log1p":
+            engagement_pipeline = Pipeline(
+                [
+                    ("imputer", SimpleImputer(strategy="median")),
+                    (
+                        "log1p",
+                        FunctionTransformer(
+                            safe_log1p, feature_names_out="one-to-one"
+                        ),
+                    ),
+                    ("scaler", _numeric_scaler(numeric_scaling)),
+                ]
+            )
+            engagement_columns = list(ENGAGEMENT_COLUMNS)
+        else:
+            raise ValueError(
+                "engagement_transform must be 'log1p' or "
+                "'within_platform_percentile'."
+            )
+        transformers.append(("engagement", engagement_pipeline, engagement_columns))
 
     return ColumnTransformer(
         transformers,
@@ -165,6 +192,9 @@ def build_ridge_preprocessor(
     stop_words: str | None = "english",
     certainty_terms: tuple[str, ...] = DEFAULT_CERTAINTY_TERMS,
     hedge_terms: tuple[str, ...] = DEFAULT_HEDGE_TERMS,
+    text_columns: tuple[str, ...] = ("title", "transcript"),
+    engagement_transform: str = "log1p",
+    platform_column: str = "platform",
 ) -> ColumnTransformer:
     """Backward-compatible standard-scaled preprocessor used by Ridge."""
     return build_interpretable_preprocessor(
@@ -175,4 +205,7 @@ def build_ridge_preprocessor(
         stop_words=stop_words,
         certainty_terms=certainty_terms,
         hedge_terms=hedge_terms,
+        text_columns=text_columns,
+        engagement_transform=engagement_transform,
+        platform_column=platform_column,
     )

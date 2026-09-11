@@ -1,0 +1,55 @@
+{
+  "data_mode": "pooled_multiplatform",
+  "source_rows": 498,
+  "labelled_rows_in_rq1": 491,
+  "training_rows_in_analysis": 392,
+  "heldout_rows_in_analysis": 99,
+  "source_columns": [
+    "row_index",
+    "record_id",
+    "platform",
+    "source_row",
+    "title",
+    "transcript",
+    "likes",
+    "comments",
+    "views",
+    "duration_sec",
+    "total_claims",
+    "false_claims",
+    "label"
+  ],
+  "source_has_video_id": false,
+  "source_has_platform": true,
+  "text_columns_used_by_models": [
+    "transcript"
+  ],
+  "engagement_transform": "within_platform_percentile",
+  "platform_distribution": {
+    "tiktok": 248,
+    "youtube": 250
+  },
+  "platform_heldout_metrics_reported": true,
+  "derived_linguistic_features": [
+    "certainty_score",
+    "hedge_score"
+  ],
+  "experimental_condition_count": 14,
+  "conditions": [
+    "A_LOGISTIC_REGRESSION",
+    "A_RIDGE",
+    "A_COMPLEMENT_NB",
+    "A_DECISION_TREE",
+    "B_LOGISTIC_REGRESSION",
+    "B_RIDGE",
+    "B_COMPLEMENT_NB",
+    "B_DECISION_TREE",
+    "C_LOGISTIC_REGRESSION",
+    "C_RIDGE",
+    "C_COMPLEMENT_NB",
+    "C_DECISION_TREE",
+    "D_FROZEN_MINILM",
+    "E_FINETUNED_BERT"
+  ],
+  "excluded_total_claims": []
+}

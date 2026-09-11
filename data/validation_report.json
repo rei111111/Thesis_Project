@@ -1,14 +1,22 @@
 {
   "source_rows": 250,
-  "modelled_rows": 246,
-  "excluded_unassigned_rows": 4,
+  "modelled_rows": 243,
+  "excluded_unassigned_rows": 7,
   "class_distribution": {
-    "1": 101,
-    "2": 52,
-    "3": 73,
-    "4": 20
+    "1": 110,
+    "2": 49,
+    "3": 63,
+    "4": 21
   },
-  "duplicate_transcript_groups": 1,
+  "exact_duplicate_transcript_groups": 1,
+  "duplicate_or_near_duplicate_content_groups": 4,
+  "content_group_method": "connected components of token-sequence similarity >= 0.80 for texts with >= 20 tokens, after length-ratio >= 0.70 and token-Jaccard >= 0.50 prefilters",
+  "transcript_language_warnings": {
+    "criterion": "transcript Latin-letter fraction below 0.80",
+    "zero_based_rows": [],
+    "advisory_only": true,
+    "message": "Review flagged transcripts manually. This automated script warning does not determine eligibility or block execution."
+  },
   "source_columns": [
     "title",
     "transcript",
@@ -21,5 +29,38 @@
     "label"
   ],
   "derived_columns_written_to_source": [],
-  "dataset_sha256": "932943e2990947392fcea728c0c4b4130f4211fea7ff81e47273de5f5cb3af77"
+  "dataset_sha256": "b8d0366457a9223e4a19d038bb15552366a3d7eb22941c278438f415586f8a1f",
+  "source_link_audit": {
+    "audit_completed": true,
+    "record_count": 250,
+    "unique_source_id_count": 248,
+    "duplicate_source_id_count": 2,
+    "duplicate_source_groups": [
+      {
+        "source_id": "hVl9srUL9pQ",
+        "zero_based_rows": [
+          129,
+          246
+        ],
+        "urls": [
+          "https://www.youtube.com/shorts/hVl9srUL9pQ"
+        ]
+      },
+      {
+        "source_id": "wJT9vX_zDck",
+        "zero_based_rows": [
+          79,
+          177
+        ],
+        "urls": [
+          "https://www.youtube.com/shorts/wJT9vX_zDck"
+        ]
+      }
+    ],
+    "has_duplicate_source_ids": true,
+    "warnings": [
+      "Duplicate source video IDs were detected. Review the author-controlled source list; execution is not blocked."
+    ]
+  },
+  "source_links_sha256": "91378843c1995b4dda5abc2e1ce230cca675f72c89bfc01f8f1ba20c73916f3b"
 }
